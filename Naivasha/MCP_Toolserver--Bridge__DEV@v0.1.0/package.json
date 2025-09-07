@@ -1,0 +1,7 @@
+﻿{
+  "name": "bridge-mcp-dev",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": { "node-fetch": "^3.3.2" },
+  "scripts": { "start": "node src/server.mjs" }
+}

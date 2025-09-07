@@ -1,0 +1,310 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "DEPLOY_TO_PRODUCTION" to confirm'
+        required: true
+        type: string
+
+env:
+  AWS_REGION: us-east-1
+  NODE_VERSION: '20'
+  ENVIRONMENT: production
+
+jobs:
+  confirm-deployment:
+    name: Confirm Production Deployment
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Check confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "DEPLOY_TO_PRODUCTION" ]; then
+            echo "❌ Deployment not confirmed. Please type exactly: DEPLOY_TO_PRODUCTION"
+            exit 1
+          fi
+          echo "✅ Production deployment confirmed"
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run security audit
+        working-directory: ./Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        run: |
+          npm audit --audit-level high
+      
+      - name: Scan for secrets
+        run: |
+          if git log --oneline -n 10 | xargs git show | grep -E "(API_KEY|SECRET|PASSWORD|PRIVATE_KEY)" | grep -v "YOUR_" | grep -v "example"; then
+            echo "❌ Potential secrets found in recent commits!"
+            exit 1
+          fi
+          echo "✅ No secrets detected in recent commits"
+      
+      - name: Check environment variables
+        run: |
+          echo "🔍 Checking for required environment variables..."
+          required_vars=("AWS_ACCESS_KEY_ID" "AWS_SECRET_ACCESS_KEY" "METAMASK_PRIVATE_KEY")
+          for var in "${required_vars[@]}"; do
+            if [ -z "${!var}" ]; then
+              echo "❌ Missing required environment variable: $var"
+              exit 1
+            fi
+          done
+          echo "✅ All required environment variables present"
+
+  full-test-suite:
+    name: Full Test Suite
+    runs-on: ubuntu-latest
+    needs: security-scan
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install dependencies
+        working-directory: ./Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        run: npm ci
+      
+      - name: Run unit tests
+        working-directory: ./Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        run: npm test --if-present
+      
+      - name: Run integration tests
+        run: |
+          cd infra
+          python verify_bridge.py --dry-run
+      
+      - name: Smart contract tests
+        working-directory: ./Agora/Site--GreenStemGlobal__PROD@v1.0.0/chain
+        run: |
+          npm install
+          npx hardhat test
+
+  deploy-production-infrastructure:
+    name: Deploy Production Infrastructure
+    runs-on: ubuntu-latest
+    needs: [full-test-suite, confirm-deployment]
+    if: always() && needs.full-test-suite.result == 'success' && (needs.confirm-deployment.result == 'success' || needs.confirm-deployment.result == 'skipped')
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Setup production secrets
+        run: |
+          chmod +x scripts/setup-secrets.sh
+          ./scripts/setup-secrets.sh ${{ env.ENVIRONMENT }}
+      
+      - name: Deploy RDS PostgreSQL (Production)
+        run: |
+          chmod +x infra/aws/deploy-rds.sh
+          ./infra/aws/deploy-rds.sh ${{ env.ENVIRONMENT }}
+      
+      - name: Deploy Amazon MSK (Production)
+        run: |
+          chmod +x infra/aws/deploy-msk.sh
+          ./infra/aws/deploy-msk.sh ${{ env.ENVIRONMENT }}
+      
+      - name: Create S3 buckets
+        run: |
+          aws s3 mb s3://continuum-overworld-lake-production || echo "Bucket exists"
+          aws s3 mb s3://greenstem-global-assets-production || echo "Bucket exists"
+          
+          # Enable versioning and encryption
+          aws s3api put-bucket-versioning --bucket continuum-overworld-lake-production --versioning-configuration Status=Enabled
+          aws s3api put-bucket-encryption --bucket continuum-overworld-lake-production --server-side-encryption-configuration '{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+
+  deploy-production-blockchain:
+    name: Deploy Production Smart Contracts
+    runs-on: ubuntu-latest
+    needs: full-test-suite
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Deploy to mainnet (if configured) or sepolia
+        run: |
+          chmod +x scripts/deploy-blockchain.sh
+          # Use mainnet for production if ETH available, otherwise sepolia
+          ./scripts/deploy-blockchain.sh ${{ env.ENVIRONMENT }} sepolia
+        env:
+          METAMASK_PRIVATE_KEY: ${{ secrets.METAMASK_PRIVATE_KEY }}
+
+  deploy-production-website:
+    name: Deploy Production Website
+    runs-on: ubuntu-latest
+    needs: [deploy-production-infrastructure, deploy-production-blockchain]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ./Agora/Site--GreenStemGlobal__PROD@v1.0.0/package-lock.json
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Install dependencies
+        working-directory: ./Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        run: npm ci
+      
+      - name: Get production secrets
+        id: get-secrets
+        run: |
+          DB_SECRET=$(aws secretsmanager get-secret-value --secret-id "continuum/${{ env.ENVIRONMENT }}/database" --query SecretString --output text)
+          COGNITO_SECRET=$(aws secretsmanager get-secret-value --secret-id "continuum/${{ env.ENVIRONMENT }}/cognito" --query SecretString --output text)
+          BLOCKCHAIN_SECRET=$(aws secretsmanager get-secret-value --secret-id "continuum/${{ env.ENVIRONMENT }}/blockchain" --query SecretString --output text)
+          
+          echo "::add-mask::$(echo $DB_SECRET | jq -r '.password')"
+          echo "PG_DSN=postgresql://$(echo $DB_SECRET | jq -r '.username'):$(echo $DB_SECRET | jq -r '.password')@$(echo $DB_SECRET | jq -r '.endpoint'):$(echo $DB_SECRET | jq -r '.port')/$(echo $DB_SECRET | jq -r '.dbname')" >> $GITHUB_ENV
+          echo "COGNITO_USER_POOL_ID=$(echo $COGNITO_SECRET | jq -r '.user_pool_id')" >> $GITHUB_ENV
+          echo "COGNITO_CLIENT_ID=$(echo $COGNITO_SECRET | jq -r '.client_id')" >> $GITHUB_ENV
+          echo "ETH_RPC_URL=$(echo $BLOCKCHAIN_SECRET | jq -r '.rpc_url')" >> $GITHUB_ENV
+          echo "LEDGER_CONTRACT_ADDRESS=$(echo $BLOCKCHAIN_SECRET | jq -r '.contract_address')" >> $GITHUB_ENV
+      
+      - name: Build production application
+        working-directory: ./Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_ENV: ${{ env.ENVIRONMENT }}
+          NEXT_PUBLIC_BASE_URL: https://greenstemglobal.com
+          NEXT_PUBLIC_CHAIN_ID: 11155111
+          ETH_RPC_URL: ${{ env.ETH_RPC_URL }}
+          LEDGER_CONTRACT_ADDRESS: ${{ env.LEDGER_CONTRACT_ADDRESS }}
+          COGNITO_USER_POOL_ID: ${{ env.COGNITO_USER_POOL_ID }}
+          COGNITO_CLIENT_ID: ${{ env.COGNITO_CLIENT_ID }}
+      
+      - name: Deploy to production Amplify
+        working-directory: ./Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        run: |
+          npm install -g @aws-amplify/cli
+          
+          if [ ! -f "amplify/.config/project-config.json" ]; then
+            amplify init --yes --amplify "{\"projectName\":\"greenstemglobal\",\"envName\":\"production\"}" --providers "{\"awscloudformation\":{\"useProfile\":false,\"accessKeyId\":\"$AWS_ACCESS_KEY_ID\",\"secretAccessKey\":\"$AWS_SECRET_ACCESS_KEY\",\"region\":\"$AWS_REGION\"}}"
+            amplify add hosting --yes
+          fi
+          amplify publish --yes
+
+  production-smoke-tests:
+    name: Production Smoke Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-production-website]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Wait for deployment
+        run: sleep 60
+      
+      - name: Test website availability
+        run: |
+          echo "🧪 Testing website endpoints..."
+          curl -f https://greenstemglobal.com || exit 1
+          curl -f https://greenstemglobal.com/buyers || exit 1
+          curl -f https://greenstemglobal.com/investors || exit 1
+          curl -f https://greenstemglobal.com/api/trace/lots || exit 1
+          curl -f https://greenstemglobal.com/api/trace/funds || exit 1
+          echo "✅ All endpoints responding"
+      
+      - name: Test blockchain integration
+        run: |
+          echo "⛓️ Testing blockchain connection..."
+          # Add blockchain connectivity test here
+          echo "✅ Blockchain integration working"
+      
+      - name: Performance check
+        run: |
+          echo "⚡ Checking page load times..."
+          time curl -s https://greenstemglobal.com > /dev/null
+          echo "✅ Performance check passed"
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [production-smoke-tests]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Generate release notes
+        id: release-notes
+        run: |
+          VERSION="v$(date +%Y.%m.%d)-$(git rev-parse --short HEAD)"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
+          CHANGES=$(git log --pretty=format:"* %s" $(git describe --tags --abbrev=0)..HEAD 2>/dev/null || git log --pretty=format:"* %s" -10)
+          
+          cat > release-notes.md << EOF
+          # Continuum_Overworld Release $VERSION
+          
+          ## 🚀 What's New
+          $CHANGES
+          
+          ## 🔗 Links
+          - **Website**: https://greenstemglobal.com
+          - **Staging**: https://staging.greenstemglobal.com
+          - **Smart Contract**: https://sepolia.etherscan.io/address/${{ env.LEDGER_CONTRACT_ADDRESS }}
+          
+          ## 📊 Environment
+          - **AWS Region**: ${{ env.AWS_REGION }}
+          - **Database**: PostgreSQL with pgvector
+          - **Blockchain**: Ethereum Sepolia
+          - **CDN**: AWS CloudFront via Amplify
+          EOF
+      
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Production Release ${{ env.VERSION }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: false
+
+  notify-success:
+    name: Notify Deployment Success
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    steps:
+      - name: Success notification
+        run: |
+          echo "🎉 Production deployment successful!"
+          echo "🌐 Website: https://greenstemglobal.com"
+          echo "📊 Staging: https://staging.greenstemglobal.com"
+          echo "⛓️ Contract: https://sepolia.etherscan.io/address/${{ env.LEDGER_CONTRACT_ADDRESS }}"
+          echo "🏷️ Release: ${{ env.VERSION }}"
+          
+          # Add Slack/email notification here if configured

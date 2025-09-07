@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "agents": [
+    {
+      "id": "claude-code-wsl2",
+      "identifier": "Builder--Code__WSL2@v1.0.0",
+      "division": "Forge",
+      "environment": "WSL2",
+      "capabilities": ["scaffold", "implement", "test"],
+      "path": "Forge/Builder--Code__WSL2@v1.0.0"
+    },
+    {
+      "id": "cursor-validator-win",
+      "identifier": "Validator--Code__WIN@v1.0.0",
+      "division": "Aegis",
+      "environment": "Windows",
+      "capabilities": ["validate", "review", "audit"],
+      "path": "Aegis/Validator--Code__WIN@v1.0.0"
+    },
+    {
+      "id": "Weaver__ESG_KPI",
+      "division": "Forge",
+      "capability": "Weaver",
+      "role": "ESG_KPI",
+      "version": "1.0.0",
+      "env": "DEV",
+      "tier": "T2",
+      "entrypoints": {
+        "orchestrator": "Forge/Weaver--ESG_KPI__DEV@v1.0.0/run-real.ts",
+        "api_latest": "Forge/Weaver--ESG_KPI__DEV@v1.0.0/api/runs-latest.ts"
+      },
+      "guards": { "aegis": "T1", "data_tier": "Green" },
+      "metrics": ["kpis_extracted","contexts_extracted","provenance_coverage"]
+    }
+
+  ],
+  "components": []
+}

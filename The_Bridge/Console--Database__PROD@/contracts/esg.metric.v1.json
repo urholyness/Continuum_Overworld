@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ESG Metric Event",
+  "description": "Event emitted when ESG metrics are extracted from documents",
+  "type": "object",
+  "required": ["headers", "payload"],
+  "properties": {
+    "headers": {
+      "type": "object",
+      "required": [
+        "world",
+        "division",
+        "capability",
+        "version",
+        "tenant_id",
+        "occurred_at",
+        "payload_schema"
+      ],
+      "properties": {
+        "world": {
+          "type": "string",
+          "const": "Continuum_Overworld"
+        },
+        "division": {
+          "type": "string",
+          "enum": ["Oracle", "Forge", "Atlas", "Aegis"]
+        },
+        "capability": {
+          "type": "string",
+          "enum": ["Calculator", "Ingestor", "Validator"]
+        },
+        "role": {
+          "type": "string"
+        },
+        "qualifier": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^v\\d+\\.\\d+\\.\\d+$"
+        },
+        "tenant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_tag": {
+          "type": "string"
+        },
+        "agent_run_id": {
+          "type": "string"
+        },
+        "occurred_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "payload_schema": {
+          "type": "string",
+          "const": "esg.metric.v1"
+        },
+        "correlation_id": {
+          "type": "string"
+        },
+        "causation_id": {
+          "type": "string"
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "required": ["doc_id", "metrics"],
+      "properties": {
+        "doc_id": {
+          "type": "string",
+          "description": "Reference to source document"
+        },
+        "org_id": {
+          "type": "string",
+          "description": "Organization UUID"
+        },
+        "org_code": {
+          "type": "string",
+          "description": "Organization code"
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["metric_type", "metric_name", "value", "unit"],
+            "properties": {
+              "metric_type": {
+                "type": "string",
+                "enum": [
+                  "scope1",
+                  "scope2",
+                  "scope3",
+                  "scope3_cat1",
+                  "scope3_cat2",
+                  "scope3_cat3",
+                  "scope3_cat4",
+                  "scope3_cat5",
+                  "scope3_cat6",
+                  "scope3_cat7",
+                  "scope3_cat8",
+                  "scope3_cat9",
+                  "scope3_cat10",
+                  "scope3_cat11",
+                  "scope3_cat12",
+                  "scope3_cat13",
+                  "scope3_cat14",
+                  "scope3_cat15",
+                  "water_consumption",
+                  "water_withdrawal",
+                  "waste_generated",
+                  "waste_recycled",
+                  "energy_consumption",
+                  "renewable_energy"
+                ]
+              },
+              "metric_name": {
+                "type": "string",
+                "description": "Human-readable metric name"
+              },
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string",
+                "description": "Unit of measurement (tCO2e, m3, MWh, etc.)"
+              },
+              "period_start": {
+                "type": "string",
+                "format": "date"
+              },
+              "period_end": {
+                "type": "string",
+                "format": "date"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Extraction confidence score"
+              },
+              "method": {
+                "type": "string",
+                "description": "Extraction method used"
+              },
+              "model_version": {
+                "type": "string",
+                "description": "Model version used for extraction"
+              },
+              "page_reference": {
+                "type": "integer",
+                "description": "Page number in source document"
+              },
+              "text_snippet": {
+                "type": "string",
+                "description": "Supporting text from document"
+              }
+            }
+          }
+        },
+        "document_metadata": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "document_type": {
+              "type": "string",
+              "enum": ["csr_report", "sustainability_report", "annual_report", "carbon_disclosure"]
+            },
+            "reporting_year": {
+              "type": "integer"
+            },
+            "source_uri": {
+              "type": "string"
+            },
+            "hash": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

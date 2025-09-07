@@ -1,0 +1,5 @@
+task: Weaver ESG run complete — {{company_count}} companies, {{kpi_total}} KPIs, provenance {{prov_pct}}%
+channel: Bridge_Companion
+sla: EOD
+owner: Envoy
+risk_gate: Aegis:T1

@@ -1,0 +1,99 @@
+{
+  "name": "Continuum Dark Green",
+  "description": "Dark surface with emerald/neo-green accents, amber warnings",
+  "locked": true,
+  "colors": {
+    "background": "#0b0f0c",
+    "panel": "#0f1512",
+    "stroke": "#124c2f",
+    "accent": "#22c55e",
+    "warning": "#f59e0b",
+    "error": "#dc2626",
+    "text": {
+      "primary": "#e6f7ee",
+      "secondary": "#7fa67a",
+      "dim": "#4a5f4a"
+    },
+    "status": {
+      "active": "#22c55e",
+      "frozen": "#f59e0b",
+      "error": "#dc2626",
+      "idle": "#7fa67a"
+    }
+  },
+  "divisionColors": {
+    "The_Bridge": "#22c55e",
+    "Forge": "#ef4444",
+    "Aegis": "#3b82f6",
+    "Oracle": "#8b5cf6",
+    "Meridian": "#f59e0b",
+    "Atlas": "#06b6d4",
+    "Agora": "#ec4899",
+    "Ledger": "#84cc16",
+    "Archive": "#6b7280",
+    "Pantheon": "#fbbf24"
+  },
+  "icons": {
+    "style": "lcars",
+    "divisions": {
+      "The_Bridge": "🌉",
+      "Meridian": "⏱",
+      "Forge": "🔥",
+      "Aegis": "🛡",
+      "Oracle": "📊",
+      "Atlas": "🗺",
+      "Agora": "✉",
+      "Ledger": "₡",
+      "Archive": "🗃",
+      "Pantheon": "⚡"
+    },
+    "starTrekMode": {
+      "enabled": false,
+      "sprites": {
+        "The_Bridge": "command-insignia",
+        "Forge": "engineering-insignia",
+        "Aegis": "security-insignia",
+        "Oracle": "science-insignia",
+        "Meridian": "ops-insignia",
+        "Atlas": "navigation-insignia",
+        "Agora": "communications-insignia",
+        "Ledger": "logistics-insignia",
+        "Archive": "memory-core",
+        "Pantheon": "holodeck"
+      }
+    }
+  },
+  "rendering": {
+    "rules": [
+      "UI only shows insights derived from pipeline artifacts",
+      "No editorial text - only data-driven content",
+      "KPIs, ContextSpans, and Provenance are primary sources"
+    ],
+    "dataBinding": {
+      "sources": ["ESG_KPI@v1", "ContextSpan@v1", "RunSummary", "Provenance"],
+      "cacheStrategy": "1-minute-ttl",
+      "refreshOnFocus": true
+    }
+  },
+  "api": {
+    "menuEndpoint": "/api/menu",
+    "dataEndpoints": {
+      "latestRun": "/api/forge/weaver/runs/latest",
+      "exportExcel": "/api/forge/weaver/export/excel",
+      "meridianJobs": "/api/meridian/jobs/esg_live"
+    },
+    "polling": {
+      "clientDefault": 60000,
+      "serverControlled": true,
+      "autoRefreshToggle": "client-only"
+    }
+  },
+  "aegisNotary": {
+    "enabled": false,
+    "config": {
+      "merkleAnchoring": true,
+      "l2Target": "polygon",
+      "requiredFlag": "AEGIS_NOTARY_ENABLED=true"
+    }
+  }
+}

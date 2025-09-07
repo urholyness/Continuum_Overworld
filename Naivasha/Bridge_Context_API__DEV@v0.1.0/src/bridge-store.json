@@ -1,0 +1,8 @@
+{
+  "Continuum_Overworld": {
+    "hello": "naivasha world"
+  },
+  "Omen_Agent": {
+    "task": "set up local dev pipeline"
+  }
+}

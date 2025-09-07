@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\Password\\Continuum_Overworld\\Ledger\\Contracts--SupplyChain__ETH@v0.1.0\\contracts\\SupplyChainChain.sol": {
+      "lastModificationDate": 1755645484936,
+      "contentHash": "8f0dd9f5faf518b6094e7f8566adfd36",
+      "sourceName": "contracts/SupplyChainChain.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.24"
+      ],
+      "artifacts": [
+        "SupplyChainChain"
+      ]
+    }
+  }
+}

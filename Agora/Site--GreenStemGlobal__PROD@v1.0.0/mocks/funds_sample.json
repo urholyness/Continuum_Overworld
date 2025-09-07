@@ -1,0 +1,27 @@
+{
+  "ledger_run_id": "2025-09-06T12:00:00Z",
+  "investor_deposit": {
+    "bank_ref": "CHASE-2025-0906-00021",
+    "amount_usd": 25000,
+    "ts": "2025-09-06T10:11:02Z",
+    "onchain_tx": "0xabc..."
+  },
+  "fx": {
+    "rate": 128.10,
+    "fee_usd": 42.50,
+    "ts": "2025-09-06T10:12:55Z",
+    "onchain_tx": "0xdef..."
+  },
+  "transfer_ke": {
+    "receiving_bank": "Equity KE",
+    "amount_kes": 3199500,
+    "swift": "EQBLKENA",
+    "ts": "2025-09-06T10:30:15Z",
+    "onchain_tx": "0x123..."
+  },
+  "allocations": [
+    {"category": "machinery", "amount_kes": 1800000, "vendor": "Jacto KE", "onchain_tx": "0x456..."},
+    {"category": "cold_storage","amount_kes": 900000, "vendor": "ModulCold","onchain_tx": "0x789..."},
+    {"category": "certification","amount_kes": 499500, "vendor": "KEPHIS/GG","onchain_tx": "0xaaa..."}
+  ]
+}

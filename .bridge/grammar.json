@@ -1,0 +1,9 @@
+{
+  "division_case": "Pascal_Snake",
+  "file_case": "kebab-case",
+  "label_pattern": "^[A-Z][A-Za-z]*(_[A-Z][a-zA-Z]*)*$",
+  "versioned_dir_pattern": "^.+--.+__.+@v\\d+\\.\\d+\\.\\d+/?$",
+  "playbook_pattern": "^Playbook--[A-Za-z0-9]+__[^@]+@v\\d+\\.\\d+\\.\\d+\\.md$",
+  "rfc_pattern": "^RFC--[A-Za-z0-9]+__[^@]+@v\\d+\\.\\d+\\.\\d+\\.md$",
+  "agent_pattern": "^Agent--[A-Za-z0-9_]+:[A-Za-z0-9]+__T[0-5]\\.md$"
+}

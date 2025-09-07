@@ -1,0 +1,21 @@
+{
+  "claude_code": {
+    "type": "WSL2",
+    "python": "/usr/bin/python3",
+    "shell": "/bin/bash",
+    "path_prefix": "/mnt/c/users/password",
+    "line_endings": "lf"
+  },
+  "cursor": {
+    "type": "Windows",
+    "python": "python",
+    "shell": "cmd.exe",
+    "path_prefix": "C:\\Users\\Password",
+    "line_endings": "crlf"
+  },
+  "shared": {
+    "root": "Continuum_Overworld",
+    "encoding": "utf-8",
+    "git_autocrlf": "true"
+  }
+}

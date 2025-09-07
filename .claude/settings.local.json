@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(env)",
+      "Bash(npm test)",
+      "Read(//mnt/c/users/password/**)",
+      "Bash(echo $PATH)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

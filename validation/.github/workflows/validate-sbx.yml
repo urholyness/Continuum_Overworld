@@ -1,0 +1,34 @@
+name: Validate SBX
+on:
+  pull_request:
+    branches: [ "sandbox" ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions: { contents: read, id-token: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_VALIDATOR_ROLE_ARN }}
+          aws-region: eu-central-1
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Install Newman
+        run: npm i -g newman
+      - name: Export env
+        run: |
+          echo "API_BASE=${{ secrets.API_BASE }}" >> validation/.env
+          echo "UI_BASE=${{ secrets.UI_BASE }}" >> validation/.env
+          echo "AWS_REGION=eu-central-1" >> validation/.env
+          echo "READINGS_TABLE=readings" >> validation/.env
+          echo "CURATED_BUCKET=gsg-data-curated" >> validation/.env
+          echo "FARM_ID=2BH" >> validation/.env
+          echo "FARM_DATE_UTC=$(date -u +%F)" >> validation/.env
+          echo "ADMIN_JWT=${{ secrets.ADMIN_JWT }}" >> validation/.env
+      - name: Validate
+        working-directory: validation
+        run: make validate
+

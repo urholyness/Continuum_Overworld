@@ -1,0 +1,186 @@
+name: THE_BRIDGE Structure & Naming Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Make scripts executable
+      run: |
+        find . -name "*.sh" -type f -exec chmod +x {} \;
+    
+    - name: Bootstrap structure (idempotent)
+      run: |
+        if [ -f "The_Bridge/Scripts_Bootstrap/mk-structure.sh" ]; then
+          bash The_Bridge/Scripts_Bootstrap/mk-structure.sh
+        else
+          echo "Bootstrap script not found, assuming structure exists"
+        fi
+    
+    - name: Validate structure and naming
+      run: |
+        if [ -f "The_Bridge/Scripts_Bootstrap/bridge-validate.py" ]; then
+          python3 The_Bridge/Scripts_Bootstrap/bridge-validate.py
+        else
+          echo "Validation script not found"
+          exit 1
+        fi
+    
+    - name: Upload validation report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: validation-report
+        path: .bridge/validation-report.json
+        retention-days: 30
+
+  meridian-drift:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Check for structural drift
+      run: |
+        echo "Checking for structural drift..."
+        python3 The_Bridge/Scripts_Bootstrap/bridge-validate.py
+        
+        # Generate structure tree
+        find . -maxdepth 3 -type d | sort > actual-structure.txt
+        
+        # Compare with expected (if exists)
+        if [ -f ".bridge/expected-structure.txt" ]; then
+          diff -u .bridge/expected-structure.txt actual-structure.txt || (
+            echo "::warning::Structural drift detected"
+            echo "Expected structure differs from current structure"
+          )
+        else
+          echo "No baseline structure found, creating one"
+          cp actual-structure.txt .bridge/expected-structure.txt
+        fi
+    
+    - name: Create issue on drift
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: 'Meridian Alert: Structural Drift Detected',
+            body: 'Automated drift detection found changes to the Continuum_Overworld structure.',
+            labels: ['meridian', 'drift-alert', 'automated']
+          });
+
+# Weekly drift monitoring
+# Runs every Monday at 06:00 UTC
+---
+name: Meridian Weekly Drift Audit
+
+on:
+  schedule:
+    - cron: '0 6 * * MON'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  drift-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Run comprehensive validation
+      run: |
+        python3 The_Bridge/Scripts_Bootstrap/bridge-validate.py
+    
+    - name: Generate structure snapshot
+      run: |
+        find . -maxdepth 3 -type d | sort > .bridge/current-structure.txt
+        find . -name "*.md" -o -name "*.json" -o -name "*.py" | sort > .bridge/current-files.txt
+    
+    - name: Check for changes
+      id: changes
+      run: |
+        if [ -f ".bridge/baseline-structure.txt" ]; then
+          if ! diff -q .bridge/baseline-structure.txt .bridge/current-structure.txt > /dev/null; then
+            echo "structure_changed=true" >> $GITHUB_OUTPUT
+          fi
+        fi
+        
+        if [ -f ".bridge/baseline-files.txt" ]; then
+          if ! diff -q .bridge/baseline-files.txt .bridge/current-files.txt > /dev/null; then
+            echo "files_changed=true" >> $GITHUB_OUTPUT
+          fi
+        fi
+    
+    - name: Update baselines
+      run: |
+        cp .bridge/current-structure.txt .bridge/baseline-structure.txt
+        cp .bridge/current-files.txt .bridge/baseline-files.txt
+    
+    - name: Create drift report
+      if: steps.changes.outputs.structure_changed == 'true' || steps.changes.outputs.files_changed == 'true'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          let report = '# Meridian Drift Report\n\n';
+          report += `**Date**: ${new Date().toISOString().split('T')[0]}\n`;
+          report += `**Environment**: ${process.env.GITHUB_RUNNER_OS}\n\n`;
+          
+          if ('${{ steps.changes.outputs.structure_changed }}' === 'true') {
+            report += '## 📁 Structure Changes Detected\n\n';
+          }
+          
+          if ('${{ steps.changes.outputs.files_changed }}' === 'true') {
+            report += '## 📄 File Changes Detected\n\n';
+          }
+          
+          report += '## Recommended Actions\n';
+          report += '1. Review changes for compliance\n';
+          report += '2. Update documentation if needed\n';
+          report += '3. Validate naming conventions\n\n';
+          report += 'Generated by Meridian automated monitoring.';
+          
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: `Meridian Weekly Report - ${new Date().toISOString().split('T')[0]}`,
+            body: report,
+            labels: ['meridian', 'weekly-report', 'automated']
+          });

@@ -1,0 +1,9 @@
+{
+  "id": "ledger_agent",
+  "name": "Ledger Agent",
+  "domain": "Finance",
+  "status": "prototype",
+  "inputs": ["bank_webhook", "onchain_events"],
+  "outputs": ["ledger_json", "status_updates", "allocations_table"],
+  "linked_agents": ["buyer_trace_agent", "satellite_data_agent", "dashboard_agent"]
+}

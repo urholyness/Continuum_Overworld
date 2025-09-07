@@ -1,0 +1,27 @@
+# Global
+.DS_Store
+.env
+*.log
+node_modules/
+__pycache__/
+.venv/
+venv/
+*.pyc
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# WSL2
+*.sock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary
+*.tmp
+*.bak
+*.cache

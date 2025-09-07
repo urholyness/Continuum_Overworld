@@ -1,0 +1,27 @@
+name: Deploy to Amplify
+on:
+  push:
+    branches: [ "main", "dev" ]
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with: 
+        node-version: "20"
+    - run: npm ci
+    - run: npm run build
+      env:
+        NEXT_PUBLIC_SITE_ENV: ${{ github.ref_name == 'main' && 'prod' || 'staging' }}
+        NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+        NEXT_PUBLIC_CHAIN_ID: 11155111
+        ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+        LEDGER_CONTRACT_ADDRESS: ${{ secrets.LEDGER_CONTRACT_ADDRESS }}
+        COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
+        COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+    - name: Upload artifact (Amplify will build too if connected)
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-build
+        path: .next

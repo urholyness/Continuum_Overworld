@@ -1,0 +1,176 @@
+service: gsg-farm-ingest
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'sbx'}
+  region: ${opt:region, 'us-east-1'}
+  environment:
+    STAGE: ${self:provider.stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Query
+            - dynamodb:UpdateItem
+            - dynamodb:BatchWriteItem
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:*:table/readings
+            - arn:aws:dynamodb:${self:provider.region}:*:table/ops_events
+            - arn:aws:dynamodb:${self:provider.region}:*:table/farms
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+          Resource:
+            - arn:aws:s3:::gsg-data-curated/*
+            - arn:aws:s3:::gsg-web-assets/*
+        - Effect: Allow
+          Action:
+            - ssm:GetParameter
+            - ssm:PutParameter
+          Resource:
+            - arn:aws:ssm:${self:provider.region}:*:parameter/ACCU_LOCKEY_*
+        - Effect: Allow
+          Action:
+            - events:PutEvents
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - sns:Publish
+          Resource:
+            - arn:aws:sns:${self:provider.region}:*:gsg-${self:provider.stage}-ops-alerts
+
+plugins:
+  - serverless-plugin-typescript
+
+functions:
+  weatherIngest:
+    handler: src/weather_ingest/index.handler
+    timeout: 30
+    environment:
+      ACCUWEATHER_API_KEY: ${env:ACCUWEATHER_API_KEY}
+      FARM_ID: 2BH
+      FARM_LAT: "-0.5143"
+      FARM_LON: "35.2698"
+    events:
+      - schedule: rate(1 hour)
+
+  opsPost:
+    handler: src/api/ops_post.handler
+    timeout: 30
+    environment:
+      S3_BUCKET: gsg-web-assets
+      FARM_ID: 2BH
+    events:
+      - httpApi:
+          path: /ops
+          method: POST
+          authorizer:
+            type: jwt
+            identitySource: $request.header.Authorization
+            issuerUrl: https://cognito-idp.${self:provider.region}.amazonaws.com/${env:COGNITO_USER_POOL_ID}
+            audience:
+              - ${env:COGNITO_CLIENT_ID}
+
+  opsGet:
+    handler: src/api/ops_get.handler
+    timeout: 30
+    events:
+      - httpApi:
+          path: /farms/{farmId}/ops
+          method: GET
+
+  summaryGet:
+    handler: src/api/summary_get.handler
+    timeout: 30
+    environment:
+      FARM_POLYGON_GEOJSON: '{"type":"Feature","properties":{"farm_id":"2BH","name":"Two Butterflies Homestead"},"geometry":{"type":"Polygon","coordinates":[[[35.2648,-0.5193],[35.2748,-0.5193],[35.2748,-0.5093],[35.2648,-0.5093],[35.2648,-0.5193]]]}}'
+    events:
+      - httpApi:
+          path: /farms/{farmId}/summary
+          method: GET
+
+  readingsGet:
+    handler: src/api/readings_get.handler
+    timeout: 30
+    events:
+      - httpApi:
+          path: /farms/{farmId}/readings
+          method: GET
+
+  alerts:
+    handler: src/alerts/index.handler
+    timeout: 30
+    environment:
+      SNS_TOPIC_ARN: arn:aws:sns:${self:provider.region}:${aws:accountId}:gsg-${self:provider.stage}-ops-alerts
+      FARM_ID: 2BH
+    events:
+      - eventBridge:
+          pattern:
+            source:
+              - farm-ingest.weather
+            detail-type:
+              - weather_ingest_complete
+      - eventBridge:
+          pattern:
+            source:
+              - farm-ingest.satellite
+            detail-type:
+              - sat_ingest_complete
+      - schedule: rate(24 hours)
+
+resources:
+  Resources:
+    ReadingsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: readings
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
+    OpsEventsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ops_events
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
+    FarmsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: farms
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+    OpsAlertsTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: gsg-${self:provider.stage}-ops-alerts
+        DisplayName: Farm Operations Alerts

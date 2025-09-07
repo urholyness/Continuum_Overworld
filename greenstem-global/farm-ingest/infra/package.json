@@ -1,0 +1,25 @@
+{
+  "name": "@greenstem-global/farm-ingest-infra",
+  "version": "1.0.0",
+  "description": "Infrastructure as Code for 2BH Farm Dashboard",
+  "bin": {
+    "infra": "bin/infra.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "deploy:sbx": "cdk deploy --context env=sbx --require-approval never",
+    "deploy:prod": "cdk deploy --context env=prod"
+  },
+  "devDependencies": {
+    "@types/node": "20.8.0",
+    "aws-cdk": "^2.100.0",
+    "ts-node": "^10.9.1",
+    "typescript": "~5.2.2"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.100.0",
+    "constructs": "^10.0.0"
+  }
+}

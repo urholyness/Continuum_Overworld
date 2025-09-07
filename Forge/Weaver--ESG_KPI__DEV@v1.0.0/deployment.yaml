@@ -1,0 +1,6 @@
+deployment_scale: 3
+cloud: aws
+region: eu-central-1
+data_tier: Green
+secrets: [Aegis_Bridge_Context__DEV]
+bridge_context_api: https://<set-this-when-available>

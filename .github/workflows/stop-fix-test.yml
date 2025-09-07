@@ -1,0 +1,306 @@
+name: STOP→FIX→TEST Enforcement
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  check-incidents:
+    name: Check Active Incidents
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check for active incidents
+      id: incidents
+      run: |
+        if [ -f "Aegis/Incidents/ACTIVE" ]; then
+          INCIDENT_ID=$(cat Aegis/Incidents/ACTIVE)
+          echo "active_incident=$INCIDENT_ID" >> $GITHUB_OUTPUT
+          echo "has_incident=true" >> $GITHUB_OUTPUT
+          echo "⚠️ Active incident detected: $INCIDENT_ID"
+        else
+          echo "has_incident=false" >> $GITHUB_OUTPUT
+          echo "✅ No active incidents"
+        fi
+    
+    - name: Validate incident has test
+      if: steps.incidents.outputs.has_incident == 'true'
+      run: |
+        INCIDENT_ID="${{ steps.incidents.outputs.active_incident }}"
+        DATE=$(echo $INCIDENT_ID | grep -oP '\d{8}')
+        
+        # Check for corresponding test file
+        TEST_PATTERN="test_*_incident_${DATE}.py"
+        if ! find tests -name "$TEST_PATTERN" -type f | grep -q .; then
+          echo "❌ Active incident $INCIDENT_ID lacks a failing test!"
+          echo "Every incident MUST have a corresponding test that reproduces the issue."
+          exit 1
+        fi
+        
+        echo "✅ Found test for incident $INCIDENT_ID"
+
+  check-bypass-flags:
+    name: Check for Bypass Flags
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Scan for bypass flags
+      run: |
+        echo "Scanning for prohibited bypass flags..."
+        
+        BYPASS_PATTERNS="skip_validation|ignore_consensus|bypass_checks|force_continue"
+        
+        # Check JSON files
+        if grep -r "$BYPASS_PATTERNS" --include="*.json" --exclude-dir=tests .; then
+          echo "❌ Bypass flags detected in JSON configs!"
+          echo "Production configs must not contain bypass flags."
+          exit 1
+        fi
+        
+        # Check Python files (excluding tests)
+        if grep -r "$BYPASS_PATTERNS" --include="*.py" --exclude-dir=tests --exclude="test_*.py" .; then
+          echo "❌ Bypass flags detected in Python code!"
+          echo "Production code must not contain bypass flags."
+          exit 1
+        fi
+        
+        echo "✅ No bypass flags found"
+
+  validate-fixes:
+    name: Validate Fix Compliance
+    runs-on: ubuntu-latest
+    needs: [check-incidents]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Get full history for diff
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Check fix scope
+      if: needs.check-incidents.outputs.has_incident == 'true'
+      run: |
+        # Get changed files
+        CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD)
+        
+        # Extract stage from incident
+        if [ -f "Aegis/Incidents/ACTIVE" ]; then
+          INCIDENT_ID=$(cat Aegis/Incidents/ACTIVE)
+          INCIDENT_FILE="Aegis/Incidents/${INCIDENT_ID}.md"
+          
+          if [ -f "$INCIDENT_FILE" ]; then
+            STAGE=$(grep "Stage:" "$INCIDENT_FILE" | cut -d: -f2 | xargs)
+            echo "Incident stage: $STAGE"
+            
+            # Check if changes are scoped to the stage
+            for file in $CHANGED_FILES; do
+              if [[ ! "$file" =~ "$STAGE" ]] && [[ ! "$file" =~ "tests/" ]] && [[ ! "$file" =~ "Aegis/Incidents" ]]; then
+                echo "⚠️ Warning: Changes detected outside of stage $STAGE"
+                echo "  File: $file"
+                echo "  Ensure fixes are scoped to the owning stage."
+              fi
+            done
+          fi
+        fi
+    
+    - name: Run structure validation
+      run: |
+        python3 The_Bridge/Scripts_Bootstrap/bridge-validate.py
+
+  test-incident-fixes:
+    name: Test Incident Fixes
+    runs-on: ubuntu-latest
+    needs: [check-incidents, check-bypass-flags, validate-fixes]
+    if: needs.check-incidents.outputs.has_incident == 'true'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install test dependencies
+      run: |
+        pip install pytest pytest-cov
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        fi
+    
+    - name: Run incident tests
+      run: |
+        INCIDENT_ID="${{ needs.check-incidents.outputs.active_incident }}"
+        DATE=$(echo $INCIDENT_ID | grep -oP '\d{8}')
+        
+        # Find and run the incident test
+        TEST_FILE=$(find tests -name "test_*_incident_${DATE}.py" -type f | head -1)
+        
+        if [ -n "$TEST_FILE" ]; then
+          echo "Running incident test: $TEST_FILE"
+          pytest "$TEST_FILE" -v
+          
+          if [ $? -eq 0 ]; then
+            echo "✅ Incident test passes - fix appears to work!"
+          else
+            echo "❌ Incident test still failing - fix incomplete"
+            exit 1
+          fi
+        else
+          echo "❌ No test found for incident $INCIDENT_ID"
+          exit 1
+        fi
+
+  freeze-check:
+    name: Check Stage Freeze Status
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Check for frozen stages
+      id: freeze
+      run: |
+        # Look for freeze markers
+        FROZEN_STAGES=""
+        
+        # Check for freeze.json files
+        for freeze_file in $(find . -name "freeze.json" -type f); do
+          STAGE_DIR=$(dirname "$freeze_file")
+          STAGE_NAME=$(basename "$STAGE_DIR")
+          FROZEN_STAGES="$FROZEN_STAGES $STAGE_NAME"
+          
+          echo "⚠️ Stage frozen: $STAGE_NAME"
+          cat "$freeze_file"
+        done
+        
+        # Check for .freeze-* markers
+        for freeze_marker in $(find . -name ".freeze-*" -type f); do
+          STAGE=$(basename "$freeze_marker" | sed 's/.freeze-//')
+          FROZEN_STAGES="$FROZEN_STAGES $STAGE"
+          echo "⚠️ Stage frozen: $STAGE"
+        done
+        
+        if [ -n "$FROZEN_STAGES" ]; then
+          echo "frozen_stages=$FROZEN_STAGES" >> $GITHUB_OUTPUT
+          echo "has_frozen=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_frozen=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Comment on PR about frozen stages
+      if: steps.freeze.outputs.has_frozen == 'true'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const stages = '${{ steps.freeze.outputs.frozen_stages }}'.trim();
+          const body = `
+          ⚠️ **Frozen Stages Detected**
+          
+          The following stages are currently frozen due to active incidents:
+          ${stages.split(' ').map(s => `- ${s}`).join('\n')}
+          
+          Please ensure:
+          1. The incident has a corresponding test
+          2. The fix is scoped to the owning stage
+          3. No bypass flags are present
+          4. Tests pass before unfreezing
+          
+          Use the STOP→FIX→TEST protocol to resolve.
+          `;
+          
+          github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            body: body
+          });
+
+  validate-resolution:
+    name: Validate Incident Resolution
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [test-incident-fixes]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Check resolution criteria
+      run: |
+        if [ -f "Aegis/Incidents/ACTIVE" ]; then
+          echo "⚠️ Incident still marked as ACTIVE after merge"
+          echo "Consider closing the incident if tests pass"
+        fi
+        
+        # Check for RESOLVED incidents
+        RESOLVED_COUNT=$(grep -l "Status.*RESOLVED" Aegis/Incidents/*.md 2>/dev/null | wc -l || echo 0)
+        echo "📊 Resolved incidents: $RESOLVED_COUNT"
+        
+        # Update metrics
+        if [ ! -f "Aegis/Incidents/metrics.json" ]; then
+          echo "[]" > Aegis/Incidents/metrics.json
+        fi
+
+  summary:
+    name: STOP→FIX→TEST Summary
+    runs-on: ubuntu-latest
+    needs: [check-incidents, check-bypass-flags, validate-fixes, test-incident-fixes, freeze-check]
+    if: always()
+    
+    steps:
+    - name: Generate summary
+      run: |
+        echo "## STOP→FIX→TEST Protocol Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ needs.check-incidents.result }}" == "success" ]; then
+          echo "✅ Incident checks passed" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Incident checks failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.check-bypass-flags.result }}" == "success" ]; then
+          echo "✅ No bypass flags detected" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Bypass flags found" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.validate-fixes.result }}" == "success" ]; then
+          echo "✅ Fix validation passed" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Fix validation failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        if [ "${{ needs.test-incident-fixes.result }}" == "success" ]; then
+          echo "✅ Incident tests passed" >> $GITHUB_STEP_SUMMARY
+        elif [ "${{ needs.test-incident-fixes.result }}" == "skipped" ]; then
+          echo "⏭️ No incident tests to run" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Incident tests failed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "*STOP→FIX→TEST Protocol enforced by The_Bridge*" >> $GITHUB_STEP_SUMMARY

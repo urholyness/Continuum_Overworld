@@ -1,0 +1,4 @@
+mode: real
+esg_docs:
+  companies: ["Lufthansa", "Air France-KLM", "Maersk", "Nestlé", "Unilever"]
+  years: [2023]

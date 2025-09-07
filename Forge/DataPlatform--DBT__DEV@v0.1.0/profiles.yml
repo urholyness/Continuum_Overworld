@@ -1,0 +1,38 @@
+continuum_overworld:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /project/Continuum_Overworld/Lake/warehouse.duckdb
+      threads: 4
+      extensions:
+        - httpfs
+        - parquet
+      settings:
+        s3_endpoint: "http://minio:9000"
+        s3_access_key_id: "minioadmin"
+        s3_secret_access_key: "minioadmin"
+        s3_region: "us-east-1"
+        s3_url_style: "path"
+        s3_use_ssl: false
+        
+    # Future production targets
+    prod_trino:
+      type: trino
+      host: trino.example.com
+      port: 8080
+      user: dbt_user
+      catalog: hive
+      schema: continuum_overworld
+      threads: 8
+      
+    prod_snowflake:
+      type: snowflake
+      account: your_account
+      user: dbt_user
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: dbt_role
+      database: continuum_overworld
+      warehouse: dbt_warehouse
+      schema: dbt
+      threads: 8

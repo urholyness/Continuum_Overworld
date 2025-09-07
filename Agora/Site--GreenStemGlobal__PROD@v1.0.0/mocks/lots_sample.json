@@ -1,0 +1,15 @@
+[{
+  "lot_id": "GSG-KE-2025-09-0007",
+  "crop": "French beans - Star 2008",
+  "origin": { "farm": "2 Butterflies", "geo": [35.287, 0.523] },
+  "events": [
+    {"ts": "2025-09-02T08:40:00Z", "type": "harvest", "by": "field_team_A"},
+    {"ts": "2025-09-02T13:10:00Z", "type": "packhouse_intake", "temp_c": 13.8},
+    {"ts": "2025-09-02T14:05:00Z", "type": "pre-cool", "target_temp_c": 6},
+    {"ts": "2025-09-03T07:10:00Z", "type": "export_clearance", "docs": ["KEPHIS","GlobalG.A.P."]},
+    {"ts": "2025-09-03T11:25:00Z", "type": "airfreight", "awb": "ET1234567890"}
+  ],
+  "quality": {"grades": {"extra_fine": 62, "super_fine": 28, "fine": 10}},
+  "indices": {"ndvi": 0.71, "ndwi": 0.14},
+  "co2e_kg": 12.4
+}]
