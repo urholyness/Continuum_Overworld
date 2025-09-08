@@ -8,8 +8,8 @@ interface Checkpoint {
   ref: string;
   amount: string;
   currency: string;
-  tx: string;
-  ts: string;
+  txHash: string;
+  timestamp: string;
 }
 
 export default function BlockchainBreadcrumbs() {
@@ -28,7 +28,7 @@ export default function BlockchainBreadcrumbs() {
       }
 
       try {
-        const data = await getRecentCheckpoints(contractAddress);
+        const data = await getRecentCheckpoints(5);
         setCheckpoints(data);
       } catch (err) {
         setError("Failed to fetch blockchain data");
@@ -93,7 +93,7 @@ export default function BlockchainBreadcrumbs() {
                 {parseInt(checkpoint.amount).toLocaleString()} {checkpoint.currency}
               </div>
               <div className="text-xs text-neutral-500">
-                {new Date(checkpoint.ts).toLocaleDateString()}
+                {new Date(checkpoint.timestamp).toLocaleDateString()}
               </div>
             </div>
           </div>
