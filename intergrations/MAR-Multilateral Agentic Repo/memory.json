@@ -1,0 +1,44 @@
+{
+  "project": "Nyxion",
+  "last_updated": "2025-08-08",
+  "critical_issues": {
+    "wsl2_network_binding": {
+      "status": "BLOCKED",
+      "description": "FastAPI/Uvicorn fails to bind to network interfaces in WSL2",
+      "root_cause": "WSL2 + ASGI server incompatibility",
+      "solutions": [
+        "Migrate to Windows host execution",
+        "Use Docker containerization",
+        "Downgrade Python 3.13 to 3.11"
+      ],
+      "documented_in": "/rankings/BACKEND_NETWORKING_ISSUE.md"
+    }
+  },
+  "rules": {
+    "no_mocks": "CRITICAL - No mock data, demo modes, or simulated processes",
+    "auth_disabled": "SKIP_AUTH=true until core features work",
+    "debugging": "Follow STOP-FIX-VERIFY methodology from DEBUGGING_GUARDRAILS.md"
+  },
+  "current_state": {
+    "backend": {
+      "entry_point": "main_working.py",
+      "status": "Cannot bind in WSL2",
+      "fallbacks": "Mock routers if imports fail"
+    },
+    "frontend": {
+      "status": "Running",
+      "shows_errors": "Clear messages when backend unavailable"
+    },
+    "features": {
+      "brand_buzz": "Implemented, no mocks",
+      "survey_studio": "Implemented, no mocks",
+      "analysis_canvas": "Pending implementation"
+    }
+  },
+  "technical_details": {
+    "environment": "WSL2 on Windows 11",
+    "python": "3.13 (incompatible with WSL2 networking)",
+    "framework": "FastAPI with Uvicorn",
+    "database": "PostgreSQL with async SQLAlchemy"
+  }
+}

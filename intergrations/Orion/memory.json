@@ -1,0 +1,34 @@
+{
+  "project": "Orion",
+  "last_updated": "2025-07-28T14:00:07Z",
+  "context": [
+    "Multi-agent AI automation system for business operations",
+    "Farm 5.0 agent system with customer support, sales, finance, and analytics agents",
+    "Built with Python FastAPI backend and React TypeScript frontend",
+    "Uses OpenAI and Anthropic Claude APIs for AI capabilities",
+    "Implements Gmail API for email management",
+    "PostgreSQL database with structured agent workflows"
+  ],
+  "notes": [
+    "Agent system has built-in state management with AgentStatus enum",
+    "Action logging system with timestamps and approval workflows",
+    "Task scheduling with priority queues implemented",
+    "Agent lifecycle management through BaseAgent class",
+    "Comprehensive test suite with pytest and httpx",
+    "Dashboard components for monitoring agent activities",
+    "MCP integration completed - memory framework active",
+    "Connected to global MCP system for persistent memory management"
+  ],
+  "current_status": "Active development with full agent infrastructure",
+  "key_files": [
+    "core/base_agent.py",
+    "core/task_scheduler.py", 
+    "api/main.py",
+    "dashboard/components/AgentDashboard.tsx"
+  ],
+  "dependencies": {
+    "backend": ["fastapi", "sqlalchemy", "postgresql", "openai", "anthropic"],
+    "frontend": ["react", "typescript"],
+    "testing": ["pytest", "httpx"]
+  }
+}

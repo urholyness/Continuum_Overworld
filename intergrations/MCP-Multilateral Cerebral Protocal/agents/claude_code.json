@@ -1,0 +1,119 @@
+{
+  "agent": "Claude Code",
+  "updated": "2025-07-29T16:20:00Z",
+  "instructions": [
+    "Load memory from MCP/agents/claude_code.json and [project]/memory.json at session start.",
+    "Update memory to both files before session end.",
+    "Summarize memory if token length is exceeded.",
+    "Log session summary to MCP/logs/."
+  ],
+  "preferences": {
+    "auto_code_review": true,
+    "root_task_handling": "on_confirm",
+    "security_first": true,
+    "preserve_environments": true
+  },
+  "active_projects": ["Orion", "Stat-R_AI", "Vifungu", "Rank_AI"],
+  "project_contexts": {
+    "Orion": {
+      "type": "multi_agent_system",
+      "tech_stack": ["Python", "FastAPI", "React", "TypeScript", "PostgreSQL"],
+      "apis": ["OpenAI", "Anthropic", "Gmail"],
+      "status": "active_development"
+    },
+    "Stat-R_AI": {
+      "type": "esg_analytics_platform", 
+      "tech_stack": ["Python", "Streamlit", "PostgreSQL", "SQLite"],
+      "apis": ["Google_Document_AI", "Google_Gemini", "OpenAI"],
+      "status": "production_ready"
+    },
+    "Vifungu": {
+      "type": "api_key_storage",
+      "tech_stack": ["markdown", "environment_variables"],
+      "security_status": "secured_with_env_vars",
+      "status": "security_audit_completed"
+    },
+    "Rank_AI": {
+      "type": "pure_ai_esg_pipeline",
+      "tech_stack": ["Python", "OpenAI", "Google_AI", "Anthropic"],
+      "architecture": "six_stage_ai_pipeline",
+      "status": "stage_2_complete_mar_integration_strategy_confirmed",
+      "strict_rule": "ZERO_REGEX_ZERO_TRADITIONAL_NLP", 
+      "current_stage": "03_document_parsing_ready_langchain_implementation",
+      "test_companies": ["Bank_of_America", "Ford"],
+      "stage1_performance": {
+        "discovery_results": "BoA: 5 results (95% confidence), Ford: 4 results (95% confidence)",
+        "ai_quality": "excellent_pure_ai_reasoning",
+        "urls_saved": 4,
+        "save_function": "working_perfectly"
+      },
+      "stage2_implementation": {
+        "multi_ai_system": "OpenAI + Gemini + Document AI consensus validation",
+        "architecture": "ai_multi_validator.py + ai_report_downloader.py",
+        "status": "COMPLETED_WITH_MIXED_RESULTS",
+        "performance_results": {
+          "document_ai": "88% (best performer)",
+          "multi_ai_consensus": "48.2% average",
+          "openai_gpt4": "0% (PDF extraction issues)",
+          "gemini": "0% (API connectivity issues)"
+        },
+        "files_validated": ["bank-of-america-2024-esg-report.pdf", "ford-2024-esg-report.pdf"],
+        "production_insights": {
+          "working_methods": ["document_ai", "multi_ai_consensus"],
+          "failed_methods": ["openai", "gemini"],
+          "recommended_approach": "Use Document AI as primary, consensus as backup"
+        },
+        "next_upgrade": "Implement LangChain/LangGraph for production-grade multi-agent workflows"
+      },
+      "mar_integration_strategy": {
+        "approach": "complete_stages_then_convert_to_agents",
+        "timeline": "5_weeks_total",
+        "conversion_method": "conversion_instructions_per_stage",
+        "strategic_goal": "transform_single_purpose_pipeline_to_multi_agent_platform",
+        "mcp_enhancement": "rename_to_multilateral_cerebral_protocol_with_agent_coordination",
+        "expected_benefits": [
+          "10x_scalability_through_agent_orchestration",
+          "ui_cockpit_for_workflow_management", 
+          "cross_project_memory_coordination",
+          "enterprise_grade_multi_agent_ecosystem"
+        ]
+      },
+      "vs_code_ready": true,
+      "dependency_requirements": ["PyPDF2", "pdfplumber", "google-generativeai", "google-cloud-documentai"]
+    }
+  },
+  "environment_tracking": {
+    "virtual_environments": [
+      "Stat-R_AI/venv",
+      "Stat-R_AI/esg_kpi_mvp/venv",
+      "Stat-R_AI/ForClaude/esg_kpi_mvp_backup_07.17/venv"
+    ],
+    "databases": [
+      "Stat-R_AI/esg_kpi_mvp/esg_kpi.db",
+      "Stat-R_AI/esg_kpi_mvp/src/esg_kpi.db"
+    ],
+    "config_files": [
+      "Orion/.env.example",
+      "Stat-R_AI/esg_kpi_mvp/.env",
+      "Stat-R_AI/esg_kpi_mvp/config/greenwashing_config.json",
+      "Vifungu/.env",
+      "Vifungu/.env.example"
+    ]
+  },
+  "security_items": [
+    {
+      "priority": "resolved",
+      "item": "Vifungu/Keys.md GitHub API key security issue",
+      "action_taken": "moved_to_env_variables",
+      "resolution_date": "2025-07-28T14:00:07Z",
+      "files_created": [".env", ".env.example", ".gitignore"]
+    }
+  ],
+  "mcp_status": {
+    "setup_completed": "2025-07-28T14:00:07Z",
+    "core_components": ["directory_structure", "global_memory", "project_memories", "documentation", "sync_script"],
+    "security_audit": "completed",
+    "ready_for_testing": true
+  },
+  "session_log": []
+}

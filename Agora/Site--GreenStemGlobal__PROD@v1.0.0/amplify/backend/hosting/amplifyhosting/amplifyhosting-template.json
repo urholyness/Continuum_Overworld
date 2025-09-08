@@ -1,0 +1,76 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Hosting resource stack for Site GreenStem Global",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "AmplifyApp": {
+      "Type": "AWS::Amplify::App",
+      "Properties": {
+        "Name": {
+          "Fn::Sub": [
+            "SiteGreenStemGlobalP-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        },
+        "Platform": "WEB_COMPUTE",
+        "BuildSpec": "version: 1\nfrontend:\n  phases:\n    preBuild:\n      commands:\n        - npm ci\n    build:\n      commands:\n        - npm run build\n  artifacts:\n    baseDirectory: .next\n    files:\n      - '**/*'\n  cache:\n    paths:\n      - node_modules/**/*",
+        "EnvironmentVariables": [
+          {
+            "Name": "NEXT_PUBLIC_CHAIN_ID",
+            "Value": "11155111"
+          },
+          {
+            "Name": "NEXT_PUBLIC_SITE_ENV",
+            "Value": "staging"
+          }
+        ]
+      }
+    },
+    "AmplifyBranch": {
+      "Type": "AWS::Amplify::Branch",
+      "Properties": {
+        "AppId": {
+          "Fn::GetAtt": ["AmplifyApp", "AppId"]
+        },
+        "BranchName": {
+          "Ref": "env"
+        },
+        "EnableAutoBuild": false
+      }
+    }
+  },
+  "Outputs": {
+    "AppId": {
+      "Description": "Amplify App ID",
+      "Value": {
+        "Fn::GetAtt": ["AmplifyApp", "AppId"]
+      }
+    },
+    "AppUrl": {
+      "Description": "Amplify App URL",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Fn::GetAtt": ["AmplifyBranch", "BranchName"]
+            },
+            ".",
+            {
+              "Fn::GetAtt": ["AmplifyApp", "DefaultDomain"]
+            }
+          ]
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,3364 @@
+[
+  {
+    "name": "FullAIESGExtractorAgent",
+    "category": "extraction",
+    "source_pattern": "FullAIESGExtractor",
+    "file_path": "agents\\extraction\\fullaiesgextractoragent.py",
+    "dependencies": [
+      "aiohttp",
+      "asyncio",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_pdf_textAgent",
+    "category": "extraction",
+    "source_pattern": "extract_pdf_text",
+    "file_path": "agents\\extraction\\extract_pdf_textagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "GeneratedAgentAgent",
+    "category": "automation",
+    "source_pattern": "GeneratedAgent",
+    "file_path": "agents\\automation\\generatedagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "RealAgentGeneratorAgent",
+    "category": "automation",
+    "source_pattern": "RealAgentGenerator",
+    "file_path": "agents\\automation\\realagentgeneratoragent.py",
+    "dependencies": [
+      "requests",
+      "httpx",
+      "aiohttp",
+      "pandas",
+      "numpy",
+      "polars",
+      "openai",
+      "anthropic",
+      "langchain",
+      "beautifulsoup4",
+      "selenium",
+      "sqlalchemy",
+      "psycopg2",
+      "pydantic",
+      "dataclasses",
+      "asyncio",
+      "threading",
+      "logging",
+      "json",
+      "yaml"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_load_agent_templatesAgent",
+    "category": "automation",
+    "source_pattern": "_load_agent_templates",
+    "file_path": "agents\\automation\\_load_agent_templatesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "scan_projectsAgent",
+    "category": "utility",
+    "source_pattern": "scan_projects",
+    "file_path": "agents\\utility\\scan_projectsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_analyze_patternAgent",
+    "category": "processing",
+    "source_pattern": "_analyze_pattern",
+    "file_path": "agents\\processing\\_analyze_patternagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_dependenciesAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_dependencies",
+    "file_path": "agents\\extraction\\_extract_dependenciesagent.py",
+    "dependencies": [
+      "requests",
+      "httpx",
+      "aiohttp",
+      "pandas",
+      "numpy",
+      "polars",
+      "openai",
+      "anthropic",
+      "langchain",
+      "beautifulsoup4",
+      "selenium",
+      "sqlalchemy",
+      "psycopg2",
+      "pydantic",
+      "dataclasses",
+      "asyncio",
+      "threading",
+      "logging",
+      "json",
+      "yaml"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_core_logicAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_core_logic",
+    "file_path": "agents\\extraction\\_extract_core_logicagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AgentStatusAgent",
+    "category": "automation",
+    "source_pattern": "AgentStatus",
+    "file_path": "agents\\automation\\agentstatusagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "BaseAgentAgent",
+    "category": "automation",
+    "source_pattern": "BaseAgent",
+    "file_path": "agents\\automation\\baseagentagent.py",
+    "dependencies": [
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "EmailManagementAgentAgent",
+    "category": "automation",
+    "source_pattern": "EmailManagementAgent",
+    "file_path": "agents\\automation\\emailmanagementagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AgentManagerAgent",
+    "category": "automation",
+    "source_pattern": "AgentManager",
+    "file_path": "agents\\automation\\agentmanageragent.py",
+    "dependencies": [
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SalesOutreachAgentAgent",
+    "category": "automation",
+    "source_pattern": "SalesOutreachAgent",
+    "file_path": "agents\\automation\\salesoutreachagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "MarketResearchAgentAgent",
+    "category": "search",
+    "source_pattern": "MarketResearchAgent",
+    "file_path": "agents\\search\\marketresearchagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "CustomerSupportAgentAgent",
+    "category": "automation",
+    "source_pattern": "CustomerSupportAgent",
+    "file_path": "agents\\automation\\customersupportagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "FinanceManagementAgentAgent",
+    "category": "automation",
+    "source_pattern": "FinanceManagementAgent",
+    "file_path": "agents\\automation\\financemanagementagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "DataAnalyticsAgentAgent",
+    "category": "automation",
+    "source_pattern": "DataAnalyticsAgent",
+    "file_path": "agents\\automation\\dataanalyticsagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "GrowthStrategyAgentAgent",
+    "category": "automation",
+    "source_pattern": "GrowthStrategyAgent",
+    "file_path": "agents\\automation\\growthstrategyagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "EmailProcessRequestAgent",
+    "category": "processing",
+    "source_pattern": "EmailProcessRequest",
+    "file_path": "agents\\processing\\emailprocessrequestagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AgentConfigAgent",
+    "category": "automation",
+    "source_pattern": "AgentConfig",
+    "file_path": "agents\\automation\\agentconfigagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ConfigAgent",
+    "category": "utility",
+    "source_pattern": "Config",
+    "file_path": "agents\\utility\\configagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_load_agent_configsAgent",
+    "category": "automation",
+    "source_pattern": "_load_agent_configs",
+    "file_path": "agents\\automation\\_load_agent_configsagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "AIModelManagerAgent",
+    "category": "utility",
+    "source_pattern": "AIModelManager",
+    "file_path": "agents\\utility\\aimodelmanageragent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "anthropic",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_regex_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "_regex_extraction",
+    "file_path": "agents\\extraction\\_regex_extractionagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SearchResultAgent",
+    "category": "search",
+    "source_pattern": "SearchResult",
+    "file_path": "agents\\search\\searchresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AISearchEngineAgent",
+    "category": "search",
+    "source_pattern": "AISearchEngine",
+    "file_path": "agents\\search\\aisearchengineagent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "discover_esg_reportsAgent",
+    "category": "search",
+    "source_pattern": "discover_esg_reports",
+    "file_path": "agents\\search\\discover_esg_reportsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_ai_generate_search_strategiesAgent",
+    "category": "search",
+    "source_pattern": "_ai_generate_search_strategies",
+    "file_path": "agents\\search\\_ai_generate_search_strategiesagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_execute_ai_search_strategyAgent",
+    "category": "search",
+    "source_pattern": "_execute_ai_search_strategy",
+    "file_path": "agents\\search\\_execute_ai_search_strategyagent.py",
+    "dependencies": [
+      "requests",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_ai_evaluate_search_resultAgent",
+    "category": "search",
+    "source_pattern": "_ai_evaluate_search_result",
+    "file_path": "agents\\search\\_ai_evaluate_search_resultagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_ai_validate_search_resultsAgent",
+    "category": "search",
+    "source_pattern": "_ai_validate_search_results",
+    "file_path": "agents\\search\\_ai_validate_search_resultsagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_fallback_evaluate_search_resultAgent",
+    "category": "search",
+    "source_pattern": "_fallback_evaluate_search_result",
+    "file_path": "agents\\search\\_fallback_evaluate_search_resultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "MultiAIValidatorAgent",
+    "category": "utility",
+    "source_pattern": "MultiAIValidator",
+    "file_path": "agents\\utility\\multiaivalidatoragent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "asyncio",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_file_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_file_content",
+    "file_path": "agents\\extraction\\_extract_file_contentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_pdf_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_pdf_content",
+    "file_path": "agents\\extraction\\_extract_pdf_contentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_html_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_html_content",
+    "file_path": "agents\\extraction\\_extract_html_contentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_generate_consensusAgent",
+    "category": "utility",
+    "source_pattern": "_generate_consensus",
+    "file_path": "agents\\utility\\_generate_consensusagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AIReportDownloaderAgent",
+    "category": "utility",
+    "source_pattern": "AIReportDownloader",
+    "file_path": "agents\\utility\\aireportdownloaderagent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "asyncio",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_pdf_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_pdf_content",
+    "file_path": "agents\\extraction\\_extract_pdf_contentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_html_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_html_content",
+    "file_path": "agents\\extraction\\_extract_html_contentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ArchitectureDemoAgent",
+    "category": "utility",
+    "source_pattern": "ArchitectureDemo",
+    "file_path": "agents\\utility\\architecturedemoagent.py",
+    "dependencies": [
+      "langchain",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_content_extraction_agentAgent",
+    "category": "extraction",
+    "source_pattern": "_content_extraction_agent",
+    "file_path": "agents\\extraction\\_content_extraction_agentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_table_extraction_agentAgent",
+    "category": "extraction",
+    "source_pattern": "_table_extraction_agent",
+    "file_path": "agents\\extraction\\_table_extraction_agentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_kpi_extraction_agentAgent",
+    "category": "extraction",
+    "source_pattern": "_kpi_extraction_agent",
+    "file_path": "agents\\extraction\\_kpi_extraction_agentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_documentAgent",
+    "category": "processing",
+    "source_pattern": "process_document",
+    "file_path": "agents\\processing\\process_documentagent.py",
+    "dependencies": [
+      "langchain"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "LangChainESGParserAgent",
+    "category": "extraction",
+    "source_pattern": "LangChainESGParser",
+    "file_path": "agents\\extraction\\langchainesgparseragent.py",
+    "dependencies": [
+      "openai",
+      "langchain",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_build_processing_graphAgent",
+    "category": "processing",
+    "source_pattern": "_build_processing_graph",
+    "file_path": "agents\\processing\\_build_processing_graphagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_content_nodeAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_content_node",
+    "file_path": "agents\\extraction\\_extract_content_nodeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_table_extraction_nodeAgent",
+    "category": "extraction",
+    "source_pattern": "_table_extraction_node",
+    "file_path": "agents\\extraction\\_table_extraction_nodeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_kpi_extraction_nodeAgent",
+    "category": "extraction",
+    "source_pattern": "_kpi_extraction_node",
+    "file_path": "agents\\extraction\\_kpi_extraction_nodeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_kpis_from_tablesAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_kpis_from_tables",
+    "file_path": "agents\\extraction\\_extract_kpis_from_tablesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_kpis_from_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_kpis_from_content",
+    "file_path": "agents\\extraction\\_extract_kpis_from_contentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_pdf_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_pdf_content",
+    "file_path": "agents\\extraction\\_extract_pdf_contentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_documentAgent",
+    "category": "processing",
+    "source_pattern": "process_document",
+    "file_path": "agents\\processing\\process_documentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SimpleESGParserAgent",
+    "category": "extraction",
+    "source_pattern": "SimpleESGParser",
+    "file_path": "agents\\extraction\\simpleesgparseragent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_content_agentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_content_agent",
+    "file_path": "agents\\extraction\\_extract_content_agentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_table_extraction_agentAgent",
+    "category": "extraction",
+    "source_pattern": "_table_extraction_agent",
+    "file_path": "agents\\extraction\\_table_extraction_agentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_kpi_extraction_agentAgent",
+    "category": "extraction",
+    "source_pattern": "_kpi_extraction_agent",
+    "file_path": "agents\\extraction\\_kpi_extraction_agentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_pdf_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_pdf_content",
+    "file_path": "agents\\extraction\\_extract_pdf_contentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_documentAgent",
+    "category": "processing",
+    "source_pattern": "process_document",
+    "file_path": "agents\\processing\\process_documentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "KPIExtractionResultAgent",
+    "category": "extraction",
+    "source_pattern": "KPIExtractionResult",
+    "file_path": "agents\\extraction\\kpiextractionresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGExtractionStateAgent",
+    "category": "extraction",
+    "source_pattern": "ESGExtractionState",
+    "file_path": "agents\\extraction\\esgextractionstateagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AIKPIExtractorAgent",
+    "category": "extraction",
+    "source_pattern": "AIKPIExtractor",
+    "file_path": "agents\\extraction\\aikpiextractoragent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "anthropic",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpisAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis",
+    "file_path": "agents\\extraction\\extract_kpisagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_from_tablesAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_from_tables",
+    "file_path": "agents\\extraction\\_extract_from_tablesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_from_contentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_from_content",
+    "file_path": "agents\\extraction\\_extract_from_contentagent.py",
+    "dependencies": [
+      "openai",
+      "anthropic"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_numeric_from_rowAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_numeric_from_row",
+    "file_path": "agents\\extraction\\_extract_numeric_from_rowagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_ai_extract_single_kpiAgent",
+    "category": "extraction",
+    "source_pattern": "_ai_extract_single_kpi",
+    "file_path": "agents\\extraction\\_ai_extract_single_kpiagent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "anthropic",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "EnhancedValidatorAgent",
+    "category": "utility",
+    "source_pattern": "EnhancedValidator",
+    "file_path": "agents\\utility\\enhancedvalidatoragent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_load_configAgent",
+    "category": "utility",
+    "source_pattern": "_load_config",
+    "file_path": "agents\\utility\\_load_configagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SalesOutreachAgentAgent",
+    "category": "automation",
+    "source_pattern": "SalesOutreachAgent",
+    "file_path": "agents\\automation\\salesoutreachagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "MarketResearchAgentAgent",
+    "category": "search",
+    "source_pattern": "MarketResearchAgent",
+    "file_path": "agents\\search\\marketresearchagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "CustomerSupportAgentAgent",
+    "category": "automation",
+    "source_pattern": "CustomerSupportAgent",
+    "file_path": "agents\\automation\\customersupportagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "FinanceManagementAgentAgent",
+    "category": "automation",
+    "source_pattern": "FinanceManagementAgent",
+    "file_path": "agents\\automation\\financemanagementagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "DataAnalyticsAgentAgent",
+    "category": "automation",
+    "source_pattern": "DataAnalyticsAgent",
+    "file_path": "agents\\automation\\dataanalyticsagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "GrowthStrategyAgentAgent",
+    "category": "automation",
+    "source_pattern": "GrowthStrategyAgent",
+    "file_path": "agents\\automation\\growthstrategyagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "EmailProcessRequestAgent",
+    "category": "processing",
+    "source_pattern": "EmailProcessRequest",
+    "file_path": "agents\\processing\\emailprocessrequestagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AgentStatusAgent",
+    "category": "automation",
+    "source_pattern": "AgentStatus",
+    "file_path": "agents\\automation\\agentstatusagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "BaseAgentAgent",
+    "category": "automation",
+    "source_pattern": "BaseAgent",
+    "file_path": "agents\\automation\\baseagentagent.py",
+    "dependencies": [
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "EmailManagementAgentAgent",
+    "category": "automation",
+    "source_pattern": "EmailManagementAgent",
+    "file_path": "agents\\automation\\emailmanagementagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AgentManagerAgent",
+    "category": "automation",
+    "source_pattern": "AgentManager",
+    "file_path": "agents\\automation\\agentmanageragent.py",
+    "dependencies": [
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "AgentConfigAgent",
+    "category": "automation",
+    "source_pattern": "AgentConfig",
+    "file_path": "agents\\automation\\agentconfigagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ConfigAgent",
+    "category": "utility",
+    "source_pattern": "Config",
+    "file_path": "agents\\utility\\configagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_load_agent_configsAgent",
+    "category": "automation",
+    "source_pattern": "_load_agent_configs",
+    "file_path": "agents\\automation\\_load_agent_configsagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "TestCurveSearchingAgent",
+    "category": "search",
+    "source_pattern": "TestCurveSearching",
+    "file_path": "agents\\search\\testcurvesearchingagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SubprocessErrorAgent",
+    "category": "processing",
+    "source_pattern": "SubprocessError",
+    "file_path": "agents\\processing\\subprocesserroragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "InstallationSubprocessErrorAgent",
+    "category": "processing",
+    "source_pattern": "InstallationSubprocessError",
+    "file_path": "agents\\processing\\installationsubprocesserroragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "PackageIndexAgent",
+    "category": "utility",
+    "source_pattern": "PackageIndex",
+    "file_path": "agents\\utility\\packageindexagent.py",
+    "dependencies": [
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "searchAgent",
+    "category": "search",
+    "source_pattern": "search",
+    "file_path": "agents\\search\\searchagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SimpleScrapingLocatorAgent",
+    "category": "utility",
+    "source_pattern": "SimpleScrapingLocator",
+    "file_path": "agents\\utility\\simplescrapinglocatoragent.py",
+    "dependencies": [
+      "requests",
+      "threading"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_process_downloadAgent",
+    "category": "processing",
+    "source_pattern": "_process_download",
+    "file_path": "agents\\processing\\_process_downloadagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ManifestAgent",
+    "category": "utility",
+    "source_pattern": "Manifest",
+    "file_path": "agents\\utility\\manifestagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_directiveAgent",
+    "category": "processing",
+    "source_pattern": "process_directive",
+    "file_path": "agents\\processing\\process_directiveagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "MetadataAgent",
+    "category": "utility",
+    "source_pattern": "Metadata",
+    "file_path": "agents\\utility\\metadataagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_to_legacyAgent",
+    "category": "utility",
+    "source_pattern": "_to_legacy",
+    "file_path": "agents\\utility\\_to_legacyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_entriesAgent",
+    "category": "processing",
+    "source_pattern": "process_entries",
+    "file_path": "agents\\processing\\process_entriesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_by_keyAgent",
+    "category": "extraction",
+    "source_pattern": "extract_by_key",
+    "file_path": "agents\\extraction\\extract_by_keyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "get_process_umaskAgent",
+    "category": "processing",
+    "source_pattern": "get_process_umask",
+    "file_path": "agents\\processing\\get_process_umaskagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "unarchiveAgent",
+    "category": "utility",
+    "source_pattern": "unarchive",
+    "file_path": "agents\\utility\\unarchiveagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SubprocessMixinAgent",
+    "category": "processing",
+    "source_pattern": "SubprocessMixin",
+    "file_path": "agents\\processing\\subprocessmixinagent.py",
+    "dependencies": [
+      "threading"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extraction_filterAgent",
+    "category": "extraction",
+    "source_pattern": "extraction_filter",
+    "file_path": "agents\\extraction\\extraction_filteragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "WheelAgent",
+    "category": "utility",
+    "source_pattern": "Wheel",
+    "file_path": "agents\\utility\\wheelagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "process_shebangAgent",
+    "category": "processing",
+    "source_pattern": "process_shebang",
+    "file_path": "agents\\processing\\process_shebangagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "search_functionAgent",
+    "category": "search",
+    "source_pattern": "search_function",
+    "file_path": "agents\\search\\search_functionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_ValidatorAgent",
+    "category": "utility",
+    "source_pattern": "_Validator",
+    "file_path": "agents\\utility\\_validatoragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_metadata_versionAgent",
+    "category": "processing",
+    "source_pattern": "_process_metadata_version",
+    "file_path": "agents\\processing\\_process_metadata_versionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_nameAgent",
+    "category": "processing",
+    "source_pattern": "_process_name",
+    "file_path": "agents\\processing\\_process_nameagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_versionAgent",
+    "category": "processing",
+    "source_pattern": "_process_version",
+    "file_path": "agents\\processing\\_process_versionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_summaryAgent",
+    "category": "processing",
+    "source_pattern": "_process_summary",
+    "file_path": "agents\\processing\\_process_summaryagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_description_content_typeAgent",
+    "category": "processing",
+    "source_pattern": "_process_description_content_type",
+    "file_path": "agents\\processing\\_process_description_content_typeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_dynamicAgent",
+    "category": "processing",
+    "source_pattern": "_process_dynamic",
+    "file_path": "agents\\processing\\_process_dynamicagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_provides_extraAgent",
+    "category": "processing",
+    "source_pattern": "_process_provides_extra",
+    "file_path": "agents\\processing\\_process_provides_extraagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_requires_pythonAgent",
+    "category": "processing",
+    "source_pattern": "_process_requires_python",
+    "file_path": "agents\\processing\\_process_requires_pythonagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_requires_distAgent",
+    "category": "processing",
+    "source_pattern": "_process_requires_dist",
+    "file_path": "agents\\processing\\_process_requires_distagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_license_expressionAgent",
+    "category": "processing",
+    "source_pattern": "_process_license_expression",
+    "file_path": "agents\\processing\\_process_license_expressionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_license_filesAgent",
+    "category": "processing",
+    "source_pattern": "_process_license_files",
+    "file_path": "agents\\processing\\_process_license_filesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_env_varAgent",
+    "category": "processing",
+    "source_pattern": "process_env_var",
+    "file_path": "agents\\processing\\process_env_varagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_python_strAgent",
+    "category": "processing",
+    "source_pattern": "process_python_str",
+    "file_path": "agents\\processing\\process_python_stragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "EnvironmentAgent",
+    "category": "utility",
+    "source_pattern": "Environment",
+    "file_path": "agents\\utility\\environmentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ExtractionErrorAgent",
+    "category": "extraction",
+    "source_pattern": "ExtractionError",
+    "file_path": "agents\\extraction\\extractionerroragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ResourceManagerAgent",
+    "category": "utility",
+    "source_pattern": "ResourceManager",
+    "file_path": "agents\\utility\\resourcemanageragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ZipProviderAgent",
+    "category": "utility",
+    "source_pattern": "ZipProvider",
+    "file_path": "agents\\utility\\zipprovideragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "__init__Agent",
+    "category": "utility",
+    "source_pattern": "__init__",
+    "file_path": "agents\\utility\\__init__agent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extraction_errorAgent",
+    "category": "extraction",
+    "source_pattern": "extraction_error",
+    "file_path": "agents\\extraction\\extraction_erroragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_warn_unsafe_extraction_pathAgent",
+    "category": "extraction",
+    "source_pattern": "_warn_unsafe_extraction_path",
+    "file_path": "agents\\extraction\\_warn_unsafe_extraction_pathagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "postprocessAgent",
+    "category": "processing",
+    "source_pattern": "postprocess",
+    "file_path": "agents\\processing\\postprocessagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "set_extraction_pathAgent",
+    "category": "extraction",
+    "source_pattern": "set_extraction_path",
+    "file_path": "agents\\extraction\\set_extraction_pathagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_resourceAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_resource",
+    "file_path": "agents\\extraction\\_extract_resourceagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "LexerAgent",
+    "category": "utility",
+    "source_pattern": "Lexer",
+    "file_path": "agents\\utility\\lexeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "DelegatingLexerAgent",
+    "category": "utility",
+    "source_pattern": "DelegatingLexer",
+    "file_path": "agents\\utility\\delegatinglexeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "RegexLexerMetaAgent",
+    "category": "utility",
+    "source_pattern": "RegexLexerMeta",
+    "file_path": "agents\\utility\\regexlexermetaagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "RegexLexerAgent",
+    "category": "utility",
+    "source_pattern": "RegexLexer",
+    "file_path": "agents\\utility\\regexlexeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ExtendedRegexLexerAgent",
+    "category": "utility",
+    "source_pattern": "ExtendedRegexLexer",
+    "file_path": "agents\\utility\\extendedregexlexeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_preprocess_lexer_inputAgent",
+    "category": "processing",
+    "source_pattern": "_preprocess_lexer_input",
+    "file_path": "agents\\processing\\_preprocess_lexer_inputagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "get_tokens_unprocessedAgent",
+    "category": "processing",
+    "source_pattern": "get_tokens_unprocessed",
+    "file_path": "agents\\processing\\get_tokens_unprocessedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "get_tokens_unprocessedAgent",
+    "category": "processing",
+    "source_pattern": "get_tokens_unprocessed",
+    "file_path": "agents\\processing\\get_tokens_unprocessedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_regexAgent",
+    "category": "processing",
+    "source_pattern": "_process_regex",
+    "file_path": "agents\\processing\\_process_regexagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_tokenAgent",
+    "category": "processing",
+    "source_pattern": "_process_token",
+    "file_path": "agents\\processing\\_process_tokenagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_new_stateAgent",
+    "category": "processing",
+    "source_pattern": "_process_new_state",
+    "file_path": "agents\\processing\\_process_new_stateagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_stateAgent",
+    "category": "processing",
+    "source_pattern": "_process_state",
+    "file_path": "agents\\processing\\_process_stateagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_tokendefAgent",
+    "category": "processing",
+    "source_pattern": "process_tokendef",
+    "file_path": "agents\\processing\\process_tokendefagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "get_tokens_unprocessedAgent",
+    "category": "processing",
+    "source_pattern": "get_tokens_unprocessed",
+    "file_path": "agents\\processing\\get_tokens_unprocessedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "get_tokens_unprocessedAgent",
+    "category": "processing",
+    "source_pattern": "get_tokens_unprocessed",
+    "file_path": "agents\\processing\\get_tokens_unprocessedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_regexAgent",
+    "category": "processing",
+    "source_pattern": "_process_regex",
+    "file_path": "agents\\processing\\_process_regexagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "get_tokens_unprocessedAgent",
+    "category": "processing",
+    "source_pattern": "get_tokens_unprocessed",
+    "file_path": "agents\\processing\\get_tokens_unprocessedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "default_subprocess_runnerAgent",
+    "category": "processing",
+    "source_pattern": "default_subprocess_runner",
+    "file_path": "agents\\processing\\default_subprocess_runneragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "quiet_subprocess_runnerAgent",
+    "category": "processing",
+    "source_pattern": "quiet_subprocess_runner",
+    "file_path": "agents\\processing\\quiet_subprocess_runneragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "BuildBackendHookCallerAgent",
+    "category": "utility",
+    "source_pattern": "BuildBackendHookCaller",
+    "file_path": "agents\\utility\\buildbackendhookcalleragent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SubprocessRunnerAgent",
+    "category": "processing",
+    "source_pattern": "SubprocessRunner",
+    "file_path": "agents\\processing\\subprocessrunneragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "subprocess_runnerAgent",
+    "category": "processing",
+    "source_pattern": "subprocess_runner",
+    "file_path": "agents\\processing\\subprocess_runneragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_cookies_to_jarAgent",
+    "category": "extraction",
+    "source_pattern": "extract_cookies_to_jar",
+    "file_path": "agents\\extraction\\extract_cookies_to_jaragent.py",
+    "dependencies": [
+      "requests"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_zipped_pathsAgent",
+    "category": "extraction",
+    "source_pattern": "extract_zipped_paths",
+    "file_path": "agents\\extraction\\extract_zipped_pathsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_renderablesAgent",
+    "category": "processing",
+    "source_pattern": "process_renderables",
+    "file_path": "agents\\processing\\process_renderablesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "LiveAgent",
+    "category": "utility",
+    "source_pattern": "Live",
+    "file_path": "agents\\utility\\liveagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_renderablesAgent",
+    "category": "processing",
+    "source_pattern": "process_renderables",
+    "file_path": "agents\\processing\\process_renderablesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "PromptBaseAgent",
+    "category": "utility",
+    "source_pattern": "PromptBase",
+    "file_path": "agents\\utility\\promptbaseagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ConfirmAgent",
+    "category": "utility",
+    "source_pattern": "Confirm",
+    "file_path": "agents\\utility\\confirmagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_responseAgent",
+    "category": "processing",
+    "source_pattern": "process_response",
+    "file_path": "agents\\processing\\process_responseagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_responseAgent",
+    "category": "processing",
+    "source_pattern": "process_response",
+    "file_path": "agents\\processing\\process_responseagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SyntaxAgent",
+    "category": "utility",
+    "source_pattern": "Syntax",
+    "file_path": "agents\\utility\\syntaxagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_codeAgent",
+    "category": "processing",
+    "source_pattern": "_process_code",
+    "file_path": "agents\\processing\\_process_codeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "TracebackAgent",
+    "category": "utility",
+    "source_pattern": "Traceback",
+    "file_path": "agents\\utility\\tracebackagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extractAgent",
+    "category": "extraction",
+    "source_pattern": "extract",
+    "file_path": "agents\\extraction\\extractagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_from_sslAgent",
+    "category": "extraction",
+    "source_pattern": "extract_from_ssl",
+    "file_path": "agents\\extraction\\extract_from_sslagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_from_urllib3Agent",
+    "category": "extraction",
+    "source_pattern": "extract_from_urllib3",
+    "file_path": "agents\\extraction\\extract_from_urllib3agent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_from_urllib3Agent",
+    "category": "extraction",
+    "source_pattern": "extract_from_urllib3",
+    "file_path": "agents\\extraction\\extract_from_urllib3agent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ResolutionAgent",
+    "category": "utility",
+    "source_pattern": "Resolution",
+    "file_path": "agents\\utility\\resolutionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_causesAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_causes",
+    "file_path": "agents\\extraction\\_extract_causesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "PythonLexerAgent",
+    "category": "utility",
+    "source_pattern": "PythonLexer",
+    "file_path": "agents\\utility\\pythonlexeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "NumPyLexerAgent",
+    "category": "utility",
+    "source_pattern": "NumPyLexer",
+    "file_path": "agents\\utility\\numpylexeragent.py",
+    "dependencies": [
+      "numpy"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "get_tokens_unprocessedAgent",
+    "category": "processing",
+    "source_pattern": "get_tokens_unprocessed",
+    "file_path": "agents\\processing\\get_tokens_unprocessedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ListCommandAgent",
+    "category": "utility",
+    "source_pattern": "ListCommand",
+    "file_path": "agents\\utility\\listcommandagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "format_for_columnsAgent",
+    "category": "utility",
+    "source_pattern": "format_for_columns",
+    "file_path": "agents\\utility\\format_for_columnsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "format_for_jsonAgent",
+    "category": "utility",
+    "source_pattern": "format_for_json",
+    "file_path": "agents\\utility\\format_for_jsonagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "iter_packages_latest_infosAgent",
+    "category": "utility",
+    "source_pattern": "iter_packages_latest_infos",
+    "file_path": "agents\\utility\\iter_packages_latest_infosagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "output_package_listingAgent",
+    "category": "utility",
+    "source_pattern": "output_package_listing",
+    "file_path": "agents\\utility\\output_package_listingagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SearchCommandAgent",
+    "category": "search",
+    "source_pattern": "SearchCommand",
+    "file_path": "agents\\search\\searchcommandagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "searchAgent",
+    "category": "search",
+    "source_pattern": "search",
+    "file_path": "agents\\search\\searchagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "search_packages_infoAgent",
+    "category": "search",
+    "source_pattern": "search_packages_info",
+    "file_path": "agents\\search\\search_packages_infoagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "LinkCollectorAgent",
+    "category": "utility",
+    "source_pattern": "LinkCollector",
+    "file_path": "agents\\utility\\linkcollectoragent.py",
+    "dependencies": [
+      "requests",
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "PackageFinderAgent",
+    "category": "search",
+    "source_pattern": "PackageFinder",
+    "file_path": "agents\\search\\packagefinderagent.py",
+    "dependencies": [
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_version_from_fragmentAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_version_from_fragment",
+    "file_path": "agents\\extraction\\_extract_version_from_fragmentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "search_scopeAgent",
+    "category": "search",
+    "source_pattern": "search_scope",
+    "file_path": "agents\\search\\search_scopeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "search_scopeAgent",
+    "category": "search",
+    "source_pattern": "search_scope",
+    "file_path": "agents\\search\\search_scopeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_project_urlAgent",
+    "category": "processing",
+    "source_pattern": "process_project_url",
+    "file_path": "agents\\processing\\process_project_urlagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "EnvironmentAgent",
+    "category": "utility",
+    "source_pattern": "Environment",
+    "file_path": "agents\\utility\\environmentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_search_distributionAgent",
+    "category": "search",
+    "source_pattern": "_search_distribution",
+    "file_path": "agents\\search\\_search_distributionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SearchScopeAgent",
+    "category": "search",
+    "source_pattern": "SearchScope",
+    "file_path": "agents\\search\\searchscopeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "DownloaderAgent",
+    "category": "utility",
+    "source_pattern": "Downloader",
+    "file_path": "agents\\utility\\downloaderagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_responseAgent",
+    "category": "processing",
+    "source_pattern": "_process_response",
+    "file_path": "agents\\processing\\_process_responseagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "preprocessAgent",
+    "category": "processing",
+    "source_pattern": "preprocess",
+    "file_path": "agents\\processing\\preprocessagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "setup_loggingAgent",
+    "category": "utility",
+    "source_pattern": "setup_logging",
+    "file_path": "agents\\utility\\setup_loggingagent.py",
+    "dependencies": [
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "call_subprocessAgent",
+    "category": "processing",
+    "source_pattern": "call_subprocess",
+    "file_path": "agents\\processing\\call_subprocessagent.py",
+    "dependencies": [
+      "logging"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "set_extracted_file_to_default_mode_plus_executableAgent",
+    "category": "extraction",
+    "source_pattern": "set_extracted_file_to_default_mode_plus_executable",
+    "file_path": "agents\\extraction\\set_extracted_file_to_default_mode_plus_executableagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "CryptographyECKeyAgent",
+    "category": "utility",
+    "source_pattern": "CryptographyECKey",
+    "file_path": "agents\\utility\\cryptographyeckeyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "CryptographyRSAKeyAgent",
+    "category": "utility",
+    "source_pattern": "CryptographyRSAKey",
+    "file_path": "agents\\utility\\cryptographyrsakeyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "CryptographyHMACKeyAgent",
+    "category": "utility",
+    "source_pattern": "CryptographyHMACKey",
+    "file_path": "agents\\utility\\cryptographyhmackeyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_jwkAgent",
+    "category": "processing",
+    "source_pattern": "_process_jwk",
+    "file_path": "agents\\processing\\_process_jwkagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_jwkAgent",
+    "category": "processing",
+    "source_pattern": "_process_jwk",
+    "file_path": "agents\\processing\\_process_jwkagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_certAgent",
+    "category": "processing",
+    "source_pattern": "_process_cert",
+    "file_path": "agents\\processing\\_process_certagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_jwkAgent",
+    "category": "processing",
+    "source_pattern": "_process_jwk",
+    "file_path": "agents\\processing\\_process_jwkagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ECDSAECKeyAgent",
+    "category": "utility",
+    "source_pattern": "ECDSAECKey",
+    "file_path": "agents\\utility\\ecdsaeckeyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_jwkAgent",
+    "category": "processing",
+    "source_pattern": "_process_jwk",
+    "file_path": "agents\\processing\\_process_jwkagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "HMACKeyAgent",
+    "category": "utility",
+    "source_pattern": "HMACKey",
+    "file_path": "agents\\utility\\hmackeyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_jwkAgent",
+    "category": "processing",
+    "source_pattern": "_process_jwk",
+    "file_path": "agents\\processing\\_process_jwkagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "RSAKeyAgent",
+    "category": "utility",
+    "source_pattern": "RSAKey",
+    "file_path": "agents\\utility\\rsakeyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_process_jwkAgent",
+    "category": "processing",
+    "source_pattern": "_process_jwk",
+    "file_path": "agents\\processing\\_process_jwkagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "GoogleSearchResultAgent",
+    "category": "search",
+    "source_pattern": "GoogleSearchResult",
+    "file_path": "agents\\search\\googlesearchresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "GoogleSearchClientAgent",
+    "category": "search",
+    "source_pattern": "GoogleSearchClient",
+    "file_path": "agents\\search\\googlesearchclientagent.py",
+    "dependencies": [
+      "requests",
+      "aiohttp",
+      "asyncio",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "get_google_search_clientAgent",
+    "category": "search",
+    "source_pattern": "get_google_search_client",
+    "file_path": "agents\\search\\get_google_search_clientagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_dateAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_date",
+    "file_path": "agents\\extraction\\_extract_dateagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "__init__Agent",
+    "category": "utility",
+    "source_pattern": "__init__",
+    "file_path": "agents\\utility\\__init__agent.py",
+    "dependencies": [
+      "requests",
+      "asyncio"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "OpenAIProviderAgent",
+    "category": "utility",
+    "source_pattern": "OpenAIProvider",
+    "file_path": "agents\\utility\\openaiprovideragent.py",
+    "dependencies": [
+      "httpx",
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "AnthropicProviderAgent",
+    "category": "utility",
+    "source_pattern": "AnthropicProvider",
+    "file_path": "agents\\utility\\anthropicprovideragent.py",
+    "dependencies": [
+      "httpx",
+      "anthropic",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "LLMRouterAgent",
+    "category": "utility",
+    "source_pattern": "LLMRouter",
+    "file_path": "agents\\utility\\llmrouteragent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "anthropic"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "KeywordCombinationAgent",
+    "category": "utility",
+    "source_pattern": "KeywordCombination",
+    "file_path": "agents\\utility\\keywordcombinationagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SearchConfigurationAgent",
+    "category": "search",
+    "source_pattern": "SearchConfiguration",
+    "file_path": "agents\\search\\searchconfigurationagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SearchQueryBuilderAgent",
+    "category": "search",
+    "source_pattern": "SearchQueryBuilder",
+    "file_path": "agents\\search\\searchquerybuilderagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "BrandBuzzServiceAgent",
+    "category": "utility",
+    "source_pattern": "BrandBuzzService",
+    "file_path": "agents\\utility\\brandbuzzserviceagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "to_search_stringAgent",
+    "category": "search",
+    "source_pattern": "to_search_string",
+    "file_path": "agents\\search\\to_search_stringagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_domainAgent",
+    "category": "extraction",
+    "source_pattern": "extract_domain",
+    "file_path": "agents\\extraction\\extract_domainagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "validate_search_configurationAgent",
+    "category": "search",
+    "source_pattern": "validate_search_configuration",
+    "file_path": "agents\\search\\validate_search_configurationagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "estimate_search_costAgent",
+    "category": "search",
+    "source_pattern": "estimate_search_cost",
+    "file_path": "agents\\search\\estimate_search_costagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "FileProcessingErrorAgent",
+    "category": "processing",
+    "source_pattern": "FileProcessingError",
+    "file_path": "agents\\processing\\fileprocessingerroragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AgentGenerationOrchestratorAgent",
+    "category": "automation",
+    "source_pattern": "AgentGenerationOrchestrator",
+    "file_path": "agents\\automation\\agentgenerationorchestratoragent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_convert_discoveries_to_patternsAgent",
+    "category": "search",
+    "source_pattern": "_convert_discoveries_to_patterns",
+    "file_path": "agents\\search\\_convert_discoveries_to_patternsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "AgentBlueprintAgent",
+    "category": "automation",
+    "source_pattern": "AgentBlueprint",
+    "file_path": "agents\\automation\\agentblueprintagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "CodeRefactoringServiceAgent",
+    "category": "utility",
+    "source_pattern": "CodeRefactoringService",
+    "file_path": "agents\\utility\\coderefactoringserviceagent.py",
+    "dependencies": [
+      "dataclasses",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_load_agent_templatesAgent",
+    "category": "automation",
+    "source_pattern": "_load_agent_templates",
+    "file_path": "agents\\automation\\_load_agent_templatesagent.py",
+    "dependencies": [
+      "dataclasses"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "analyze_code_patternsAgent",
+    "category": "processing",
+    "source_pattern": "analyze_code_patterns",
+    "file_path": "agents\\processing\\analyze_code_patternsagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_core_logicAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_core_logic",
+    "file_path": "agents\\extraction\\_extract_core_logicagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "OmenAgentAgent",
+    "category": "automation",
+    "source_pattern": "OmenAgent",
+    "file_path": "agents\\automation\\omenagentagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "analyze_enhancedAgent",
+    "category": "processing",
+    "source_pattern": "analyze_enhanced",
+    "file_path": "agents\\processing\\analyze_enhancedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_analyze_code_with_llmAgent",
+    "category": "processing",
+    "source_pattern": "_analyze_code_with_llm",
+    "file_path": "agents\\processing\\_analyze_code_with_llmagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "save_discoveriesAgent",
+    "category": "search",
+    "source_pattern": "save_discoveries",
+    "file_path": "agents\\search\\save_discoveriesagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "get_high_potential_discoveriesAgent",
+    "category": "search",
+    "source_pattern": "get_high_potential_discoveries",
+    "file_path": "agents\\search\\get_high_potential_discoveriesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "get_discoveries_by_typeAgent",
+    "category": "search",
+    "source_pattern": "get_discoveries_by_type",
+    "file_path": "agents\\search\\get_discoveries_by_typeagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "DiscoveryAgentAgent",
+    "category": "search",
+    "source_pattern": "DiscoveryAgent",
+    "file_path": "agents\\search\\discoveryagentagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_pdf_text_realAgent",
+    "category": "extraction",
+    "source_pattern": "extract_pdf_text_real",
+    "file_path": "agents\\extraction\\extract_pdf_text_realagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpis_with_aiAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis_with_ai",
+    "file_path": "agents\\extraction\\extract_kpis_with_aiagent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "validate_ai_extractionsAgent",
+    "category": "extraction",
+    "source_pattern": "validate_ai_extractions",
+    "file_path": "agents\\extraction\\validate_ai_extractionsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_pdf_text_improvedAgent",
+    "category": "extraction",
+    "source_pattern": "extract_pdf_text_improved",
+    "file_path": "agents\\extraction\\extract_pdf_text_improvedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpis_from_chunkAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis_from_chunk",
+    "file_path": "agents\\extraction\\extract_kpis_from_chunkagent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "consolidate_extractionsAgent",
+    "category": "extraction",
+    "source_pattern": "consolidate_extractions",
+    "file_path": "agents\\extraction\\consolidate_extractionsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_csv_fileAgent",
+    "category": "processing",
+    "source_pattern": "process_csv_file",
+    "file_path": "agents\\processing\\process_csv_fileagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_kpi_extractorAgent",
+    "category": "extraction",
+    "source_pattern": "test_kpi_extractor",
+    "file_path": "agents\\extraction\\test_kpi_extractoragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_dashboard_processing_methodAgent",
+    "category": "processing",
+    "source_pattern": "test_dashboard_processing_method",
+    "file_path": "agents\\processing\\test_dashboard_processing_methodagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_dashboard_processingAgent",
+    "category": "processing",
+    "source_pattern": "test_dashboard_processing",
+    "file_path": "agents\\processing\\test_dashboard_processingagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_kpi_extractorAgent",
+    "category": "extraction",
+    "source_pattern": "test_kpi_extractor",
+    "file_path": "agents\\extraction\\test_kpi_extractoragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_with_google_document_aiAgent",
+    "category": "extraction",
+    "source_pattern": "extract_with_google_document_ai",
+    "file_path": "agents\\extraction\\extract_with_google_document_aiagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_with_openaiAgent",
+    "category": "extraction",
+    "source_pattern": "extract_with_openai",
+    "file_path": "agents\\extraction\\extract_with_openaiagent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_with_geminiAgent",
+    "category": "extraction",
+    "source_pattern": "extract_with_gemini",
+    "file_path": "agents\\extraction\\extract_with_geminiagent.py",
+    "dependencies": [
+      "requests",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "compare_model_resultsAgent",
+    "category": "utility",
+    "source_pattern": "compare_model_results",
+    "file_path": "agents\\utility\\compare_model_resultsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "score_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "score_extraction",
+    "file_path": "agents\\extraction\\score_extractionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_pdf_with_multiple_strategiesAgent",
+    "category": "extraction",
+    "source_pattern": "extract_pdf_with_multiple_strategies",
+    "file_path": "agents\\extraction\\extract_pdf_with_multiple_strategiesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_with_openai_smartAgent",
+    "category": "extraction",
+    "source_pattern": "extract_with_openai_smart",
+    "file_path": "agents\\extraction\\extract_with_openai_smartagent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_with_gemini_smartAgent",
+    "category": "extraction",
+    "source_pattern": "extract_with_gemini_smart",
+    "file_path": "agents\\extraction\\extract_with_gemini_smartagent.py",
+    "dependencies": [
+      "requests",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_pdf_textAgent",
+    "category": "extraction",
+    "source_pattern": "extract_pdf_text",
+    "file_path": "agents\\extraction\\extract_pdf_textagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "BatchTesting50CompaniesAgent",
+    "category": "utility",
+    "source_pattern": "BatchTesting50Companies",
+    "file_path": "agents\\utility\\batchtesting50companiesagent.py",
+    "dependencies": [
+      "pandas",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "process_single_companyAgent",
+    "category": "processing",
+    "source_pattern": "process_single_company",
+    "file_path": "agents\\processing\\process_single_companyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "EnhancedESGDashboardAgent",
+    "category": "utility",
+    "source_pattern": "EnhancedESGDashboard",
+    "file_path": "agents\\utility\\enhancedesgdashboardagent.py",
+    "dependencies": [
+      "threading",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "display_upload_initiate_tabAgent",
+    "category": "utility",
+    "source_pattern": "display_upload_initiate_tab",
+    "file_path": "agents\\utility\\display_upload_initiate_tabagent.py",
+    "dependencies": [
+      "threading"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SearchResultAgent",
+    "category": "search",
+    "source_pattern": "SearchResult",
+    "file_path": "agents\\search\\searchresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGURLScraperPatchedAgent",
+    "category": "extraction",
+    "source_pattern": "ESGURLScraperPatched",
+    "file_path": "agents\\extraction\\esgurlscraperpatchedagent.py",
+    "dependencies": [
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_api_with_retryAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_api_with_retry",
+    "file_path": "agents\\search\\search_esg_reports_api_with_retryagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "scrape_company_batchAgent",
+    "category": "extraction",
+    "source_pattern": "scrape_company_batch",
+    "file_path": "agents\\extraction\\scrape_company_batchagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "save_results_to_databaseAgent",
+    "category": "utility",
+    "source_pattern": "save_results_to_database",
+    "file_path": "agents\\utility\\save_results_to_databaseagent.py",
+    "dependencies": [
+      "psycopg2"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SearchResultAgent",
+    "category": "search",
+    "source_pattern": "SearchResult",
+    "file_path": "agents\\search\\searchresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGURLScraperV2Agent",
+    "category": "extraction",
+    "source_pattern": "ESGURLScraperV2",
+    "file_path": "agents\\extraction\\esgurlscraperv2agent.py",
+    "dependencies": [
+      "requests",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_apiAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_api",
+    "file_path": "agents\\search\\search_esg_reports_apiagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_fallbackAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_fallback",
+    "file_path": "agents\\search\\search_esg_reports_fallbackagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "scrape_companyAgent",
+    "category": "extraction",
+    "source_pattern": "scrape_company",
+    "file_path": "agents\\extraction\\scrape_companyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_save_search_resultAgent",
+    "category": "search",
+    "source_pattern": "_save_search_result",
+    "file_path": "agents\\search\\_save_search_resultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "scrape_all_companiesAgent",
+    "category": "extraction",
+    "source_pattern": "scrape_all_companies",
+    "file_path": "agents\\extraction\\scrape_all_companiesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ExtractionResultAgent",
+    "category": "extraction",
+    "source_pattern": "ExtractionResult",
+    "file_path": "agents\\extraction\\extractionresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGKPIExtractorAgent",
+    "category": "extraction",
+    "source_pattern": "ESGKPIExtractor",
+    "file_path": "agents\\extraction\\esgkpiextractoragent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_text_document_aiAgent",
+    "category": "extraction",
+    "source_pattern": "extract_text_document_ai",
+    "file_path": "agents\\extraction\\extract_text_document_aiagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_text_fallbackAgent",
+    "category": "extraction",
+    "source_pattern": "extract_text_fallback",
+    "file_path": "agents\\extraction\\extract_text_fallbackagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpis_regexAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis_regex",
+    "file_path": "agents\\extraction\\extract_kpis_regexagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpis_openaiAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis_openai",
+    "file_path": "agents\\extraction\\extract_kpis_openaiagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "process_pdf_urlAgent",
+    "category": "processing",
+    "source_pattern": "process_pdf_url",
+    "file_path": "agents\\processing\\process_pdf_urlagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_save_extraction_resultAgent",
+    "category": "extraction",
+    "source_pattern": "_save_extraction_result",
+    "file_path": "agents\\extraction\\_save_extraction_resultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_company_urlsAgent",
+    "category": "processing",
+    "source_pattern": "process_company_urls",
+    "file_path": "agents\\processing\\process_company_urlsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "EnhancedKPIExtractorAgent",
+    "category": "extraction",
+    "source_pattern": "EnhancedKPIExtractor",
+    "file_path": "agents\\extraction\\enhancedkpiextractoragent.py",
+    "dependencies": [
+      "requests",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "test_enhanced_extractorAgent",
+    "category": "extraction",
+    "source_pattern": "test_enhanced_extractor",
+    "file_path": "agents\\extraction\\test_enhanced_extractoragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_year_from_textAgent",
+    "category": "extraction",
+    "source_pattern": "extract_year_from_text",
+    "file_path": "agents\\extraction\\extract_year_from_textagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpis_from_pageAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis_from_page",
+    "file_path": "agents\\extraction\\extract_kpis_from_pageagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "analyze_greenwashingAgent",
+    "category": "processing",
+    "source_pattern": "analyze_greenwashing",
+    "file_path": "agents\\processing\\analyze_greenwashingagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_pdf_with_metadataAgent",
+    "category": "processing",
+    "source_pattern": "process_pdf_with_metadata",
+    "file_path": "agents\\processing\\process_pdf_with_metadataagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGURLScraperAgent",
+    "category": "extraction",
+    "source_pattern": "ESGURLScraper",
+    "file_path": "agents\\extraction\\esgurlscraperagent.py",
+    "dependencies": [
+      "requests",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_freeAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_free",
+    "file_path": "agents\\search\\search_esg_reports_freeagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_apiAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_api",
+    "file_path": "agents\\search\\search_esg_reports_apiagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SurveyAutomationSystemAgent",
+    "category": "automation",
+    "source_pattern": "SurveyAutomationSystem",
+    "file_path": "agents\\automation\\surveyautomationsystemagent.py",
+    "dependencies": [
+      "openai",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_platformAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_platform",
+    "file_path": "agents\\extraction\\_extract_platformagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_tickerAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_ticker",
+    "file_path": "agents\\extraction\\_extract_tickeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGKPIExtractorUnitTestsAgent",
+    "category": "extraction",
+    "source_pattern": "ESGKPIExtractorUnitTests",
+    "file_path": "agents\\extraction\\esgkpiextractorunittestsagent.py",
+    "dependencies": [
+      "openai"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "PerformanceTestsAgent",
+    "category": "utility",
+    "source_pattern": "PerformanceTests",
+    "file_path": "agents\\utility\\performancetestsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_kpi_extraction_performanceAgent",
+    "category": "extraction",
+    "source_pattern": "test_kpi_extraction_performance",
+    "file_path": "agents\\extraction\\test_kpi_extraction_performanceagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "benchmark_kpi_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "benchmark_kpi_extraction",
+    "file_path": "agents\\extraction\\benchmark_kpi_extractionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "TestEnhancedSurveyAutomationAgent",
+    "category": "automation",
+    "source_pattern": "TestEnhancedSurveyAutomation",
+    "file_path": "agents\\automation\\testenhancedsurveyautomationagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_ticker_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "test_ticker_extraction",
+    "file_path": "agents\\extraction\\test_ticker_extractionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_ticker_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "test_ticker_extraction",
+    "file_path": "agents\\extraction\\test_ticker_extractionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_tickerAgent",
+    "category": "extraction",
+    "source_pattern": "extract_ticker",
+    "file_path": "agents\\extraction\\extract_tickeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "TestESGScraperV2Agent",
+    "category": "extraction",
+    "source_pattern": "TestESGScraperV2",
+    "file_path": "agents\\extraction\\testesgscraperv2agent.py",
+    "dependencies": [
+      "requests",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "test_api_search_successAgent",
+    "category": "search",
+    "source_pattern": "test_api_search_success",
+    "file_path": "agents\\search\\test_api_search_successagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_api_search_failureAgent",
+    "category": "search",
+    "source_pattern": "test_api_search_failure",
+    "file_path": "agents\\search\\test_api_search_failureagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_enhanced_search_queriesAgent",
+    "category": "search",
+    "source_pattern": "test_enhanced_search_queries",
+    "file_path": "agents\\search\\test_enhanced_search_queriesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "generate_search_queryAgent",
+    "category": "search",
+    "source_pattern": "generate_search_query",
+    "file_path": "agents\\search\\generate_search_queryagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "BatchTesting50CompaniesAgent",
+    "category": "utility",
+    "source_pattern": "BatchTesting50Companies",
+    "file_path": "agents\\utility\\batchtesting50companiesagent.py",
+    "dependencies": [
+      "pandas",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "process_single_companyAgent",
+    "category": "processing",
+    "source_pattern": "process_single_company",
+    "file_path": "agents\\processing\\process_single_companyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "EnhancedESGDashboardAgent",
+    "category": "utility",
+    "source_pattern": "EnhancedESGDashboard",
+    "file_path": "agents\\utility\\enhancedesgdashboardagent.py",
+    "dependencies": [
+      "psycopg2",
+      "logging",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "process_companies_with_progressAgent",
+    "category": "processing",
+    "source_pattern": "process_companies_with_progress",
+    "file_path": "agents\\processing\\process_companies_with_progressagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "display_upload_initiate_tabAgent",
+    "category": "utility",
+    "source_pattern": "display_upload_initiate_tab",
+    "file_path": "agents\\utility\\display_upload_initiate_tabagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "DummyExtractorAgent",
+    "category": "extraction",
+    "source_pattern": "DummyExtractor",
+    "file_path": "agents\\extraction\\dummyextractoragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_pdf_urlAgent",
+    "category": "processing",
+    "source_pattern": "process_pdf_url",
+    "file_path": "agents\\processing\\process_pdf_urlagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_companies_simpleAgent",
+    "category": "processing",
+    "source_pattern": "process_companies_simple",
+    "file_path": "agents\\processing\\process_companies_simpleagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "SearchResultAgent",
+    "category": "search",
+    "source_pattern": "SearchResult",
+    "file_path": "agents\\search\\searchresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGURLScraperPatchedAgent",
+    "category": "extraction",
+    "source_pattern": "ESGURLScraperPatched",
+    "file_path": "agents\\extraction\\esgurlscraperpatchedagent.py",
+    "dependencies": [
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_api_with_retryAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_api_with_retry",
+    "file_path": "agents\\search\\search_esg_reports_api_with_retryagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "scrape_company_batchAgent",
+    "category": "extraction",
+    "source_pattern": "scrape_company_batch",
+    "file_path": "agents\\extraction\\scrape_company_batchagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "save_results_to_databaseAgent",
+    "category": "utility",
+    "source_pattern": "save_results_to_database",
+    "file_path": "agents\\utility\\save_results_to_databaseagent.py",
+    "dependencies": [
+      "psycopg2"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SearchResultAgent",
+    "category": "search",
+    "source_pattern": "SearchResult",
+    "file_path": "agents\\search\\searchresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGURLScraperV2Agent",
+    "category": "extraction",
+    "source_pattern": "ESGURLScraperV2",
+    "file_path": "agents\\extraction\\esgurlscraperv2agent.py",
+    "dependencies": [
+      "requests",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_apiAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_api",
+    "file_path": "agents\\search\\search_esg_reports_apiagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_fallbackAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_fallback",
+    "file_path": "agents\\search\\search_esg_reports_fallbackagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "scrape_companyAgent",
+    "category": "extraction",
+    "source_pattern": "scrape_company",
+    "file_path": "agents\\extraction\\scrape_companyagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_save_search_resultAgent",
+    "category": "search",
+    "source_pattern": "_save_search_result",
+    "file_path": "agents\\search\\_save_search_resultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "scrape_all_companiesAgent",
+    "category": "extraction",
+    "source_pattern": "scrape_all_companies",
+    "file_path": "agents\\extraction\\scrape_all_companiesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "HealthCheckerAgent",
+    "category": "utility",
+    "source_pattern": "HealthChecker",
+    "file_path": "agents\\utility\\healthcheckeragent.py",
+    "dependencies": [
+      "psycopg2"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "check_processing_performanceAgent",
+    "category": "processing",
+    "source_pattern": "check_processing_performance",
+    "file_path": "agents\\processing\\check_processing_performanceagent.py",
+    "dependencies": [
+      "psycopg2"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "ExtractionResultAgent",
+    "category": "extraction",
+    "source_pattern": "ExtractionResult",
+    "file_path": "agents\\extraction\\extractionresultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGKPIExtractorAgent",
+    "category": "extraction",
+    "source_pattern": "ESGKPIExtractor",
+    "file_path": "agents\\extraction\\esgkpiextractoragent.py",
+    "dependencies": [
+      "requests",
+      "openai",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_text_document_aiAgent",
+    "category": "extraction",
+    "source_pattern": "extract_text_document_ai",
+    "file_path": "agents\\extraction\\extract_text_document_aiagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_text_document_ai_chunkedAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_text_document_ai_chunked",
+    "file_path": "agents\\extraction\\_extract_text_document_ai_chunkedagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_text_fallbackAgent",
+    "category": "extraction",
+    "source_pattern": "extract_text_fallback",
+    "file_path": "agents\\extraction\\extract_text_fallbackagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpis_regexAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis_regex",
+    "file_path": "agents\\extraction\\extract_kpis_regexagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpis_openaiAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis_openai",
+    "file_path": "agents\\extraction\\extract_kpis_openaiagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "process_pdf_urlAgent",
+    "category": "processing",
+    "source_pattern": "process_pdf_url",
+    "file_path": "agents\\processing\\process_pdf_urlagent.py",
+    "dependencies": [
+      "openai",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_save_extraction_resultAgent",
+    "category": "extraction",
+    "source_pattern": "_save_extraction_result",
+    "file_path": "agents\\extraction\\_save_extraction_resultagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_company_urlsAgent",
+    "category": "processing",
+    "source_pattern": "process_company_urls",
+    "file_path": "agents\\processing\\process_company_urlsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "DocumentAIKPIExtractorAgent",
+    "category": "extraction",
+    "source_pattern": "DocumentAIKPIExtractor",
+    "file_path": "agents\\extraction\\documentaikpiextractoragent.py",
+    "dependencies": [
+      "requests",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "process_pdf_with_document_aiAgent",
+    "category": "processing",
+    "source_pattern": "process_pdf_with_document_ai",
+    "file_path": "agents\\processing\\process_pdf_with_document_aiagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_page_textAgent",
+    "category": "extraction",
+    "source_pattern": "extract_page_text",
+    "file_path": "agents\\extraction\\extract_page_textagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_document_ai_entityAgent",
+    "category": "processing",
+    "source_pattern": "process_document_ai_entity",
+    "file_path": "agents\\processing\\process_document_ai_entityagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "fallback_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "fallback_extraction",
+    "file_path": "agents\\extraction\\fallback_extractionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "analyze_greenwashing_with_geminiAgent",
+    "category": "processing",
+    "source_pattern": "analyze_greenwashing_with_gemini",
+    "file_path": "agents\\processing\\analyze_greenwashing_with_geminiagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "fallback_pdf_processingAgent",
+    "category": "processing",
+    "source_pattern": "fallback_pdf_processing",
+    "file_path": "agents\\processing\\fallback_pdf_processingagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_pdf_with_metadataAgent",
+    "category": "processing",
+    "source_pattern": "process_pdf_with_metadata",
+    "file_path": "agents\\processing\\process_pdf_with_metadataagent.py",
+    "dependencies": [
+      "requests"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "extract_year_from_contextAgent",
+    "category": "extraction",
+    "source_pattern": "extract_year_from_context",
+    "file_path": "agents\\extraction\\extract_year_from_contextagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "EnhancedKPIExtractorAgent",
+    "category": "extraction",
+    "source_pattern": "EnhancedKPIExtractor",
+    "file_path": "agents\\extraction\\enhancedkpiextractoragent.py",
+    "dependencies": [
+      "requests",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "test_enhanced_extractorAgent",
+    "category": "extraction",
+    "source_pattern": "test_enhanced_extractor",
+    "file_path": "agents\\extraction\\test_enhanced_extractoragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_year_from_textAgent",
+    "category": "extraction",
+    "source_pattern": "extract_year_from_text",
+    "file_path": "agents\\extraction\\extract_year_from_textagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_kpis_from_pageAgent",
+    "category": "extraction",
+    "source_pattern": "extract_kpis_from_page",
+    "file_path": "agents\\extraction\\extract_kpis_from_pageagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "analyze_greenwashingAgent",
+    "category": "processing",
+    "source_pattern": "analyze_greenwashing",
+    "file_path": "agents\\processing\\analyze_greenwashingagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "process_pdf_with_metadataAgent",
+    "category": "processing",
+    "source_pattern": "process_pdf_with_metadata",
+    "file_path": "agents\\processing\\process_pdf_with_metadataagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGURLScraperAgent",
+    "category": "extraction",
+    "source_pattern": "ESGURLScraper",
+    "file_path": "agents\\extraction\\esgurlscraperagent.py",
+    "dependencies": [
+      "requests",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_freeAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_free",
+    "file_path": "agents\\search\\search_esg_reports_freeagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "search_esg_reports_apiAgent",
+    "category": "search",
+    "source_pattern": "search_esg_reports_api",
+    "file_path": "agents\\search\\search_esg_reports_apiagent.py",
+    "dependencies": [
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "SurveyAutomationSystemAgent",
+    "category": "automation",
+    "source_pattern": "SurveyAutomationSystem",
+    "file_path": "agents\\automation\\surveyautomationsystemagent.py",
+    "dependencies": [
+      "openai",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_platformAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_platform",
+    "file_path": "agents\\extraction\\_extract_platformagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "_extract_tickerAgent",
+    "category": "extraction",
+    "source_pattern": "_extract_ticker",
+    "file_path": "agents\\extraction\\_extract_tickeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_processor_accessAgent",
+    "category": "processing",
+    "source_pattern": "test_processor_access",
+    "file_path": "agents\\processing\\test_processor_accessagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_list_processorsAgent",
+    "category": "processing",
+    "source_pattern": "test_list_processors",
+    "file_path": "agents\\processing\\test_list_processorsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_minimal_processingAgent",
+    "category": "processing",
+    "source_pattern": "test_minimal_processing",
+    "file_path": "agents\\processing\\test_minimal_processingagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "ESGKPIExtractorUnitTestsAgent",
+    "category": "extraction",
+    "source_pattern": "ESGKPIExtractorUnitTests",
+    "file_path": "agents\\extraction\\esgkpiextractorunittestsagent.py",
+    "dependencies": [
+      "openai"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "PerformanceTestsAgent",
+    "category": "utility",
+    "source_pattern": "PerformanceTests",
+    "file_path": "agents\\utility\\performancetestsagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_kpi_extraction_performanceAgent",
+    "category": "extraction",
+    "source_pattern": "test_kpi_extraction_performance",
+    "file_path": "agents\\extraction\\test_kpi_extraction_performanceagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "benchmark_kpi_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "benchmark_kpi_extraction",
+    "file_path": "agents\\extraction\\benchmark_kpi_extractionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "TestEnhancedSurveyAutomationAgent",
+    "category": "automation",
+    "source_pattern": "TestEnhancedSurveyAutomation",
+    "file_path": "agents\\automation\\testenhancedsurveyautomationagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_ticker_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "test_ticker_extraction",
+    "file_path": "agents\\extraction\\test_ticker_extractionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_ticker_extractionAgent",
+    "category": "extraction",
+    "source_pattern": "test_ticker_extraction",
+    "file_path": "agents\\extraction\\test_ticker_extractionagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "extract_tickerAgent",
+    "category": "extraction",
+    "source_pattern": "extract_ticker",
+    "file_path": "agents\\extraction\\extract_tickeragent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "TestESGScraperV2Agent",
+    "category": "extraction",
+    "source_pattern": "TestESGScraperV2",
+    "file_path": "agents\\extraction\\testesgscraperv2agent.py",
+    "dependencies": [
+      "requests",
+      "psycopg2",
+      "json"
+    ],
+    "status": "generated"
+  },
+  {
+    "name": "test_api_search_successAgent",
+    "category": "search",
+    "source_pattern": "test_api_search_success",
+    "file_path": "agents\\search\\test_api_search_successagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_api_search_failureAgent",
+    "category": "search",
+    "source_pattern": "test_api_search_failure",
+    "file_path": "agents\\search\\test_api_search_failureagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "test_enhanced_search_queriesAgent",
+    "category": "search",
+    "source_pattern": "test_enhanced_search_queries",
+    "file_path": "agents\\search\\test_enhanced_search_queriesagent.py",
+    "dependencies": [],
+    "status": "generated"
+  },
+  {
+    "name": "generate_search_queryAgent",
+    "category": "search",
+    "source_pattern": "generate_search_query",
+    "file_path": "agents\\search\\generate_search_queryagent.py",
+    "dependencies": [],
+    "status": "generated"
+  }
+]

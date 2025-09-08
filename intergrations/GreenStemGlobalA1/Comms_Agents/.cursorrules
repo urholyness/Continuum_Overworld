@@ -1,0 +1,19 @@
+# Purpose
+You are scaffolding a multi-agent comms system (Signal, Scribe, Liaison, Sentinel, Conductor, Analyst, Switchboard, Cartographer), integrated with MCP, MAR, and Orion.
+
+# Ground rules
+- Prefer Python 3.11 + FastAPI + Postgres + ChromaDB + Redis + RabbitMQ.
+- Use LangGraph/LlamaIndex for orchestration logic.
+- RAG over /knowledge and /issue_cards. Cite sources.
+- All outbound messages require human approval.
+- MCP tool specs mirror agents.yaml schemas.
+- Orion only triggers drafts/simulations by default; posting requires /approve.
+
+# Deliverables for any "scaffold" request
+- /agents, /tools, /workflows, /prompts, /knowledge, /issue_cards, /infra, /tests
+- FastAPI Switchboard with routes: /draft/scribe, /scan/signal, /risk/sentinel, /outreach/liaison, /schedule/conductor, /analytics/analyst, /ingest/cartographer, /approve
+- Minimal tests per route.
+
+# Style
+- Production-grade. Type hints. Docstrings. Keep dependencies minimal.
+

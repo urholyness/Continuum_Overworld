@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-sitegreenstemglobalp-dev-cf07b-authRole",
+      "UnauthRoleArn": "arn:aws:iam::086143043656:role/amplify-sitegreenstemglobalp-dev-cf07b-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::086143043656:role/amplify-sitegreenstemglobalp-dev-cf07b-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-sitegreenstemglobalp-dev-cf07b-deployment",
+      "UnauthRoleName": "amplify-sitegreenstemglobalp-dev-cf07b-unauthRole",
+      "StackName": "amplify-sitegreenstemglobalp-dev-cf07b",
+      "StackId": "arn:aws:cloudformation:us-east-1:086143043656:stack/amplify-sitegreenstemglobalp-dev-cf07b/2dc65ec0-8c9b-11f0-97ef-12ce0a2af17d",
+      "AmplifyAppId": "dgcik29wowtkc"
+    }
+  }
+}

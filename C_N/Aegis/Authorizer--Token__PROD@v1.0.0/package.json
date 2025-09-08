@@ -1,0 +1,27 @@
+{
+  "name": "c-n-token-authorizer",
+  "version": "1.0.0",
+  "description": "C_N Token Authorizer - API Gateway custom authorizer",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "npm install && zip -r ../function.zip ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.637.0",
+    "aws-xray-sdk-core": "^3.9.0"
+  },
+  "keywords": [
+    "auth",
+    "authorizer",
+    "api-gateway",
+    "aws",
+    "lambda"
+  ],
+  "author": "C_N",
+  "license": "PROPRIETARY",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

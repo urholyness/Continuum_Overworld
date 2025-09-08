@@ -1,0 +1,43 @@
+{
+  "session": "nyxion_wsl2_debugging",
+  "date": "2025-08-08",
+  "cerebral_analysis": {
+    "pattern_recognition": {
+      "symptom": "Server logs show running but no actual binding",
+      "pattern": "WSL2 virtualization layer blocking ASGI server socket binding",
+      "similar_cases": "Known issue with Python 3.13 + WSL2 + async frameworks"
+    },
+    "root_cause_tree": {
+      "level_1": "Network binding failure",
+      "level_2": "WSL2 namespace isolation",
+      "level_3": "Hyper-V network virtualization incompatibility",
+      "level_4": "Python 3.13 ASGI implementation vs WSL2 bridge"
+    },
+    "solution_matrix": {
+      "immediate": {
+        "action": "Windows host execution",
+        "complexity": "Low",
+        "success_rate": "High"
+      },
+      "robust": {
+        "action": "Docker containerization",
+        "complexity": "Medium",
+        "success_rate": "Very High"
+      },
+      "tactical": {
+        "action": "Python 3.11 downgrade",
+        "complexity": "Low",
+        "success_rate": "Medium"
+      }
+    }
+  },
+  "debugging_methodology": {
+    "applied": "STOP-FIX-VERIFY from DEBUGGING_GUARDRAILS.md",
+    "result": "Successfully identified environmental issue, not code defect"
+  },
+  "constraints": {
+    "no_mocks": "Strictly enforced - all mock code removed",
+    "real_data_only": "No fallback to simulated data",
+    "auth_deferred": "Priority level 10 - disabled with SKIP_AUTH"
+  }
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "discovery_agent",
+    "category": "csr",
+    "smart": true,
+    "compatible_llms": [
+      "gpt-4o",
+      "claude-3"
+    ],
+    "protocols": [
+      "MCP",
+      "SCIP"
+    ]
+  }
+]

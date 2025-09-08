@@ -1,0 +1,54 @@
+version: 0.1
+vector_store: pgvector
+object_store: local
+queue: rq
+agents:
+  - name: signal
+    goal: scan news/policy feeds and produce prioritized briefs
+    input_schema:
+      type: object
+      properties:
+        focus_regions: { type: array, items: { type: string } }
+        topics: { type: array, items: { type: string } }
+    output_schema:
+      type: object
+      properties:
+        pulse_digest: { type: string }
+        engage_now: { type: array, items: { type: object, properties: { who: {type: string}, why: {type: string}, draft_hook: {type: string} } } }
+  - name: scribe
+    goal: draft LI posts, X threads, comment packs with citations
+    input_schema:
+      type: object
+      properties:
+        issue_card_path: { type: string }
+        audience: { type: string, enum: [policy, investor, buyer, public] }
+        tone: { type: string, enum: [boardroom, policy-brief, field-notes, vision-thread, humor-light] }
+    output_schema:
+      type: object
+      properties:
+        linkedin_post: { type: string }
+        x_thread: { type: array, items: { type: string } }
+        comments_pack: { type: array, items: { type: string } }
+        citations: { type: array, items: { type: string } }
+  - name: sentinel
+    goal: risk & compliance screening
+    input_schema: { type: object, properties: { content: {type: string}, jurisdiction: {type: string} } }
+    output_schema: { type: object, properties: { risk: {type: string, enum: [green, amber, red]}, notes: {type: array, items: {type:string}} } }
+  - name: liaison
+    goal: personalized outreach drafts (emails/DMs/comments)
+    input_schema: { type: object, properties: { target_profile: {type:string}, campaign_goal:{type:string}, hooks:{type:array, items:{type:string}} } }
+    output_schema: { type: object, properties: { email:{type:string}, linkedin_comment:{type:string}, twitter_reply:{type:string} } }
+  - name: conductor
+    goal: schedule & track posts
+    input_schema: { type: object, properties: { platform:{type:string}, content:{type:string}, when:{type:string} } }
+    output_schema: { type: object, properties: { scheduled_id:{type:string}, utm:{type:string} } }
+  - name: analyst
+    goal: attribute performance & learnings
+    input_schema: { type: object, properties: { campaign_id:{type:string} } }
+    output_schema: { type: object, properties: { kpis:{type:object}, insights:{type:array, items:{type:string}}, suggestions:{type:array, items:{type:string}} } }
+  - name: cartographer
+    goal: ingest PDFs/notes, extract entities, vectorize
+    input_schema: { type: object, properties: { path:{type:string}, tags:{type:array, items:{type:string}} } }
+    output_schema: { type: object, properties: { entities:{type:array, items:{type:string}}, vectors:{type:integer} } }
+  - name: switchboard
+    goal: API layer that routes tasks to agents and stores logs

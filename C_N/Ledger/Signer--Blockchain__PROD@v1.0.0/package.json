@@ -1,0 +1,29 @@
+{
+  "name": "c-n-ledger-signer",
+  "version": "1.0.0",
+  "description": "C_N Ledger Signer - Blockchain transaction service",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "npm install && zip -r ../function.zip ."
+  },
+  "dependencies": {
+    "ethers": "^6.13.2",
+    "@aws-sdk/client-secrets-manager": "^3.637.0",
+    "@aws-sdk/client-cloudwatch": "^3.637.0",
+    "aws-xray-sdk-core": "^3.9.0"
+  },
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "ledger",
+    "aws",
+    "lambda"
+  ],
+  "author": "C_N",
+  "license": "PROPRIETARY",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

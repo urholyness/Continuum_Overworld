@@ -1,0 +1,15 @@
+{
+  "name": "Continuum_Overworld",
+  "private": true,
+  "workspaces": [
+    "Agora/Site--GreenStemGlobal__PROD@v1.0.0",
+    "Agora/Site--GreenStemGlobal__PROD@v1.0.0/chain"
+  ],
+  "description": "Enterprise Multi-Tenant ESG Data Platform with Blockchain Traceability",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/Continuum_Overworld.git"
+  },
+  "author": "GreenStem Global",
+  "license": "UNLICENSED"
+}

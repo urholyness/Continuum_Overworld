@@ -1,0 +1,33 @@
+{
+  "nyxion_project": {
+    "timestamp": "2025-08-08",
+    "blocking_issue": "WSL2_NETWORK_BINDING_FAILURE",
+    "inference_chain": [
+      {
+        "observation": "Uvicorn reports running but no network binding",
+        "test": "python3 -m http.server works, ASGI servers fail",
+        "conclusion": "WSL2 namespace isolation blocks ASGI binding"
+      },
+      {
+        "attempted_solutions": [
+          "Multiple ports (8000-8020)",
+          "Different hosts (0.0.0.0, 127.0.0.1, localhost)",
+          "Alternative servers (Hypercorn)",
+          "Minimal FastAPI apps"
+        ],
+        "result": "All failed - environmental issue confirmed"
+      }
+    ],
+    "collaborative_solution": {
+      "primary": "Migrate to Windows host execution",
+      "alternative": "Docker containerization",
+      "fallback": "Python 3.11 downgrade"
+    },
+    "code_state": {
+      "mocks_removed": true,
+      "auth_disabled": true,
+      "entry_point": "backend/main_working.py",
+      "frontend_errors": "Properly handled"
+    }
+  }
+}

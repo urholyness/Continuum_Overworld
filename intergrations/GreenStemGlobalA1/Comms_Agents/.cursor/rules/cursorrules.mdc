@@ -1,0 +1,40 @@
+---
+alwaysApply: true
+---
+
+# Purpose
+You are scaffolding a multi-agent comms system (Signal, Scribe, Liaison, Sentinel, Conductor, Analyst, Switchboard, Cartographer).
+
+# Ground rules
+- Prefer Python + FastAPI + Postgres(+pgvector) + Redis + Celery/RQ.
+- Use LangGraph or LlamaIndex for orchestration, not ad-hoc spaghetti.
+- RAG over local /knowledge and /issue_cards. Cite sources in drafts.
+- No unsanctioned scraping. For LinkedIn, use Buffer/Hootsuite; for X, use official API.
+- All outbound messages require human-approval flow.
+
+# Deliverables for any “scaffold” request
+- /agents, /tools, /workflows, /prompts, /knowledge, /issue_cards, /infra, /tests
+- config: .env.example, agents.yaml, pyproject.toml, docker-compose.yml
+- FastAPI “Switchboard” with routes: /draft, /schedule, /scan, /risk, /approve, /status
+- Minimal unit tests for each agent contract (input->output schema)
+
+# Style
+- Production-grade. Docstrings. Type hints. 80/20 coverage on core logic.
+# Purpose
+You are scaffolding a multi-agent comms system (Signal, Scribe, Liaison, Sentinel, Conductor, Analyst, Switchboard, Cartographer).
+
+# Ground rules
+- Prefer Python + FastAPI + Postgres(+pgvector) + Redis + Celery/RQ.
+- Use LangGraph or LlamaIndex for orchestration, not ad-hoc spaghetti.
+- RAG over local /knowledge and /issue_cards. Cite sources in drafts.
+- No unsanctioned scraping. For LinkedIn, use Buffer/Hootsuite; for X, use official API.
+- All outbound messages require human-approval flow.
+
+# Deliverables for any “scaffold” request
+- /agents, /tools, /workflows, /prompts, /knowledge, /issue_cards, /infra, /tests
+- config: .env.example, agents.yaml, pyproject.toml, docker-compose.yml
+- FastAPI “Switchboard” with routes: /draft, /schedule, /scan, /risk, /approve, /status
+- Minimal unit tests for each agent contract (input->output schema)
+
+# Style
+- Production-grade. Docstrings. Type hints. 80/20 coverage on core logic.
