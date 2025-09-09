@@ -1,0 +1,248 @@
+{
+  "Comment": "Ledger Anchoring - Batch events, compute merkle root, anchor to blockchain, emit checkpoint",
+  "StartAt": "CollectBatchEvents",
+  "States": {
+    "CollectBatchEvents": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "C_N-Ledger-BatchCollector",
+        "Payload": {
+          "correlationId.$": "$.correlationId",
+          "causationId.$": "$.causationId",
+          "batchId.$": "$.batchId",
+          "eventTypes": ["NDVI.Processed", "Weather.Snapshotted", "ProductTrace.Updated"],
+          "timeWindow": "PT1H"
+        }
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "IntervalSeconds": 10,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "ResultPath": "$.batchEvents",
+      "Next": "ValidateBatch"
+    },
+    "ValidateBatch": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.batchEvents.Payload.eventCount",
+          "NumericGreaterThan": 0,
+          "Next": "ComputeMerkleRoot"
+        }
+      ],
+      "Default": "EmptyBatch"
+    },
+    "ComputeMerkleRoot": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "C_N-Ledger-MerkleCompute",
+        "Payload": {
+          "correlationId.$": "$.correlationId",
+          "causationId.$": "$.causationId",
+          "batchId.$": "$.batchId",
+          "events.$": "$.batchEvents.Payload.events"
+        }
+      },
+      "ResultPath": "$.merkleResult",
+      "Next": "CheckGasPrice"
+    },
+    "CheckGasPrice": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "C_N-Ledger-GasOracle",
+        "Payload": {
+          "correlationId.$": "$.correlationId",
+          "network": "sepolia",
+          "priority": "standard"
+        }
+      },
+      "ResultPath": "$.gasData",
+      "Next": "AnchorToBlockchain"
+    },
+    "AnchorToBlockchain": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "C_N-Ledger-Signer",
+        "Payload": {
+          "httpMethod": "POST",
+          "body": {
+            "action": "emitCheckpoint",
+            "params": {
+              "batch.$": "$.batchId",
+              "amount.$": "$.merkleResult.Payload.eventCount",
+              "currency.$": "$.merkleResult.Payload.rootHash",
+              "metadata": {
+                "correlationId.$": "$.correlationId",
+                "causationId.$": "$.causationId",
+                "eventTypes.$": "$.batchEvents.Payload.eventTypes",
+                "gasPrice.$": "$.gasData.Payload.gasPrice"
+              }
+            }
+          }
+        }
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "HandleBlockchainError",
+          "ResultPath": "$.error"
+        }
+      ],
+      "ResultPath": "$.txResult",
+      "Next": "WaitForConfirmation"
+    },
+    "WaitForConfirmation": {
+      "Type": "Wait",
+      "Seconds": 60,
+      "Next": "CheckConfirmation"
+    },
+    "CheckConfirmation": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "C_N-Ledger-TxStatus",
+        "Payload": {
+          "txHash.$": "$.txResult.Payload.txHash",
+          "network": "sepolia",
+          "requiredConfirmations": 3
+        }
+      },
+      "ResultPath": "$.confirmationResult",
+      "Next": "ConfirmationCheck"
+    },
+    "ConfirmationCheck": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.confirmationResult.Payload.confirmed",
+          "BooleanEquals": true,
+          "Next": "EmitCheckpointEvent"
+        },
+        {
+          "Variable": "$.confirmationResult.Payload.retryCount",
+          "NumericLessThan": 10,
+          "Next": "WaitForConfirmation"
+        }
+      ],
+      "Default": "HandleConfirmationTimeout"
+    },
+    "EmitCheckpointEvent": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::events:putEvents",
+      "Parameters": {
+        "Entries": [
+          {
+            "Source": "Ledger.Blockchain",
+            "DetailType": "Checkpoint.Emitted@v1",
+            "Detail": {
+              "correlationId.$": "$.correlationId",
+              "causationId.$": "$.causationId",
+              "batchId.$": "$.batchId",
+              "txHash.$": "$.txResult.Payload.txHash",
+              "blockNumber.$": "$.confirmationResult.Payload.blockNumber",
+              "confirmations.$": "$.confirmationResult.Payload.confirmations",
+              "gasUsed.$": "$.confirmationResult.Payload.gasUsed",
+              "network": "sepolia",
+              "merkleRoot.$": "$.merkleResult.Payload.rootHash",
+              "eventCount.$": "$.merkleResult.Payload.eventCount"
+            },
+            "EventBusName": "C_N-EventBus-Core"
+          }
+        ]
+      },
+      "Next": "Success"
+    },
+    "Success": {
+      "Type": "Pass",
+      "Parameters": {
+        "status": "SUCCESS",
+        "batchId.$": "$.batchId",
+        "txHash.$": "$.txResult.Payload.txHash",
+        "blockNumber.$": "$.confirmationResult.Payload.blockNumber",
+        "eventCount.$": "$.merkleResult.Payload.eventCount",
+        "completedAt.$": "$$.State.EnteredTime"
+      },
+      "End": true
+    },
+    "EmptyBatch": {
+      "Type": "Pass",
+      "Parameters": {
+        "status": "SKIPPED",
+        "reason": "No events in batch",
+        "batchId.$": "$.batchId"
+      },
+      "End": true
+    },
+    "HandleBlockchainError": {
+      "Type": "Pass",
+      "Parameters": {
+        "status": "BLOCKCHAIN_ERROR",
+        "error.$": "$.error",
+        "batchId.$": "$.batchId",
+        "retryable": true
+      },
+      "Next": "NotifyBlockchainError"
+    },
+    "HandleConfirmationTimeout": {
+      "Type": "Pass",
+      "Parameters": {
+        "status": "CONFIRMATION_TIMEOUT",
+        "txHash.$": "$.txResult.Payload.txHash",
+        "batchId.$": "$.batchId",
+        "note": "Transaction submitted but confirmation timeout - check manually"
+      },
+      "Next": "NotifyConfirmationTimeout"
+    },
+    "NotifyBlockchainError": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:C_N-Meridian-Alerts",
+        "Message": {
+          "level": "ERROR",
+          "service": "Ledger.Anchoring",
+          "correlationId.$": "$.correlationId",
+          "error.$": "$.error",
+          "batchId.$": "$.batchId",
+          "timestamp.$": "$$.State.EnteredTime"
+        },
+        "Subject": "C_N Ledger - Blockchain Anchoring Failed"
+      },
+      "End": true
+    },
+    "NotifyConfirmationTimeout": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:C_N-Meridian-Alerts",
+        "Message": {
+          "level": "WARN",
+          "service": "Ledger.Anchoring",
+          "correlationId.$": "$.correlationId",
+          "txHash.$": "$.txResult.Payload.txHash",
+          "batchId.$": "$.batchId",
+          "note": "Manual confirmation check required",
+          "timestamp.$": "$$.State.EnteredTime"
+        },
+        "Subject": "C_N Ledger - Confirmation Timeout"
+      },
+      "End": true
+    }
+  }
+}

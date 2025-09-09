@@ -1,0 +1,222 @@
+{
+  "Comment": "Satellite Weather Compose - Fetch S2/S1, compute indices, store tiles, snapshot weather, emit events",
+  "StartAt": "ValidateInput",
+  "States": {
+    "ValidateInput": {
+      "Type": "Pass",
+      "Parameters": {
+        "correlationId.$": "$.correlationId",
+        "causationId.$": "$.causationId",
+        "plotId.$": "$.plotId",
+        "coordinates.$": "$.coordinates",
+        "dateFrom.$": "$.dateFrom",
+        "dateTo.$": "$.dateTo",
+        "indices.$": "States.Array('ndvi', 'ndwi')"
+      },
+      "Next": "FetchSatelliteData"
+    },
+    "FetchSatelliteData": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "C_N-Oracle-Sat-Ingest",
+        "Payload": {
+          "correlationId.$": "$.correlationId",
+          "causationId.$": "$.causationId",
+          "plotId.$": "$.plotId",
+          "coordinates.$": "$.coordinates",
+          "dateFrom.$": "$.dateFrom",
+          "dateTo.$": "$.dateTo"
+        }
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "IntervalSeconds": 5,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "HandleSatelliteError",
+          "ResultPath": "$.error"
+        }
+      ],
+      "ResultPath": "$.satelliteData",
+      "Next": "ComputeIndicesParallel"
+    },
+    "ComputeIndicesParallel": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "ComputeNDVI",
+          "States": {
+            "ComputeNDVI": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "C_N-Oracle-Sat-Index",
+                "Payload": {
+                  "correlationId.$": "$.correlationId",
+                  "causationId.$": "$.causationId",
+                  "plotId.$": "$.plotId",
+                  "imageData.$": "$.satelliteData.Payload.imageBuffer",
+                  "index": "ndvi",
+                  "bands": ["B04", "B08"]
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "ComputeNDWI",
+          "States": {
+            "ComputeNDWI": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "C_N-Oracle-Sat-Index",
+                "Payload": {
+                  "correlationId.$": "$.correlationId",
+                  "causationId.$": "$.causationId",
+                  "plotId.$": "$.plotId",
+                  "imageData.$": "$.satelliteData.Payload.imageBuffer",
+                  "index": "ndwi",
+                  "bands": ["B03", "B08"]
+                }
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "ResultPath": "$.indexResults",
+      "Next": "StoreTiles"
+    },
+    "StoreTiles": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "C_N-Oracle-Sat-StoreTiles",
+        "Payload": {
+          "correlationId.$": "$.correlationId",
+          "causationId.$": "$.causationId",
+          "plotId.$": "$.plotId",
+          "indexResults.$": "$.indexResults"
+        }
+      },
+      "ResultPath": "$.tileResults",
+      "Next": "SnapshotWeather"
+    },
+    "SnapshotWeather": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "C_N-Oracle-Weather-Snapshot",
+        "Payload": {
+          "correlationId.$": "$.correlationId",
+          "causationId.$": "$.causationId",
+          "plotId.$": "$.plotId",
+          "coordinates.$": "$.coordinates",
+          "dateFrom.$": "$.dateFrom",
+          "dateTo.$": "$.dateTo"
+        }
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "IntervalSeconds": 10,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "ResultPath": "$.weatherData",
+      "Next": "EmitEvents"
+    },
+    "EmitEvents": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "EmitNDVIProcessed",
+          "States": {
+            "EmitNDVIProcessed": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "C_N-Oracle-Emit-NDVIProcessed",
+                "Payload": {
+                  "correlationId.$": "$.correlationId",
+                  "causationId.$": "$.causationId",
+                  "plotId.$": "$.plotId",
+                  "ndviData.$": "$.indexResults[0].Payload",
+                  "tileKey.$": "$.tileResults.Payload.ndviTileKey"
+                }
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "EmitWeatherSnapshotted",
+          "States": {
+            "EmitWeatherSnapshotted": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "C_N-Oracle-Emit-WeatherSnap",
+                "Payload": {
+                  "correlationId.$": "$.correlationId",
+                  "causationId.$": "$.causationId",
+                  "plotId.$": "$.plotId",
+                  "weatherData.$": "$.weatherData.Payload"
+                }
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "Success"
+    },
+    "Success": {
+      "Type": "Pass",
+      "Parameters": {
+        "status": "SUCCESS",
+        "correlationId.$": "$.correlationId",
+        "plotId.$": "$.plotId",
+        "eventsEmitted.$": "$.length(@)",
+        "completedAt.$": "$$.State.EnteredTime"
+      },
+      "End": true
+    },
+    "HandleSatelliteError": {
+      "Type": "Pass",
+      "Parameters": {
+        "status": "FAILED",
+        "error": "Satellite data fetch failed",
+        "correlationId.$": "$.correlationId",
+        "details.$": "$.error"
+      },
+      "Next": "NotifyError"
+    },
+    "NotifyError": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:C_N-Meridian-Alerts",
+        "Message": {
+          "level": "ERROR",
+          "service": "Oracle.Satellite",
+          "correlationId.$": "$.correlationId",
+          "error.$": "$.error",
+          "timestamp.$": "$$.State.EnteredTime"
+        },
+        "Subject": "C_N Oracle - Satellite Processing Failed"
+      },
+      "End": true
+    }
+  }
+}

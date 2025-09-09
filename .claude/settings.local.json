@@ -37,7 +37,8 @@
       "Bash(npx cdk init:*)",
       "Bash(npm install:*)",
       "Bash(npx cdk:*)",
-      "Bash(aws events create-event-bus:*)"
+      "Bash(aws events create-event-bus:*)",
+      "Bash(git config:*)"
     ],
     "deny": [],
     "ask": []
