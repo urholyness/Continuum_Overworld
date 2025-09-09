@@ -1,0 +1,29 @@
+{
+  "name": "cn-oracle-satellite-enhanced",
+  "version": "1.0.0",
+  "description": "Enhanced satellite data processing with polygon clipping and quality assessment",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.450.0",
+    "@aws-sdk/client-s3": "^3.450.0",
+    "@aws-sdk/client-dynamodb": "^3.450.0",
+    "@aws-sdk/client-cloudwatch": "^3.450.0",
+    "@aws-sdk/util-dynamodb": "^3.450.0",
+    "@turf/turf": "^6.5.0",
+    "aws-xray-sdk-core": "^3.5.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.126",
+    "@types/node": "^20.8.0",
+    "@types/node-fetch": "^2.6.6",
+    "typescript": "^5.2.2"
+  },
+  "keywords": ["aws", "lambda", "satellite", "ndvi", "sentinel", "agriculture"],
+  "author": "GreenStem Global Dev Team",
+  "license": "PROPRIETARY"
+}

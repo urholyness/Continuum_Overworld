@@ -1,0 +1,27 @@
+{
+  "name": "cn-farm-validator",
+  "version": "1.0.0",
+  "description": "Enterprise farm geometry validator with polygon validation",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.450.0",
+    "@aws-sdk/client-dynamodb": "^3.450.0",
+    "@aws-sdk/client-eventbridge": "^3.450.0",
+    "@aws-sdk/client-cloudwatch": "^3.450.0",
+    "@aws-sdk/util-dynamodb": "^3.450.0",
+    "@turf/turf": "^6.5.0",
+    "aws-xray-sdk-core": "^3.5.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.126",
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2"
+  },
+  "keywords": ["aws", "lambda", "farm", "geometry", "validation", "gis"],
+  "author": "GreenStem Global Dev Team",
+  "license": "PROPRIETARY"
+}
