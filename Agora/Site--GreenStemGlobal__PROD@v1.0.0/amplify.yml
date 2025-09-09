@@ -3,20 +3,19 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Starting build in correct directory"
+        - echo "Starting build in Agora/Site--GreenStemGlobal__PROD@v1.0.0"
+        - cd Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        - echo "Installing dependencies..."
         - npm ci
     build:
       commands:
         - echo "Building Next.js application"
         - npm run build
-    postBuild:
-      commands:
-        - echo "Build completed successfully"
+        - echo "Build completed"
   artifacts:
-    baseDirectory: .next
+    baseDirectory: Agora/Site--GreenStemGlobal__PROD@v1.0.0/.next
     files:
       - '**/*'
   cache:
     paths:
-      - node_modules/**/*
-      - .next/cache/**/*
+      - Agora/Site--GreenStemGlobal__PROD@v1.0.0/node_modules/**/*
