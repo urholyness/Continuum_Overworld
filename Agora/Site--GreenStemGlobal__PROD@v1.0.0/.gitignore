@@ -56,3 +56,10 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+# environment files (do not commit secrets)
+.env
+.env.production
+env.production
+.env.development
+.env.test
