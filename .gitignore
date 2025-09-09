@@ -26,3 +26,8 @@ desktop.ini
 *.bak
 *.cache
 /intergrations
+
+# Next.js
+.next
+build
+dist

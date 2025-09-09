@@ -3,21 +3,20 @@ frontend:
   phases:
     preBuild:
       commands:
+        - echo "Starting build in Agora/Site--GreenStemGlobal__PROD@v1.0.0"
+        - cd Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        - echo "Installing dependencies..."
         - npm ci
-        - echo "Building GreenStem Global website..."
-        - echo "Environment: $NEXT_PUBLIC_SITE_ENV"
     build:
       commands:
+        - echo "Building Next.js application"
+        - cd Agora/Site--GreenStemGlobal__PROD@v1.0.0
         - npm run build
+        - echo "Build completed"
   artifacts:
-    baseDirectory: .next
+    baseDirectory: Agora/Site--GreenStemGlobal__PROD@v1.0.0/.next
     files:
       - '**/*'
   cache:
     paths:
-      - node_modules/**/*
-backend:
-  phases:
-    build:
-      commands:
-        - echo "BILLING_REGION=us-east-1" >> .env
+      - Agora/Site--GreenStemGlobal__PROD@v1.0.0/node_modules/**/*
