@@ -12,17 +12,13 @@
     --accent: 245 158 11;
   }
 
-  * {
-    @apply border-border;
-  }
-
   body {
-    @apply bg-light text-soil;
+    @apply bg-gray-50 text-gray-900;
   }
 
   /* Focus styles for accessibility */
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-leaf;
+    @apply outline-2 outline-offset-2 outline-green-500;
   }
 
   /* Ensure minimum contrast ratios */
@@ -32,7 +28,7 @@
 
   /* Skip to main content link for screen readers */
   .skip-link {
-    @apply absolute left-0 top-0 -translate-y-full bg-leaf text-white px-4 py-2 focus:translate-y-0;
+    @apply absolute left-0 top-0 -translate-y-full bg-green-500 text-white px-4 py-2 focus:translate-y-0;
   }
 }
 
@@ -42,11 +38,11 @@
   }
 
   .btn-primary {
-    @apply bg-leaf text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf;
+    @apply bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500;
   }
 
   .btn-secondary {
-    @apply bg-stem text-white px-6 py-3 rounded-lg font-medium hover:bg-green-900 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stem;
+    @apply bg-green-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-800 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700;
   }
 
   .card {
