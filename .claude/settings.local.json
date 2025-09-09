@@ -38,7 +38,9 @@
       "Bash(npm install:*)",
       "Bash(npx cdk:*)",
       "Bash(aws events create-event-bus:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(npm ci:*)",
+      "Bash(timeout 60 npm install:*)"
     ],
     "deny": [],
     "ask": []
