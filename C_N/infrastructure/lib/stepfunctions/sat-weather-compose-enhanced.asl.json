@@ -1,0 +1,324 @@
+{
+  "Comment": "Enhanced composite Oracle execution with error handling and quality assessment",
+  "StartAt": "ValidateInput",
+  "States": {
+    "ValidateInput": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.plotId",
+          "IsPresent": true,
+          "Next": "FetchPlotDetails"
+        },
+        {
+          "Variable": "$.farmId",
+          "IsPresent": true,
+          "Next": "FetchFarmPlots"
+        }
+      ],
+      "Default": "InputValidationFailed"
+    },
+    "FetchPlotDetails": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:getItem",
+      "Parameters": {
+        "TableName": "C_N-Oracle-FarmPlots",
+        "Key": {
+          "plotId": {
+            "S.$": "$.plotId"
+          }
+        }
+      },
+      "Next": "ProcessSinglePlot",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "PlotNotFound",
+          "ResultPath": "$.error"
+        }
+      ]
+    },
+    "FetchFarmPlots": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:query",
+      "Parameters": {
+        "TableName": "C_N-Oracle-FarmPlots",
+        "IndexName": "FarmIndex",
+        "KeyConditionExpression": "farmId = :farmId",
+        "ExpressionAttributeValues": {
+          ":farmId": {
+            "S.$": "$.farmId"
+          }
+        }
+      },
+      "Next": "ProcessMultiplePlots",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "FarmNotFound",
+          "ResultPath": "$.error"
+        }
+      ]
+    },
+    "ProcessSinglePlot": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "FetchSatelliteData",
+          "States": {
+            "FetchSatelliteData": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:eu-north-1:086143043656:function:C_N-Oracle-Satellite-Enhanced",
+                "Payload": {
+                  "plotId.$": "$.plotId",
+                  "farmId.$": "$.Item.farmId.S",
+                  "correlationId.$": "$.correlationId",
+                  "source": "step-function"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2
+                },
+                {
+                  "ErrorEquals": ["States.TaskFailed"],
+                  "IntervalSeconds": 10,
+                  "MaxAttempts": 2,
+                  "BackoffRate": 2
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "Next": "SatelliteDataFailed",
+                  "ResultPath": "$.satelliteError"
+                }
+              ],
+              "End": true
+            },
+            "SatelliteDataFailed": {
+              "Type": "Pass",
+              "Parameters": {
+                "service": "satellite",
+                "status": "failed",
+                "error.$": "$.satelliteError.Cause",
+                "timestamp.$": "$$.State.EnteredTime"
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "FetchWeatherData",
+          "States": {
+            "FetchWeatherData": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "arn:aws:lambda:eu-north-1:086143043656:function:C_N-Oracle-Weather",
+                "Payload": {
+                  "plotId.$": "$.plotId",
+                  "farmId.$": "$.Item.farmId.S",
+                  "coordinates": {
+                    "lat.$": "$.Item.centroid.M.lat.N",
+                    "lon.$": "$.Item.centroid.M.lon.N"
+                  },
+                  "correlationId.$": "$.correlationId",
+                  "source": "step-function"
+                }
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                  "IntervalSeconds": 5,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2
+                }
+              ],
+              "Catch": [
+                {
+                  "ErrorEquals": ["States.ALL"],
+                  "Next": "WeatherDataFailed",
+                  "ResultPath": "$.weatherError"
+                }
+              ],
+              "End": true
+            },
+            "WeatherDataFailed": {
+              "Type": "Pass",
+              "Parameters": {
+                "service": "weather",
+                "status": "failed",
+                "error.$": "$.weatherError.Cause",
+                "timestamp.$": "$$.State.EnteredTime"
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "AssessDataQuality",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "ParallelProcessingFailed",
+          "ResultPath": "$.parallelError"
+        }
+      ]
+    },
+    "ProcessMultiplePlots": {
+      "Type": "Map",
+      "ItemsPath": "$.Items",
+      "Parameters": {
+        "plotId.$": "$$.Map.Item.Value.plotId.S",
+        "farmId.$": "$$.Map.Item.Value.farmId.S",
+        "coordinates": {
+          "lat.$": "$$.Map.Item.Value.centroid.M.lat.N",
+          "lon.$": "$$.Map.Item.Value.centroid.M.lon.N"
+        },
+        "correlationId.$": "$.correlationId"
+      },
+      "MaxConcurrency": 5,
+      "Iterator": {
+        "StartAt": "ProcessPlotParallel",
+        "States": {
+          "ProcessPlotParallel": {
+            "Type": "Parallel",
+            "Branches": [
+              {
+                "StartAt": "PlotSatellite",
+                "States": {
+                  "PlotSatellite": {
+                    "Type": "Task",
+                    "Resource": "arn:aws:states:::lambda:invoke",
+                    "Parameters": {
+                      "FunctionName": "arn:aws:lambda:eu-north-1:086143043656:function:C_N-Oracle-Satellite-Enhanced",
+                      "Payload.$": "$"
+                    },
+                    "Retry": [
+                      {
+                        "ErrorEquals": ["Lambda.ServiceException"],
+                        "IntervalSeconds": 5,
+                        "MaxAttempts": 2
+                      }
+                    ],
+                    "End": true
+                  }
+                }
+              },
+              {
+                "StartAt": "PlotWeather",
+                "States": {
+                  "PlotWeather": {
+                    "Type": "Task",
+                    "Resource": "arn:aws:states:::lambda:invoke",
+                    "Parameters": {
+                      "FunctionName": "arn:aws:lambda:eu-north-1:086143043656:function:C_N-Oracle-Weather",
+                      "Payload.$": "$"
+                    },
+                    "Retry": [
+                      {
+                        "ErrorEquals": ["Lambda.ServiceException"],
+                        "IntervalSeconds": 5,
+                        "MaxAttempts": 2
+                      }
+                    ],
+                    "End": true
+                  }
+                }
+              }
+            ],
+            "End": true
+          }
+        }
+      },
+      "Next": "AggregateResults"
+    },
+    "AssessDataQuality": {
+      "Type": "Pass",
+      "Parameters": {
+        "qualityAssessment": {
+          "satelliteSuccess.$": "States.ArrayContains($[0].Payload.success, true)",
+          "weatherSuccess.$": "States.ArrayContains($[1].Payload.success, true)",
+          "overallQuality.$": "States.Format('{}', 'PROCESSING_COMPLETE')",
+          "timestamp.$": "$$.State.EnteredTime"
+        },
+        "results.$": "$"
+      },
+      "Next": "EmitCompositeEvent"
+    },
+    "AggregateResults": {
+      "Type": "Pass",
+      "Parameters": {
+        "totalPlots.$": "States.ArrayLength($)",
+        "successfulPlots.$": "States.ArrayLength($[?(@.Payload.success == true)])",
+        "timestamp.$": "$$.State.EnteredTime",
+        "results.$": "$"
+      },
+      "Next": "EmitBatchEvent"
+    },
+    "EmitCompositeEvent": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::events:putEvents",
+      "Parameters": {
+        "Entries": [
+          {
+            "Source": "Oracle.Composite",
+            "DetailType": "Oracle.DataProcessed@v1",
+            "Detail.$": "States.JsonToString($.qualityAssessment)",
+            "EventBusName": "C_N-EventBus-Core"
+          }
+        ]
+      },
+      "Next": "CompositeComplete"
+    },
+    "EmitBatchEvent": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::events:putEvents",
+      "Parameters": {
+        "Entries": [
+          {
+            "Source": "Oracle.Batch",
+            "DetailType": "Oracle.BatchProcessed@v1",
+            "Detail.$": "States.JsonToString($)",
+            "EventBusName": "C_N-EventBus-Core"
+          }
+        ]
+      },
+      "Next": "BatchComplete"
+    },
+    "CompositeComplete": {
+      "Type": "Succeed",
+      "Comment": "Single plot Oracle data processing completed"
+    },
+    "BatchComplete": {
+      "Type": "Succeed",
+      "Comment": "Batch Oracle data processing completed"
+    },
+    "InputValidationFailed": {
+      "Type": "Fail",
+      "Cause": "Missing required input: plotId or farmId",
+      "Error": "InputValidationError"
+    },
+    "PlotNotFound": {
+      "Type": "Fail",
+      "Cause": "Plot not found in database",
+      "Error": "PlotNotFoundError"
+    },
+    "FarmNotFound": {
+      "Type": "Fail",
+      "Cause": "Farm not found in database",
+      "Error": "FarmNotFoundError"
+    },
+    "ParallelProcessingFailed": {
+      "Type": "Fail",
+      "Cause": "Parallel Oracle processing failed",
+      "Error": "ParallelProcessingError"
+    }
+  }
+}

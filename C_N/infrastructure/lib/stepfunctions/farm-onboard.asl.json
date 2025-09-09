@@ -1,0 +1,221 @@
+{
+  "Comment": "Enterprise farm onboarding with Oracle scheduling and validation",
+  "StartAt": "ValidateFarmGeometry",
+  "States": {
+    "ValidateFarmGeometry": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:eu-north-1:086143043656:function:C_N-Farm-Validator",
+        "Payload.$": "$"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException", "Lambda.SdkClientException"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2
+        },
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 5,
+          "MaxAttempts": 2,
+          "BackoffRate": 2
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "ValidationFailed",
+          "ResultPath": "$.error"
+        }
+      ],
+      "Next": "ExtractFarmDetails"
+    },
+    "ExtractFarmDetails": {
+      "Type": "Pass",
+      "Parameters": {
+        "farmId.$": "$.Payload.farmId",
+        "farmName.$": "$.Payload.farmName",
+        "farmArea.$": "$.Payload.farmArea",
+        "plots.$": "$.Payload.plots",
+        "correlationId.$": "$.Payload.correlationId",
+        "timestamp.$": "$$.State.EnteredTime"
+      },
+      "Next": "ScheduleOracleServices"
+    },
+    "ScheduleOracleServices": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "ScheduleSatelliteMonitoring",
+          "States": {
+            "ScheduleSatelliteMonitoring": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::events:putRule",
+              "Parameters": {
+                "Name.$": "States.Format('Satellite-Farm-{}', $.farmId)",
+                "Description.$": "States.Format('Satellite monitoring for farm {} every 5 days', $.farmName)",
+                "ScheduleExpression": "rate(5 days)",
+                "State": "ENABLED",
+                "Tags": {
+                  "FarmId.$": "$.farmId",
+                  "Service": "SatelliteMonitoring",
+                  "CreatedBy": "FarmOnboardWorkflow"
+                }
+              },
+              "Next": "CreateSatelliteTarget"
+            },
+            "CreateSatelliteTarget": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::events:putTargets",
+              "Parameters": {
+                "Rule.$": "States.Format('Satellite-Farm-{}', $.farmId)",
+                "Targets": [
+                  {
+                    "Id": "1",
+                    "Arn": "arn:aws:lambda:eu-north-1:086143043656:function:C_N-Oracle-Satellite-Enhanced",
+                    "Input.$": "States.JsonToString({\"farmId\": $.farmId, \"source\": \"scheduled\"})"
+                  }
+                ]
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "ScheduleWeatherMonitoring",
+          "States": {
+            "ScheduleWeatherMonitoring": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::events:putRule",
+              "Parameters": {
+                "Name.$": "States.Format('Weather-Farm-{}', $.farmId)",
+                "Description.$": "States.Format('Daily weather monitoring for farm {}', $.farmName)",
+                "ScheduleExpression": "cron(0 6 * * ? *)",
+                "State": "ENABLED",
+                "Tags": {
+                  "FarmId.$": "$.farmId",
+                  "Service": "WeatherMonitoring",
+                  "CreatedBy": "FarmOnboardWorkflow"
+                }
+              },
+              "Next": "CreateWeatherTarget"
+            },
+            "CreateWeatherTarget": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::events:putTargets",
+              "Parameters": {
+                "Rule.$": "States.Format('Weather-Farm-{}', $.farmId)",
+                "Targets": [
+                  {
+                    "Id": "1",
+                    "Arn": "arn:aws:lambda:eu-north-1:086143043656:function:C_N-Oracle-Weather",
+                    "Input.$": "States.JsonToString({\"farmId\": $.farmId, \"source\": \"scheduled\"})"
+                  }
+                ]
+              },
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "InitialSatelliteCapture",
+          "States": {
+            "InitialSatelliteCapture": {
+              "Type": "Map",
+              "ItemsPath": "$.plots",
+              "Parameters": {
+                "plotId.$": "$$.Map.Item.Value.plotId",
+                "farmId.$": "$.farmId",
+                "correlationId.$": "$.correlationId",
+                "source": "onboarding"
+              },
+              "MaxConcurrency": 3,
+              "Iterator": {
+                "StartAt": "ProcessPlotSatellite",
+                "States": {
+                  "ProcessPlotSatellite": {
+                    "Type": "Task",
+                    "Resource": "arn:aws:states:::lambda:invoke",
+                    "Parameters": {
+                      "FunctionName": "arn:aws:lambda:eu-north-1:086143043656:function:C_N-Oracle-Satellite-Enhanced",
+                      "Payload.$": "$"
+                    },
+                    "Retry": [
+                      {
+                        "ErrorEquals": ["Lambda.ServiceException", "Lambda.AWSLambdaException"],
+                        "IntervalSeconds": 5,
+                        "MaxAttempts": 2,
+                        "BackoffRate": 2
+                      }
+                    ],
+                    "Catch": [
+                      {
+                        "ErrorEquals": ["States.ALL"],
+                        "Next": "LogPlotError",
+                        "ResultPath": "$.error"
+                      }
+                    ],
+                    "End": true
+                  },
+                  "LogPlotError": {
+                    "Type": "Pass",
+                    "Parameters": {
+                      "plotId.$": "$.plotId",
+                      "error.$": "$.error.Cause",
+                      "timestamp.$": "$$.State.EnteredTime"
+                    },
+                    "End": true
+                  }
+                }
+              },
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "EmitFarmOnboardedEvent"
+    },
+    "EmitFarmOnboardedEvent": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::events:putEvents",
+      "Parameters": {
+        "Entries": [
+          {
+            "Source": "Farm.Management",
+            "DetailType": "Farm.Onboarded@v1",
+            "Detail.$": "States.JsonToString($)",
+            "EventBusName": "C_N-EventBus-Core"
+          }
+        ]
+      },
+      "Next": "CreateAuditRecord"
+    },
+    "CreateAuditRecord": {
+      "Type": "Pass",
+      "Parameters": {
+        "_aegis": true,
+        "event": "FARM_ONBOARDING_COMPLETE",
+        "farmId.$": "$[0].farmId",
+        "farmName.$": "$[0].farmName",
+        "plotCount.$": "States.ArrayLength($[0].plots)",
+        "satelliteScheduled": true,
+        "weatherScheduled": true,
+        "correlationId.$": "$[0].correlationId",
+        "executionArn.$": "$$.Execution.Name",
+        "timestamp.$": "$$.State.EnteredTime"
+      },
+      "Next": "OnboardingComplete"
+    },
+    "OnboardingComplete": {
+      "Type": "Succeed",
+      "Comment": "Farm onboarding completed successfully with Oracle services scheduled"
+    },
+    "ValidationFailed": {
+      "Type": "Fail",
+      "Cause": "Farm geometry validation failed",
+      "Error": "GeometryValidationError"
+    }
+  }
+}
