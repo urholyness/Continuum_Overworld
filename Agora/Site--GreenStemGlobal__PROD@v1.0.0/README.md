@@ -1,88 +1,223 @@
-# GreenStem Global Web v1
+# GreenStemGlobal Production Website
 
-Dynamic site for Buyers + Investors with mock traceability data and Sepolia on‑chain breadcrumbs.
+Production website for GreenStemGlobal - connecting EU buyers to verified East African farms with real-time traceability and compliance.
 
-## Quickstart
+## 🚀 Tech Stack
 
-1) Install: `npm install`
-2) Env: copy `.env.example` to `.env.local` and fill keys.
-3) Dev: `npm run dev` → http://localhost:3000
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS + Custom Design System
+- **Components:** shadcn/ui components
+- **Forms:** Zod validation
+- **Analytics:** Plausible Analytics (privacy-friendly)
+- **Deployment:** AWS Amplify
+- **SEO:** next-sitemap, structured metadata
 
-## Deploy
-
-- Connect repo in AWS Amplify (branches: main → prod, dev → stage)
-- Set env vars in Amplify per branch
-- Push to trigger CI
-
-## Chain
-
-- Deploy `LedgerCheckpoint.sol` to Sepolia → put address in secrets
-- Use `/src/lib/ledger.ts` to read recent `Checkpoint` events (wire later to UI)
-
-### Deploy Contract
-```bash
-cd chain
-npm install
-cp .env.example .env # add ETH_RPC_URL + PRIVATE_KEY (deployer)
-npx hardhat compile
-npx hardhat run scripts/deploy.ts --network sepolia
-```
-
-## Data Contracts
-
-- `GET /api/trace/lots` → returns `/mocks/lots_sample.json`
-- `GET /api/trace/funds` → returns `/mocks/funds_sample.json` (download via `?download=1`)
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-Agora/Site--GreenStemGlobal__PROD@v1.0.0/
+Site--GreenStemGlobal__PROD@v1.0.0/
 ├── src/
-│   ├── app/              # Next.js app router pages
-│   │   ├── api/trace/    # API routes for trace data
-│   │   ├── buyers/       # Buyers traceability page
-│   │   ├── investors/    # Investors portal
-│   │   └── trace/[id]/   # Trace detail page
-│   ├── components/       # React components
-│   └── lib/             # Utilities (ledger, config)
-├── mocks/               # Sample JSON data
-├── chain/               # Solidity contract & Hardhat
-├── agents/              # C_O integration (MAR, MCP)
-└── .github/workflows/   # CI/CD pipeline
+│   ├── app/
+│   │   ├── page.tsx                # Home page
+│   │   ├── buyers/page.tsx         # Buyers information
+│   │   ├── investors/page.tsx      # Investor information
+│   │   ├── trace/page.tsx          # Supply chain traceability
+│   │   ├── about/page.tsx          # About us
+│   │   ├── contact/page.tsx        # Contact form
+│   │   ├── legal/
+│   │   │   ├── imprint/page.tsx    # Legal imprint
+│   │   │   └── privacy/page.tsx    # Privacy policy
+│   │   └── api/
+│   │       └── contact/route.ts    # Contact form API
+│   ├── components/                 # Reusable components
+│   └── lib/                        # Utility functions
+├── public/                         # Static assets
+├── amplify.yml                     # AWS Amplify config
+└── next-sitemap.config.js          # Sitemap configuration
 ```
 
-## Environment Variables
+## 🎨 Design System
 
-Required for production:
-- `NEXT_PUBLIC_BASE_URL` - Base URL for API calls
-- `NEXT_PUBLIC_CHAIN_ID` - Ethereum chain ID (11155111 for Sepolia)
-- `ETH_RPC_URL` - Ethereum RPC endpoint
-- `LEDGER_CONTRACT_ADDRESS` - Deployed contract address
-- `COGNITO_USER_POOL_ID` - AWS Cognito pool
-- `COGNITO_CLIENT_ID` - AWS Cognito client
+### Colors
+- **Leaf:** #10b981 (Primary green)
+- **Stem:** #065f46 (Dark green)
+- **Soil:** #111827 (Dark text)
+- **Light:** #f9fafb (Background)
+- **Accent:** #f59e0b (Orange accent)
 
-## Roadmap
+### Typography
+- **Body:** Inter
+- **Display:** DM Sans
 
-- Replace mocks with C_O MCP calls
-- Cognito‑gated investor downloads
-- NDVI tiles per lot (image URLs)
-- API Gateway + Lambda for ingest `/api/ingest/ledger`
+### Components
+- NavBar with mobile responsive menu
+- Footer with sitemap and legal links
+- Hero sections with CTAs
+- Product cards with specifications
+- Contact form with GDPR compliance
 
-## Punchlist (DoD for v1)
+## 🔧 Environment Variables
 
-- [ ] Amplify apps created (prod/stage) + domain mapping
-- [ ] Cognito pool + client IDs saved as secrets
-- [ ] Sepolia contract deployed; address saved as LEDGER_CONTRACT_ADDRESS
-- [ ] Pages render with mock data; download link works
-- [ ] MAR registry committed under /agents/mar
-- [ ] README covers run + deploy + keys
+Create a `.env.local` file with:
 
-## Tech Stack
+```env
+# Site Configuration
+NEXT_PUBLIC_SITE_ENV=DEV|STAGE|PROD
+NEXT_PUBLIC_SITE_URL=https://greenstemglobal.com
 
-- **Frontend**: Next.js 14 (App Router) + TypeScript + Tailwind CSS
-- **API**: Next.js Route Handlers (v1), upgrade path → API Gateway + Lambda
-- **Auth**: AWS Cognito (Investors portal)
-- **Storage**: S3 for static assets + JSON mocks
-- **Hosting**: AWS Amplify Hosting (SSR-ready)
-- **Blockchain**: ethers.js → Sepolia testnet
-- **C_O Integration**: MAR registry + MCP topics
+# API Configuration
+NEXT_PUBLIC_API_BASE_URL=https://api.greenstemglobal.com
+
+# Analytics (Optional)
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=greenstemglobal.com
+
+# Contact Form (Server-side)
+CONTACT_EMAIL=info@greenstemglobal.com
+SENDGRID_API_KEY=your-sendgrid-key
+```
+
+## 📦 Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## 🚢 Deployment
+
+### AWS Amplify Branch Mapping
+
+- `dev` branch → DEV environment
+- `stage` branch → STAGE environment
+- `main` branch → PROD environment
+
+### Deploy Commands
+
+```bash
+# Deploy to DEV
+git push origin dev
+
+# Deploy to STAGE
+git push origin stage
+
+# Deploy to PRODUCTION
+git push origin main
+```
+
+## ✅ Quality Checklist
+
+### Performance
+- [ ] Lighthouse Performance ≥ 95
+- [ ] Images optimized (WebP/AVIF)
+- [ ] Code splitting implemented
+- [ ] Critical CSS inlined
+
+### SEO
+- [ ] All pages have unique meta titles/descriptions
+- [ ] Open Graph tags configured
+- [ ] Sitemap generated automatically
+- [ ] Robots.txt configured
+
+### Accessibility
+- [ ] Lighthouse Accessibility = 100
+- [ ] WCAG 2.1 AA compliant
+- [ ] Keyboard navigation works
+- [ ] Screen reader tested
+- [ ] Focus indicators visible
+- [ ] Color contrast ≥ 4.5:1
+
+### Security
+- [ ] Content Security Policy configured
+- [ ] HTTPS enforced
+- [ ] Security headers set
+- [ ] No client-side secrets
+- [ ] Form validation on client and server
+
+## 📊 Features
+
+### For Buyers
+- Product specifications (French beans, chili, passion fruit, macadamia)
+- Quality assurance information
+- Partnership process outline
+- Sample shipment requests
+
+### For Investors
+- Investment thesis
+- Use of funds breakdown
+- Governance structure
+- Transparency commitments
+- Data room access
+
+### Traceability
+- Public trace highlights (24-48h delay)
+- Real-time access for active buyers
+- Supply chain event timeline
+- Integration with backend API
+
+### Contact
+- GDPR-compliant contact form
+- Server-side validation with Zod
+- Email integration ready
+- Spam protection
+
+## 🔐 Security Headers
+
+Configured in `amplify.yml`:
+- Strict-Transport-Security
+- X-Frame-Options: DENY
+- X-Content-Type-Options: nosniff
+- X-XSS-Protection
+- Content Security Policy
+- Referrer-Policy
+
+## 📝 Content Guidelines
+
+**CRITICAL:** No unverifiable claims or placeholder data
+- All numbers must be backed by real data
+- All certifications must be documented
+- Product specs from actual operations
+- No "coming soon" or placeholder text
+
+## 🧪 Testing
+
+```bash
+# Run linter
+npm run lint
+
+# Type checking
+npx tsc --noEmit
+
+# Lighthouse audit
+npx lighthouse https://localhost:3000
+```
+
+## 📚 Documentation
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [AWS Amplify](https://docs.amplify.aws)
+- [Zod Validation](https://zod.dev)
+
+## 👥 Team
+
+- **Executor:** Cursor AI
+- **Reviewer:** Claude
+- **PM:** Naivasha
+
+## 📄 License
+
+© 2025 GreenStemGlobal. All rights reserved.
+
+---
+
+**Note:** This is a production website with real content only. No placeholders, no unverifiable claims, no mock data.

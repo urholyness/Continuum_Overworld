@@ -1,30 +1,65 @@
+import type { Metadata } from 'next'
 import './globals.css'
+import NavBar from '@/components/NavBar'
+import Footer from '@/components/Footer'
 
-export const metadata = {
-  title: "GreenStem Global",
-  description: "From Leaf to Root — Traceable Freshness.",
-};
+export const metadata: Metadata = {
+  title: {
+    default: 'GreenStemGlobal - Seed-to-Shelf Traceability',
+    template: '%s | GreenStemGlobal'
+  },
+  description: 'Connecting EU buyers to verified East African farms with real-time traceability and compliance.',
+  keywords: ['sustainable agriculture', 'traceability', 'East Africa', 'EU compliance', 'GlobalG.A.P.', 'supply chain'],
+  authors: [{ name: 'GreenStemGlobal' }],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://greenstemglobal.com',
+    siteName: 'GreenStemGlobal',
+    title: 'GreenStemGlobal - Seed-to-Shelf Traceability',
+    description: 'Connecting EU buyers to verified East African farms with real-time traceability and compliance.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'GreenStemGlobal',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GreenStemGlobal - Seed-to-Shelf Traceability',
+    description: 'Connecting EU buyers to verified East African farms with real-time traceability and compliance.',
+    images: ['/og-image.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+}
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-neutral-50 text-neutral-900">
-        <header className="px-6 py-4 border-b bg-white">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <a href="/" className="font-semibold">GreenStem Global</a>
-            <nav className="text-sm">
-              <a className="mr-4 hover:underline" href="/buyers">Buyers</a>
-              <a className="hover:underline" href="/investors">Investors</a>
-            </nav>
-          </div>
-        </header>
-        <main className="px-6 py-8">
-          <div className="max-w-6xl mx-auto">{children}</div>
+      <body className="min-h-screen flex flex-col">
+        <NavBar />
+        <main id="main-content" className="flex-grow">
+          {children}
         </main>
-        <footer className="px-6 py-6 text-sm text-neutral-500">
-          <div className="max-w-6xl mx-auto">© {new Date().getFullYear()} GreenStem Global</div>
-        </footer>
+        <Footer />
       </body>
     </html>
-  );
+  )
 }
