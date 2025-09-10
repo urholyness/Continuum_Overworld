@@ -2,7 +2,7 @@
 
 DEPLOYMENT_ID=$(date +%Y%m%d%H%M%S)
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-AWS_REGION=${AWS_REGION:-us-east-1}
+AWS_REGION=${AWS_REGION:-eu-central-1}
 
 echo "
 ========================================

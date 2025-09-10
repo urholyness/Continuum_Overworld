@@ -11,7 +11,7 @@ on:
         type: string
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: eu-central-1
   NODE_VERSION: '20'
   ENVIRONMENT: production
 
@@ -123,7 +123,7 @@ jobs:
       - name: Create S3 buckets
         run: |
           aws s3 mb s3://continuum-overworld-lake-production || echo "Bucket exists"
-          aws s3 mb s3://greenstem-global-assets-production || echo "Bucket exists"
+          aws s3 mb s3://greenstemglobal-assets-production || echo "Bucket exists"
           
           # Enable versioning and encryption
           aws s3api put-bucket-versioning --bucket continuum-overworld-lake-production --versioning-configuration Status=Enabled

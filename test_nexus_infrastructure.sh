@@ -9,7 +9,7 @@ echo -n '{"test":"data","timestamp":'$(date +%s)'}' > /tmp/s3-test.json
 # Upload test file to each tier
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 for tier in raw bronze silver gold; do
-    BUCKET_NAME="c-n-greenstem-global-${tier}-${ACCOUNT_ID}"
+    BUCKET_NAME="c-n-greenstemglobal-${tier}-prod"
     aws s3 cp /tmp/s3-test.json "s3://${BUCKET_NAME}/test/data.json" && \
     echo "    ✓ Upload to $tier tier successful" || \
     echo "    ✗ Upload to $tier tier failed"

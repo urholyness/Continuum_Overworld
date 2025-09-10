@@ -141,6 +141,33 @@ Content-Type: application/json
 
 ---
 
+## 🔄 **CI/CD & Repository Management**
+
+### **GitHub Repository Setup (NEW)**
+- **Repository Structure**: OIDC authentication, path-filtered workflows
+- **Branch Strategy**: `main` (PROD) → `stage` (STAGING) → `dev` (DEV)  
+- **Security**: No static AWS keys, GitHub OIDC only
+- **Deployment**: Infrastructure changes trigger automated deployments
+- **Frontend**: Amplify auto-build from GitHub integration
+
+### **Deployment Pipeline**
+```
+Local C_O Development
+    ↓
+GitHub Repository (OIDC Auth)
+    ↓
+Path-filtered Workflows
+    ↓
+C_N AWS Infrastructure (Auto-deploy)
+```
+
+### **Workflow Triggers**
+- **Infrastructure**: Changes to `The_Bridge/`, `Oracle/`, `Forge/`, `Atlas/`, `Aegis/`
+- **Frontend**: Changes to `Agora/` (handled by Amplify)
+- **Documentation**: Changes to `*.md` (no deployment)
+
+---
+
 ## 📚 **Documentation**
 
 ### **🚀 Deployment & Operations**
@@ -154,11 +181,16 @@ Content-Type: application/json
 - [**Session Blueprint**](SESSION-BLUEPRINT.md): Implementation details and architecture changes
 - [**Work Order Verification**](C_N/WORK_ORDER_VERIFICATION.md): Task completion verification
 
+### **🔄 Repository & CI/CD (NEW)**
+- [**Repository Playbook**](The_Bridge/Playbooks/Repo--Continuum_Nexus__PROD@v2.0.0.md): GitHub workflow rules
+- **GitHub Workflows**: `.github/workflows/` - Infrastructure, web, and release automation
+- **OIDC Policies**: `The_Bridge/Policies/` - Security-first authentication
+
 ### **🎯 Quick Reference**
 - **Production App**: `Agora/Site--GreenStemGlobal__PROD@v1.0.0`
 - **Amplify App ID**: `dgcik29wowtkc`
-- **Status**: ✅ Deployed and operational
-- **Monthly Cost**: ~$20-25 (optimized)
+- **Status**: ✅ Deployed and operational (C_N backend) + 🟡 GitHub CI/CD (partial)
+- **Monthly Cost**: ~$20-25 (optimized) + ~$4 (current GitHub deployment)
 
 ---
 

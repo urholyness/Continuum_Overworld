@@ -1,17 +1,18 @@
 #!/bin/bash
 set -e
 
-echo "🏗️ Creating C_N S3 Data Lake with Security Baseline..."
+echo "🏗️ Creating C_N S3 Data Lake in Frankfurt with Security Baseline..."
 
-# Data lake tiers
+# Environment suffix and region configuration
+ENV_SUFFIX="${ENVIRONMENT:-prod}"
 TIERS=("raw" "bronze" "silver" "gold")
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-PROJECT_NAME="greenstem-global"
-AWS_REGION=${AWS_REGION:-us-east-1}
+PROJECT_NAME="greenstemglobal"
+AWS_REGION=${AWS_REGION:-eu-central-1}
 
 for tier in "${TIERS[@]}"; do
-    # S3 requires lowercase - using c-n- prefix for buckets only
-    BUCKET_NAME="c-n-${PROJECT_NAME}-${tier}-${ACCOUNT_ID}"
+    # S3 requires lowercase with environment suffix
+    BUCKET_NAME="c-n-${PROJECT_NAME}-${tier}-${ENV_SUFFIX}"
     
     # Create bucket
     if aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
@@ -27,10 +28,17 @@ for tier in "${TIERS[@]}"; do
             --bucket "$BUCKET_NAME" \
             --versioning-configuration Status=Enabled
         
-        # Enable SSE-S3 encryption
+        # Enable KMS encryption (Frankfurt security requirement)
         aws s3api put-bucket-encryption \
             --bucket "$BUCKET_NAME" \
-            --server-side-encryption-configuration '{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+            --server-side-encryption-configuration '{
+                "Rules": [{
+                    "ApplyServerSideEncryptionByDefault": {
+                        "SSEAlgorithm": "aws:kms",
+                        "KMSMasterKeyID": "alias/aws/s3"
+                    }
+                }]
+            }'
         
         # Block all public access
         aws s3api put-public-access-block \
@@ -82,7 +90,7 @@ POLICY
 
 # Apply lifecycle to gold tier only
 aws s3api put-bucket-lifecycle-configuration \
-    --bucket "c-n-${PROJECT_NAME}-gold-${ACCOUNT_ID}" \
+    --bucket "c-n-${PROJECT_NAME}-gold-${ENV_SUFFIX}" \
     --lifecycle-configuration file:///tmp/lifecycle-policy.json
 
 echo "✅ S3 Data Lake created with security baseline"

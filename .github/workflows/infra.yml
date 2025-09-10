@@ -23,9 +23,9 @@ on:
           - dev
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: eu-central-1
   C_N_PREFIX: C_N
-  PROJECT_NAME: greenstem-global
+  PROJECT_NAME: greenstemglobal
 
 concurrency:
   group: ${{ github.ref_name }}-infra
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: ${{ needs.detect-environment.outputs.environment }}
-      url: https://console.aws.amazon.com/cloudformation/home?region=us-east-1
+      url: https://console.aws.amazon.com/cloudformation/home?region=eu-central-1
     
     steps:
       - uses: actions/checkout@v4

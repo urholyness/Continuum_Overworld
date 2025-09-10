@@ -3,7 +3,9 @@ set -e
 
 echo "📡 Creating C_N EventBridge Infrastructure..."
 
-BUS_NAME="C_N-EventBus-Core"
+AWS_REGION=${AWS_REGION:-eu-central-1}
+ENV_SUFFIX="${ENVIRONMENT:-PROD}"
+BUS_NAME="C_N-EventBus-Core-${ENV_SUFFIX}"
 
 # Create custom event bus
 aws events create-event-bus \
@@ -16,7 +18,7 @@ echo "  Creating orchestration rules..."
 
 # Rule 1: Farm IoT Data -> Process Metrics
 aws events put-rule \
-    --name "C_N-FarmData-Processor" \
+    --name "C_N-FarmData-Processor-${ENV_SUFFIX}" \
     --event-bus-name "$BUS_NAME" \
     --event-pattern '{"source":["IoT.Farm"],"detail-type":["MetricsUpdate"]}' \
     --state ENABLED \
@@ -25,7 +27,7 @@ aws events put-rule \
 
 # Rule 2: Satellite NDVI -> Update Dashboard
 aws events put-rule \
-    --name "C_N-Satellite-NDVI" \
+    --name "C_N-Satellite-NDVI-${ENV_SUFFIX}" \
     --event-bus-name "$BUS_NAME" \
     --event-pattern '{"source":["Oracle.Satellite"],"detail-type":["NDVI.Processed"]}' \
     --state ENABLED \
@@ -34,7 +36,7 @@ aws events put-rule \
 
 # Rule 3: Blockchain Events -> Notify Investors
 aws events put-rule \
-    --name "C_N-Blockchain-Update" \
+    --name "C_N-Blockchain-Update-${ENV_SUFFIX}" \
     --event-bus-name "$BUS_NAME" \
     --event-pattern '{"source":["Ledger.Blockchain"],"detail-type":["Checkpoint.Emitted"]}' \
     --state ENABLED \
@@ -43,7 +45,7 @@ aws events put-rule \
 
 # Rule 4: Error Handling -> Aegis Alert
 aws events put-rule \
-    --name "C_N-Error-Handler" \
+    --name "C_N-Error-Handler-${ENV_SUFFIX}" \
     --event-bus-name "$BUS_NAME" \
     --event-pattern '{"detail-type":["Error","Exception","Failure"]}' \
     --state ENABLED \

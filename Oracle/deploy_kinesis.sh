@@ -4,11 +4,12 @@ set -e
 echo "🌊 Creating C_N Kinesis Streams (1 shard each for cost optimization)..."
 
 STREAMS=("FarmData" "SatelliteData" "LogisticsData" "BlockchainEvents")
-PROJECT_NAME="greenstem-global"
-AWS_REGION=${AWS_REGION:-us-east-1}
+PROJECT_NAME="greenstemglobal"
+AWS_REGION=${AWS_REGION:-eu-central-1}
+ENV_SUFFIX="${ENVIRONMENT:-prod}"
 
 for stream in "${STREAMS[@]}"; do
-    STREAM_NAME="C_N-${PROJECT_NAME}-${stream}"
+    STREAM_NAME="C_N-${PROJECT_NAME}-${stream}-${ENV_SUFFIX}"
     
     if aws kinesis describe-stream --stream-name "$STREAM_NAME" 2>/dev/null; then
         echo "  ✓ Stream $STREAM_NAME exists"

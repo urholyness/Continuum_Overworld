@@ -1,13 +1,14 @@
 #!/bin/bash
 set -e
 
-echo "🗄️ Creating C_N DynamoDB Tables with PITR..."
+echo "🗄️ Creating C_N DynamoDB Tables with PITR in Frankfurt..."
 
-AWS_REGION=${AWS_REGION:-us-east-1}
+AWS_REGION=${AWS_REGION:-eu-central-1}
+ENV_SUFFIX="${ENVIRONMENT:-PROD}"
 
 # Farm Metrics Table (Hot Data - 7 day TTL)
 aws dynamodb create-table \
-    --table-name "C_N-FarmMetrics-Live" \
+    --table-name "C_N-FarmMetrics-Live-${ENV_SUFFIX}" \
     --attribute-definitions \
         AttributeName=farmId,AttributeType=S \
         AttributeName=timestamp,AttributeType=N \
@@ -20,22 +21,22 @@ aws dynamodb create-table \
     2>/dev/null && echo "  ✓ Created C_N-FarmMetrics-Live" || echo "  ✓ C_N-FarmMetrics-Live exists"
 
 # Wait for table to be active before updating
-aws dynamodb wait table-exists --table-name "C_N-FarmMetrics-Live"
+aws dynamodb wait table-exists --table-name "C_N-FarmMetrics-Live-${ENV_SUFFIX}"
 
 # Enable TTL and PITR
 aws dynamodb update-time-to-live \
-    --table-name "C_N-FarmMetrics-Live" \
+    --table-name "C_N-FarmMetrics-Live-${ENV_SUFFIX}" \
     --time-to-live-specification Enabled=true,AttributeName=ttl \
     2>/dev/null || true
 
 aws dynamodb update-continuous-backups \
-    --table-name "C_N-FarmMetrics-Live" \
+    --table-name "C_N-FarmMetrics-Live-${ENV_SUFFIX}" \
     --point-in-time-recovery-specification PointInTimeRecoveryEnabled=true \
     2>/dev/null || true
 
 # Pantheon Agent Registry
 aws dynamodb create-table \
-    --table-name "C_N-Pantheon-Registry" \
+    --table-name "C_N-Pantheon-Registry-${ENV_SUFFIX}" \
     --attribute-definitions \
         AttributeName=agentId,AttributeType=S \
         AttributeName=division,AttributeType=S \
@@ -47,16 +48,16 @@ aws dynamodb create-table \
     --tags "Key=Environment,Value=C_N" "Key=Component,Value=Pantheon" "Key=Division,Value=Pantheon" \
     2>/dev/null && echo "  ✓ Created C_N-Pantheon-Registry" || echo "  ✓ C_N-Pantheon-Registry exists"
 
-aws dynamodb wait table-exists --table-name "C_N-Pantheon-Registry"
+aws dynamodb wait table-exists --table-name "C_N-Pantheon-Registry-${ENV_SUFFIX}"
 
 aws dynamodb update-continuous-backups \
-    --table-name "C_N-Pantheon-Registry" \
+    --table-name "C_N-Pantheon-Registry-${ENV_SUFFIX}" \
     --point-in-time-recovery-specification PointInTimeRecoveryEnabled=true \
     2>/dev/null || true
 
 # Shipment Tracking Table
 aws dynamodb create-table \
-    --table-name "C_N-ShipmentTracking-Active" \
+    --table-name "C_N-ShipmentTracking-Active-${ENV_SUFFIX}" \
     --attribute-definitions \
         AttributeName=shipmentId,AttributeType=S \
         AttributeName=updatedAt,AttributeType=N \
@@ -67,16 +68,16 @@ aws dynamodb create-table \
     --tags "Key=Environment,Value=C_N" "Key=Component,Value=Logistics" "Key=Division,Value=Oracle" \
     2>/dev/null && echo "  ✓ Created C_N-ShipmentTracking-Active" || echo "  ✓ C_N-ShipmentTracking-Active exists"
 
-aws dynamodb wait table-exists --table-name "C_N-ShipmentTracking-Active"
+aws dynamodb wait table-exists --table-name "C_N-ShipmentTracking-Active-${ENV_SUFFIX}"
 
 aws dynamodb update-continuous-backups \
-    --table-name "C_N-ShipmentTracking-Active" \
+    --table-name "C_N-ShipmentTracking-Active-${ENV_SUFFIX}" \
     --point-in-time-recovery-specification PointInTimeRecoveryEnabled=true \
     2>/dev/null || true
 
 # WebSocket Connections
 aws dynamodb create-table \
-    --table-name "C_N-WebSocketConnections" \
+    --table-name "C_N-WebSocketConnections-${ENV_SUFFIX}" \
     --attribute-definitions \
         AttributeName=connectionId,AttributeType=S \
         AttributeName=userId,AttributeType=S \
