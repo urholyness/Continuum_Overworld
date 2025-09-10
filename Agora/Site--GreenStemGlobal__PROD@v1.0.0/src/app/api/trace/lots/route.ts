@@ -4,7 +4,7 @@ import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
 export const runtime = 'nodejs';
 
 const client = new DynamoDBClient({ 
-  region: process.env.AWS_REGION || 'eu-central-1' 
+  region: process.env.AWS_REGION || 'eu-north-1'  // Stockholm - cheaper and faster
 });
 const ddb = DynamoDBDocumentClient.from(client);
 
