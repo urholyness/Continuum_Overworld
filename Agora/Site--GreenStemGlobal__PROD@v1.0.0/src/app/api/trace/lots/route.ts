@@ -10,9 +10,10 @@ const ddb = DynamoDBDocumentClient.from(client);
 
 export async function GET() {
   try {
-    // Use EXISTING table name from deployed infrastructure
+    // Use environment variable with fallback to deployed table
+    const tableName = process.env.DDB_METRICS_TABLE || 'C_N-FarmMetrics-Live-PROD';
     const command = new ScanCommand({
-      TableName: 'C_N-FarmMetrics-Live-PROD',
+      TableName: tableName,
       FilterExpression: 'attribute_exists(farmId)',
       Limit: 20
     });
