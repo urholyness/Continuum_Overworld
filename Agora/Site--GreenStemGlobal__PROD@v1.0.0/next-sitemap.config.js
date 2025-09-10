@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://greenstemglobal.com',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://main.d1o0v91pjtyjuc.amplifyapp.com',
   generateRobotsTxt: true,
   changefreq: 'weekly',
   priority: 0.7,

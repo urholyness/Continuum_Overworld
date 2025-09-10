@@ -4,6 +4,7 @@ import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://main.d1o0v91pjtyjuc.amplifyapp.com'),
   title: {
     default: 'GreenStemGlobal - Seed-to-Shelf Traceability',
     template: '%s | GreenStemGlobal'
