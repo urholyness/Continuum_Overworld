@@ -1,0 +1,148 @@
+name: Deploy Infrastructure to C_N
+
+on:
+  push:
+    branches: [main, stage]
+    paths:
+      - 'The_Bridge/**'
+      - 'Oracle/**'
+      - 'Forge/**'
+      - 'Atlas/**'
+      - 'Aegis/**'
+      - '.github/workflows/infra.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+          - prod
+          - stage
+          - dev
+
+env:
+  AWS_REGION: us-east-1
+  C_N_PREFIX: C_N
+  PROJECT_NAME: greenstem-global
+
+concurrency:
+  group: ${{ github.ref_name }}-infra
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  detect-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.detect.outputs.environment }}
+    steps:
+      - id: detect
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/stage" ]]; then
+            echo "environment=stage" >> $GITHUB_OUTPUT
+          else
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
+
+  deploy-infrastructure:
+    needs: detect-environment
+    runs-on: ubuntu-latest
+    environment: 
+      name: ${{ needs.detect-environment.outputs.environment }}
+      url: https://console.aws.amazon.com/cloudformation/home?region=us-east-1
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/C_N-GitHubDeployRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set Environment Prefix
+        run: |
+          if [[ "${{ needs.detect-environment.outputs.environment }}" == "stage" ]]; then
+            echo "C_N_PREFIX=C_N_STAGE" >> $GITHUB_ENV
+          elif [[ "${{ needs.detect-environment.outputs.environment }}" == "dev" ]]; then
+            echo "C_N_PREFIX=C_N_DEV" >> $GITHUB_ENV
+          fi
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Deploy S3 Data Lake
+        run: |
+          chmod +x The_Bridge/deploy_s3_datalake.sh
+          ./The_Bridge/deploy_s3_datalake.sh
+
+      - name: Deploy DynamoDB Tables
+        run: |
+          chmod +x The_Bridge/deploy_dynamodb.sh
+          ./The_Bridge/deploy_dynamodb.sh
+
+      - name: Deploy Kinesis Streams
+        run: |
+          chmod +x Oracle/deploy_kinesis.sh
+          ./Oracle/deploy_kinesis.sh
+
+      - name: Deploy EventBridge
+        run: |
+          chmod +x Atlas/deploy_eventbridge.sh
+          ./Atlas/deploy_eventbridge.sh
+
+      - name: Deploy IAM Roles
+        run: |
+          chmod +x Aegis/deploy_iam.sh
+          ./Aegis/deploy_iam.sh
+
+      - name: Deploy Lambda Functions
+        run: |
+          chmod +x Forge/deploy_lambdas.sh
+          ./Forge/deploy_lambdas.sh
+
+      - name: Configure SSM Parameters
+        run: |
+          chmod +x The_Bridge/deploy_ssm_config.sh
+          ./The_Bridge/deploy_ssm_config.sh
+
+      - name: Test Infrastructure
+        run: |
+          chmod +x test_nexus_infrastructure.sh
+          ./test_nexus_infrastructure.sh
+
+      - name: Generate Deployment Report
+        if: always()
+        run: |
+          chmod +x nexus_deployment_summary.sh
+          ./nexus_deployment_summary.sh
+
+      - name: Upload Deployment Manifest
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: deployment-manifest-${{ github.sha }}
+          path: deployment_manifest.json
+          retention-days: 30
+
+      - name: Tag Deployment Version
+        if: success() && needs.detect-environment.outputs.environment == 'prod'
+        run: |
+          aws ssm put-parameter \
+            --name "/C_N/Config/Version" \
+            --value "${{ github.sha }}" \
+            --type String \
+            --overwrite

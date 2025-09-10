@@ -1,0 +1,35 @@
+name: Web Frontend Checks
+
+on:
+  push:
+    branches: [main, stage]
+    paths:
+      - 'Agora/**'
+      - 'package*.json'
+  pull_request:
+    paths:
+      - 'Agora/**'
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'Agora/Site--GreenStemGlobal__PROD@v1.0.0/package-lock.json'
+      
+      - name: Install and Test
+        working-directory: Agora/Site--GreenStemGlobal__PROD@v1.0.0
+        run: |
+          npm ci
+          npm run lint
+          npm run test --if-present
+          npm run build
+      
+      # Note: Actual deployment handled by Amplify GitHub integration
+      - name: Notify Amplify
+        run: echo "Amplify will auto-deploy from GitHub push"

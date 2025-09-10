@@ -1,0 +1,16 @@
+# Continuum Nexus Code Ownership
+
+# Global owners
+* @continuum-nexus/the-bridge
+
+# Division-specific ownership
+The_Bridge/** @continuum-nexus/the-bridge @continuum-nexus/aegis
+Aegis/**      @continuum-nexus/aegis
+Oracle/**     @continuum-nexus/oracle
+Forge/**      @continuum-nexus/forge
+Atlas/**      @continuum-nexus/atlas
+
+# Critical files
+.github/workflows/*.yml @continuum-nexus/the-bridge @continuum-nexus/aegis
+**/deploy_*.sh         @continuum-nexus/the-bridge
+**/IAM*.json          @continuum-nexus/aegis

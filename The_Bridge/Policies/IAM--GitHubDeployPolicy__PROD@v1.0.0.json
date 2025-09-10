@@ -1,0 +1,35 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*",
+        "dynamodb:*",
+        "kinesis:*",
+        "events:*",
+        "lambda:*",
+        "iam:GetRole",
+        "iam:PassRole",
+        "ssm:PutParameter",
+        "ssm:GetParameter"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "aws:RequestTag/Environment": ["C_N", "C_N_STAGE"]
+        }
+      }
+    },
+    {
+      "Effect": "Deny",
+      "Action": [
+        "iam:DeleteRole*",
+        "iam:DeletePolicy*",
+        "s3:DeleteBucket*",
+        "dynamodb:DeleteTable"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
