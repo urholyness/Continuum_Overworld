@@ -143,9 +143,22 @@ Content-Type: application/json
 
 ## 📚 **Documentation**
 
-- [**Enterprise Deployment**](C_N/README-ENTERPRISE.md): Complete production deployment guide
-- [**Session Blueprint**](SESSION-BLUEPRINT.md): Implementation details and changes
+### **🚀 Deployment & Operations**
+- [**🔧 Deployment Blueprint**](DEPLOYMENT-BLUEPRINT.md): Complete deployment guide for production
+- [**📋 Technical Specifications**](DEPLOYMENT-SPECS.md): Detailed technical reference for development team
+- [**👥 Team Handoff Guide**](TEAM-HANDOFF.md): Operational procedures and team knowledge transfer
+- [**⚠️ Contributing Guidelines**](CONTRIBUTING.md): Git workflow and AWS Amplify commit rules
+
+### **🏢 Enterprise Platform**
+- [**Enterprise Deployment**](C_N/README-ENTERPRISE.md): C_N platform deployment guide
+- [**Session Blueprint**](SESSION-BLUEPRINT.md): Implementation details and architecture changes
 - [**Work Order Verification**](C_N/WORK_ORDER_VERIFICATION.md): Task completion verification
+
+### **🎯 Quick Reference**
+- **Production App**: `Agora/Site--GreenStemGlobal__PROD@v1.0.0`
+- **Amplify App ID**: `dgcik29wowtkc`
+- **Status**: ✅ Deployed and operational
+- **Monthly Cost**: ~$20-25 (optimized)
 
 ---
 

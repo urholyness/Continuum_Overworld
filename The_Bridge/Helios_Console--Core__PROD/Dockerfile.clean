@@ -1,0 +1,125 @@
+# Dockerfile for Helios Console - Complete WSL Path Isolation
+FROM node:20-alpine AS base
+
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Create package.json from scratch to avoid any WSL contamination
+RUN echo '{\
+  "name": "helios-console-core-prod",\
+  "version": "1.0.1",\
+  "private": true,\
+  "scripts": {\
+    "dev": "next dev -p 3000",\
+    "build": "next build",\
+    "start": "next start",\
+    "lint": "next lint",\
+    "typecheck": "tsc --noEmit"\
+  },\
+  "dependencies": {\
+    "next": "^14.2.5",\
+    "react": "^18.3.1",\
+    "react-dom": "^18.3.1",\
+    "@types/node": "^20",\
+    "@types/react": "^18",\
+    "@types/react-dom": "^18",\
+    "typescript": "^5",\
+    "tailwindcss": "^3.4.1",\
+    "autoprefixer": "^10.4.19",\
+    "postcss": "^8.4.31",\
+    "class-variance-authority": "^0.7.0",\
+    "clsx": "^2.1.1",\
+    "tailwind-merge": "^2.5.2",\
+    "zod": "^3.23.8",\
+    "lucide-react": "^0.446.0",\
+    "@radix-ui/react-slot": "^1.1.0",\
+    "eslint": "^8",\
+    "eslint-config-next": "14.2.5"\
+  }\
+}' > package.json
+
+# Generate completely clean package-lock.json and install
+RUN npm install --package-lock-only --no-audit --no-fund
+RUN npm ci --no-audit --no-fund
+
+# Development stage
+FROM base AS dev
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package.json ./package.json
+
+# Copy source files to completely isolate from WSL paths
+COPY src ./src
+
+# Create clean Next.js configuration files
+RUN echo 'export default {\
+  output: "standalone",\
+  experimental: {\
+    typedRoutes: true\
+  },\
+  typescript: {\
+    ignoreBuildErrors: false\
+  },\
+  eslint: {\
+    ignoreDuringBuilds: false\
+  }\
+};' > next.config.mjs
+
+RUN echo '{\
+  "compilerOptions": {\
+    "lib": ["dom", "dom.iterable", "es6"],\
+    "allowJs": true,\
+    "skipLibCheck": true,\
+    "strict": true,\
+    "noEmit": true,\
+    "esModuleInterop": true,\
+    "module": "esnext",\
+    "moduleResolution": "bundler",\
+    "resolveJsonModule": true,\
+    "isolatedModules": true,\
+    "jsx": "preserve",\
+    "incremental": true,\
+    "plugins": [{ "name": "next" }],\
+    "baseUrl": ".",\
+    "paths": {\
+      "@/*": ["./src/*"]\
+    }\
+  },\
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],\
+  "exclude": ["node_modules"]\
+}' > tsconfig.json
+
+RUN echo 'module.exports = {\
+  plugins: {\
+    tailwindcss: {},\
+    autoprefixer: {},\
+  },\
+}' > postcss.config.js
+
+RUN echo 'import type { Config } from "tailwindcss"\
+export default {\
+  darkMode: ["class"],\
+  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],\
+  theme: {\
+    extend: {\
+      borderRadius: {\
+        lg: "var(--radius)",\
+        md: "calc(var(--radius) - 2px)",\
+        sm: "calc(var(--radius) - 4px)",\
+      },\
+    },\
+  },\
+  plugins: [],\
+} satisfies Config' > tailwind.config.ts
+
+# Expose port
+EXPOSE 3000
+
+# Set environment
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Start development server
+CMD ["npm", "run", "dev"]

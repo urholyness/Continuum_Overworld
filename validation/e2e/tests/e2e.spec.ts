@@ -8,3 +8,6 @@ test('Public farm page is fresh and renders NDVI', async ({ page }) => {
   await expect(page.getByTestId('farm-map')).toBeVisible();
 });
 
+
+
+

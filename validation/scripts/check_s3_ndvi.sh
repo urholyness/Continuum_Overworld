@@ -5,3 +5,6 @@ set -euo pipefail
 aws s3 ls "s3://${CURATED_BUCKET}/sat/${FARM_ID}/${FARM_DATE_UTC}/ndvi.png" --region "$AWS_REGION" >/dev/null \
   && echo "✅ NDVI tile present" || { echo "❌ NDVI tile missing"; exit 1; }
 
+
+
+

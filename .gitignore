@@ -1,33 +1,73 @@
-# Global
-.DS_Store
+# Continuum_Overworld .gitignore
+# Following Agora/Playbook--WebDev__PROD@v2.0.0
+
+# Environment files (NEVER commit)
 .env
-*.log
+.env.local
+.env.production
+.env.staging
+env.production
+*.env
+
+# Dependencies (Playbook Rule 6)
 node_modules/
 __pycache__/
 .venv/
 venv/
 *.pyc
 
-# Windows
+# Build artifacts (Playbook Rule 6)
+.next/
+build/
+dist/
+*.tsbuildinfo
+
+# AWS & Deployment
+.aws-sam/
+cdk.out/
+amplify/
+deployment.zip
+deployment.tar.gz
+*.pem
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
 Thumbs.db
 desktop.ini
 
 # WSL2
 *.sock
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Temporary
+# Temporary files
 *.tmp
 *.bak
 *.cache
-/intergrations
 
-# Next.js
-.next
-build
-dist
+# Test coverage
+coverage/
+.nyc_output
+
+# Security files
+*.key
+*.crt
+secrets.json
+
+# Package manager
+package-lock.json.bak
+yarn.lock.bak
+
+# Development overrides
+/intergrations

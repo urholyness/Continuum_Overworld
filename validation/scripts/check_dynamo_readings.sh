@@ -13,3 +13,6 @@ OUT=$(aws dynamodb query \
 echo "$OUT" | jq -e '.Count >= 1' >/dev/null || { echo "❌ No readings found for ${FARM_ID} today"; exit 1; }
 echo "✅ Dynamo readings exist for ${FARM_ID} today"
 
+
+
+

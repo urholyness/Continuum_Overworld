@@ -1,0 +1,376 @@
+openapi: 3.1.0
+info:
+  title: Composer API
+  version: 1.1.0
+  description: Continuum Overworld Composer API - Operations and Traceability
+  contact:
+    name: Continuum Overworld Team
+    email: dev@greenstemglobal.com
+
+servers:
+  - url: https://cn-dev-api.greenstemglobal.com
+    description: Development server
+  - url: https://cn-stage-api.greenstemglobal.com
+    description: Staging server
+  - url: https://cn-api.greenstemglobal.com
+    description: Production server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /composer/ops/metrics:
+    get:
+      summary: Get operational metrics
+      description: Retrieve operational KPIs for the last 24 hours
+      operationId: getOpsMetrics
+      tags:
+        - Operations
+      parameters:
+        - name: org
+          in: query
+          required: true
+          schema:
+            type: string
+            default: org-main
+          description: Organization/tenant identifier
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start time for metrics (ISO 8601)
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End time for metrics (ISO 8601)
+        - name: kpis
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: false
+          description: Specific KPIs to retrieve
+      responses:
+        '200':
+          description: Operational metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpsMetric'
+              examples:
+                sample_metrics:
+                  value:
+                    - kpi: throughput_tph
+                      value: 1.8
+                      unit: t/h
+                      ts: "2023-09-09T12:00:00.000Z"
+                    - kpi: orders_open
+                      value: 12
+                      unit: count
+                      ts: "2023-09-09T12:00:00.000Z"
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests - rate limited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /composer/trace/events:
+    get:
+      summary: Get traceability events
+      description: Retrieve audit trail events with optional filtering and pagination
+      operationId: getTraceEvents
+      tags:
+        - Traceability
+      parameters:
+        - name: org
+          in: query
+          required: true
+          schema:
+            type: string
+            default: org-main
+          description: Organization/tenant identifier
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Start time for events (ISO 8601)
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: End time for events (ISO 8601)
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 100
+          description: Maximum number of events to return
+        - name: cursor
+          in: query
+          schema:
+            type: string
+          description: Pagination cursor for next page
+        - name: type
+          in: query
+          schema:
+            type: string
+          description: Filter by event type
+        - name: actor
+          in: query
+          schema:
+            type: string
+          description: Filter by event actor
+      responses:
+        '200':
+          description: Trace events retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TraceEventsResponse'
+              examples:
+                sample_events:
+                  value:
+                    items:
+                      - id: "evt_001"
+                        ts: "2023-09-09T12:00:00.000Z"
+                        type: "shipment.scan"
+                        actor: "agent_001"
+                        payload:
+                          location: "NBO"
+                          status: "ok"
+                          batch_id: "24-0901-FB"
+                    nextCursor: "eyJQSyI6Im9yZy1tYWluIiwiU0siOiJ0cyMyMDIzLTA5LTA5VDEyOjAwOjAwLjAwMFoifQ=="
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - invalid JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests - rate limited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token from Cognito User Pool
+
+  schemas:
+    OpsMetric:
+      type: object
+      required:
+        - kpi
+        - value
+        - unit
+        - ts
+      properties:
+        kpi:
+          type: string
+          description: Key Performance Indicator name
+          examples:
+            - throughput_tph
+            - orders_open
+            - temp_packhouse
+            - avg_ndvi
+            - rainfall_mm_24h
+        value:
+          type: number
+          description: Metric value
+        unit:
+          type: string
+          description: Unit of measurement
+          examples:
+            - t/h
+            - count
+            - °C
+            - index
+            - mm
+        ts:
+          type: string
+          format: date-time
+          description: Timestamp when metric was recorded (ISO 8601)
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Optional metadata for the metric
+
+    TraceEvent:
+      type: object
+      required:
+        - id
+        - ts
+        - type
+        - payload
+      properties:
+        id:
+          type: string
+          description: Unique event identifier
+        ts:
+          type: string
+          format: date-time
+          description: Event timestamp (ISO 8601)
+        type:
+          type: string
+          description: Event type identifier
+          examples:
+            - shipment.scan
+            - farm.harvest
+            - quality.check
+            - batch.create
+        actor:
+          type: string
+          nullable: true
+          description: Actor that triggered the event
+        payload:
+          type: object
+          additionalProperties: true
+          description: Event-specific data payload
+
+    TraceEventsResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TraceEvent'
+          description: Array of trace events
+        nextCursor:
+          type: string
+          nullable: true
+          description: Cursor for pagination - null if no more results
+        totalCount:
+          type: integer
+          description: Total number of events matching the query (optional)
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          examples:
+            - UNAUTHORIZED
+            - FORBIDDEN
+            - BAD_REQUEST
+            - RATE_LIMITED
+            - INTERNAL_ERROR
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error details
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+        requestId:
+          type: string
+          description: Request identifier for debugging
+
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    ForbiddenError:
+      description: Access denied - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFoundError:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    RateLimitError:
+      description: Too many requests - rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying
+          schema:
+            type: integer
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

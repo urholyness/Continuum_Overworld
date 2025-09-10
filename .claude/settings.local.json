@@ -41,7 +41,18 @@
       "Bash(git config:*)",
       "Bash(npm ci:*)",
       "Bash(timeout 60 npm install:*)",
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "Bash(npx create-next-app:*)",
+      "Bash(find:*)",
+      "Bash(./scripts/deploy-environment.sh:*)",
+      "Bash(aws:*)",
+      "Bash(npm ls:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(docker:*)",
+      "Bash(./docker-start.sh:*)"
     ],
     "deny": [],
     "ask": []

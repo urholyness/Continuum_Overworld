@@ -1,0 +1,513 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Continuum Overworld Integration Stack - Helios+Site v1.1.0'
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues: [dev, stage, prod]
+    Description: Environment name
+  
+  DomainName:
+    Type: String
+    Default: greenstemglobal.com
+    Description: Root domain name
+  
+  TenantId:
+    Type: String
+    Default: org-main
+    Description: Tenant identifier
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 30
+    MemorySize: 512
+    Environment:
+      Variables:
+        ENVIRONMENT: !Ref Environment
+        TENANT_ID: !Ref TenantId
+        METRICS_TABLE: !Ref MetricsTable
+        EVENTS_TABLE: !Ref EventsTable
+        FARMS_TABLE: !Ref FarmsTable
+        AGENTS_TABLE: !Ref AgentsTable
+
+Resources:
+  # ============================================================================
+  # DynamoDB Tables
+  # ============================================================================
+  
+  MetricsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'C_N-Metrics-Operational-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Purpose
+          Value: OperationalMetrics
+
+  EventsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'C_N-Events-Trace-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Purpose
+          Value: TraceabilityEvents
+
+  FarmsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'C_N-Registry-Farms-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Purpose
+          Value: FarmRegistry
+
+  AgentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'C_N-Pantheon-Registry-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Purpose
+          Value: AgentRegistry
+
+  # ============================================================================
+  # Dead Letter Queues
+  # ============================================================================
+
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub 'cn-dlq-${Environment}'
+      MessageRetentionPeriod: 1209600 # 14 days
+      VisibilityTimeoutSeconds: 300
+
+  # ============================================================================
+  # Lambda Functions
+  # ============================================================================
+
+  ComposerOpsMetricsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'cn-composer-ops-metrics-${Environment}'
+      CodeUri: lambda/composer-ops-metrics/
+      Handler: index.handler
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /composer/ops/metrics
+            Method: GET
+            Auth:
+              Authorizer: JWTAuthorizer
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MetricsTable
+
+  ComposerTraceEventsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'cn-composer-trace-events-${Environment}'
+      CodeUri: lambda/composer-trace-events/
+      Handler: index.handler
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /composer/trace/events
+            Method: GET
+            Auth:
+              Authorizer: JWTAuthorizer
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref EventsTable
+
+  AdminFarmsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'cn-admin-farms-${Environment}'
+      CodeUri: lambda/admin-farms/
+      Handler: index.handler
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Events:
+        GetFarms:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /admin/farms
+            Method: GET
+            Auth:
+              Authorizer: JWTAuthorizer
+        PostFarms:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /admin/farms
+            Method: POST
+            Auth:
+              Authorizer: JWTAuthorizer
+        BatchFarms:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /admin/farms:batch
+            Method: POST
+            Auth:
+              Authorizer: JWTAuthorizer
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FarmsTable
+
+  AdminAgentsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'cn-admin-agents-${Environment}'
+      CodeUri: lambda/admin-agents/
+      Handler: index.handler
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /admin/agents
+            Method: GET
+            Auth:
+              Authorizer: JWTAuthorizer
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref AgentsTable
+
+  PublicHighlightsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'cn-public-highlights-${Environment}'
+      CodeUri: lambda/public-highlights/
+      Handler: index.handler
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /public/trace/highlights
+            Method: GET
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref EventsTable
+
+  OracleMetricsAggregatorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub 'cn-oracle-metrics-aggregator-${Environment}'
+      CodeUri: lambda/oracle-metrics-aggregator/
+      Handler: index.handler
+      Timeout: 300
+      MemorySize: 1024
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !GetAtt DeadLetterQueue.Arn
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+            Enabled: true
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Sub 'C_N-Oracle-SatelliteData-${Environment}'
+        - DynamoDBReadPolicy:
+            TableName: !Sub 'C_N-Oracle-WeatherData-${Environment}'
+        - DynamoDBWritePolicy:
+            TableName: !Ref MetricsTable
+
+  # ============================================================================
+  # API Gateway
+  # ============================================================================
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref Environment
+      Domain:
+        DomainName: !Sub 'cn-${Environment}-api.${DomainName}'
+        CertificateArn: !Ref ApiCertificate
+        Route53:
+          HostedZoneId: !Ref HostedZone
+      ThrottleConfig:
+        BurstLimit: 100
+        RateLimit: 50
+      CorsConfiguration:
+        AllowOrigins:
+          - http://localhost:3000
+          - !Sub 'https://cn-${Environment}-helios.${DomainName}'
+          - !Sub 'https://cn-helios.${DomainName}'
+          - !Sub 'https://stage.${DomainName}'
+          - !Sub 'https://www.${DomainName}'
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Authorization
+          - Content-Type
+        MaxAge: 600
+      Auth:
+        Authorizers:
+          JWTAuthorizer:
+            JwtConfiguration:
+              issuer: !Sub 'https://cognito-idp.${AWS::Region}.amazonaws.com/${UserPool}'
+              audience:
+                - !Ref UserPoolClient
+            IdentitySource: $request.header.Authorization
+
+  # ============================================================================
+  # Cognito
+  # ============================================================================
+
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub 'cn-users-${Environment}'
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Required: true
+          Mutable: true
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
+      ClientName: !Sub 'cn-client-${Environment}'
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_ADMIN_USER_PASSWORD_AUTH
+      CallbackURLs:
+        - http://localhost:3000/api/auth/callback
+        - !Sub 'https://cn-dev-helios.${DomainName}/api/auth/callback'
+        - !Sub 'https://cn-stage-helios.${DomainName}/api/auth/callback'
+        - !Sub 'https://cn-helios.${DomainName}/api/auth/callback'
+      LogoutURLs:
+        - http://localhost:3000/
+        - !Sub 'https://cn-dev-helios.${DomainName}/'
+        - !Sub 'https://cn-stage-helios.${DomainName}/'
+        - !Sub 'https://cn-helios.${DomainName}/'
+      SupportedIdentityProviders:
+        - COGNITO
+
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      UserPoolId: !Ref UserPool
+      Domain: !Sub 'cn-auth-${Environment}'
+
+  # Cognito Groups
+  AdminGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      UserPoolId: !Ref UserPool
+      GroupName: admin
+      Description: Administrative access to all resources
+
+  OpsGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      UserPoolId: !Ref UserPool
+      GroupName: ops
+      Description: Operations dashboard access
+
+  TraceGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      UserPoolId: !Ref UserPool
+      GroupName: trace
+      Description: Traceability interface access
+
+  # ============================================================================
+  # Route53 & SSL
+  # ============================================================================
+
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+
+  ApiCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub '*.${DomainName}'
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !Sub '*.${DomainName}'
+          HostedZoneId: !Ref HostedZone
+
+  # ============================================================================
+  # Monitoring & Alarms
+  # ============================================================================
+
+  ErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub 'CN-5XXError-${Environment}'
+      AlarmDescription: 'API Gateway 5XX Error Rate'
+      MetricName: 5XXError
+      Namespace: AWS/ApiGateway
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 5
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: ApiName
+          Value: !Ref HttpApi
+      TreatMissingData: notBreaching
+
+  LatencyAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub 'CN-LatencyP95-${Environment}'
+      AlarmDescription: 'API Gateway P95 Latency'
+      MetricName: Latency
+      Namespace: AWS/ApiGateway
+      ExtendedStatistic: p95
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 600
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: ApiName
+          Value: !Ref HttpApi
+      TreatMissingData: notBreaching
+
+  DLQAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub 'CN-DLQ-Messages-${Environment}'
+      AlarmDescription: 'Dead Letter Queue Message Count'
+      MetricName: ApproximateNumberOfVisibleMessages
+      Namespace: AWS/SQS
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: QueueName
+          Value: !GetAtt DeadLetterQueue.QueueName
+      TreatMissingData: notBreaching
+
+Outputs:
+  ApiUrl:
+    Description: 'API Gateway URL'
+    Value: !Sub 'https://cn-${Environment}-api.${DomainName}'
+    Export:
+      Name: !Sub '${AWS::StackName}-ApiUrl'
+
+  UserPoolId:
+    Description: 'Cognito User Pool ID'
+    Value: !Ref UserPool
+    Export:
+      Name: !Sub '${AWS::StackName}-UserPoolId'
+
+  UserPoolClientId:
+    Description: 'Cognito User Pool Client ID'
+    Value: !Ref UserPoolClient
+    Export:
+      Name: !Sub '${AWS::StackName}-UserPoolClientId'
+
+  UserPoolDomain:
+    Description: 'Cognito User Pool Domain'
+    Value: !Sub 'https://${UserPoolDomain}.auth.${AWS::Region}.amazoncognito.com'
+    Export:
+      Name: !Sub '${AWS::StackName}-UserPoolDomain'

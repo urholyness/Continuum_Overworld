@@ -1,0 +1,145 @@
+# File: infra/api-routes.yaml
+# Task 2: API Gateway Routes for Oracle Status
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Oracle Status API Routes
+
+Resources:
+  # HTTP API
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: C_N-Oracle-API
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+          - https://cn-helios.greenstemglobal.com
+          - https://cn-stage-helios.greenstemglobal.com
+          - http://localhost:3000
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+        MaxAge: 300
+
+  # JWT Authorizer
+  JWTAuthorizer:
+    Type: AWS::ApiGatewayV2::Authorizer
+    Properties:
+      ApiId: !Ref HttpApi
+      AuthorizerType: JWT
+      IdentitySource:
+        - $request.header.Authorization
+      JwtConfiguration:
+        Audience:
+          - !Ref CognitoUserPoolClient
+        Issuer: !Sub https://cognito-idp.${AWS::Region}.amazonaws.com/${CognitoUserPool}
+      Name: JWTAuthorizer
+
+  # Oracle Status Lambda
+  OracleStatusFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: C_N-Oracle-Status-Aggregator
+      CodeUri: ../C_N/lambdas/
+      Handler: oracle-status-aggregator.handler
+      Runtime: nodejs18.x
+      MemorySize: 256
+      Timeout: 30
+      Environment:
+        Variables:
+          AWS_REGION: !Ref AWS::Region
+          TABLE_SATELLITE: C_N-Oracle-SatelliteData
+          TABLE_WEATHER: C_N-Oracle-WeatherData
+          TABLE_EVENTS: C_N-Events-Trace
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: C_N-Oracle-SatelliteData
+        - DynamoDBReadPolicy:
+            TableName: C_N-Oracle-WeatherData
+        - DynamoDBReadPolicy:
+            TableName: C_N-Events-Trace
+
+  # Lambda Integration
+  OracleStatusIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub
+        - arn:aws:apigatewayv2:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+        - LambdaArn: !GetAtt OracleStatusFunction.Arn
+      PayloadFormatVersion: '2.0'
+
+  # Oracle Status Route (Protected)
+  OracleStatusRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: GET /admin/oracle-status
+      AuthorizationType: JWT
+      AuthorizerId: !Ref JWTAuthorizer
+      Target: !Sub integrations/${OracleStatusIntegration}
+
+  # Public Health Check Route
+  HealthCheckRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: GET /health
+      Target: !Sub integrations/${HealthCheckIntegration}
+
+  # Health Check Integration
+  HealthCheckIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: HTTP_PROXY
+      IntegrationMethod: GET
+      IntegrationUri: https://checkip.amazonaws.com
+      PayloadFormatVersion: '1.0'
+
+  # Lambda Permission for API Gateway
+  ApiGatewayInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref OracleStatusFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/*
+
+  # Deployment Stage
+  ApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: prod
+      AutoDeploy: true
+      DefaultRouteSettings:
+        ThrottlingRateLimit: 100
+        ThrottlingBurstLimit: 200
+      AccessLogSettings:
+        DestinationArn: !GetAtt ApiLogGroup.Arn
+        Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","routeKey":"$context.routeKey","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
+
+  # CloudWatch Log Group for API
+  ApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/apigateway/C_N-Oracle-API
+      RetentionInDays: 7
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/prod
+    Export:
+      Name: C_N-Oracle-API-Endpoint
+  
+  OracleStatusUrl:
+    Description: Oracle Status endpoint
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/prod/admin/oracle-status

@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # Development server
+  helios-console-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.clean
+      target: dev
+    ports:
+      - "3000:3000"
+    # volumes:
+      # Removed all volume mounts to completely isolate from WSL paths
+      # Source files are copied during build instead of mounted at runtime
+      # This prevents WSL path corruption from affecting the container
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      # Copy environment variables from .env.development.local
+      - NEXT_PUBLIC_DEMO_MODE=true
+      - NEXT_PUBLIC_SITE_ENV=development
+      - NEXT_PUBLIC_API_BASE_URL=https://cn-dev-api.greenstemglobal.com
+      - NEXT_PUBLIC_WS_URL=wss://ws-dev.greenstemglobal.com
+      - NEXT_PUBLIC_CHAIN_ID=11155111
+      - AUTH_ISSUER=https://cognito-idp.us-east-1.amazonaws.com/us-east-1_PLACEHOLDER
+      - AUTH_CLIENT_ID=PLACEHOLDER_CLIENT_ID
+      - AUTH_AUDIENCE=PLACEHOLDER_CLIENT_ID
+      - JWT_SECRET=dev-jwt-secret-key
+    command: npm run dev
+    networks:
+      - helios-network
+
+  # Production build (optional)
+  helios-console-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - NEXT_PUBLIC_DEMO_MODE=false
+      - NEXT_PUBLIC_SITE_ENV=production
+      - NEXT_PUBLIC_API_BASE_URL=https://cn-dev-api.greenstemglobal.com
+    profiles:
+      - production
+    networks:
+      - helios-network
+
+networks:
+  helios-network:
+    driver: bridge
+
+volumes:
+  helios_node_modules:
+  helios_next_cache:

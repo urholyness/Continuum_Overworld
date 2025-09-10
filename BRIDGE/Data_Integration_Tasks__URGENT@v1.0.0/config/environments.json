@@ -1,0 +1,34 @@
+{
+  "environments": {
+    "dev": {
+      "account_id": "123456789012",
+      "region": "eu-central-1",
+      "stage": "dev",
+      "api_endpoint": "https://cn-dev-api.greenstemglobal.com",
+      "amplify_app_id": "d1a2b3c4d5e6f7",
+      "branch": "dev"
+    },
+    "stage": {
+      "account_id": "123456789012",
+      "region": "eu-central-1",
+      "stage": "stage",
+      "api_endpoint": "https://cn-stage-api.greenstemglobal.com",
+      "amplify_app_id": "d1a2b3c4d5e6f7",
+      "branch": "stage"
+    },
+    "prod": {
+      "account_id": "123456789012",
+      "region": "eu-central-1",
+      "stage": "prod",
+      "api_endpoint": "https://cn-api.greenstemglobal.com",
+      "amplify_app_id": "d1a2b3c4d5e6f7",
+      "branch": "main"
+    }
+  },
+  "shared_resources": {
+    "cognito_user_pool_id": "eu-central-1_XXXXXXXXX",
+    "cognito_client_id": "1234567890abcdefghijklmnop",
+    "s3_bucket_artifacts": "cn-artifacts-eu-central-1",
+    "sns_topic_alerts": "arn:aws:sns:eu-central-1:123456789012:cn-alerts"
+  }
+}

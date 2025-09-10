@@ -7,3 +7,6 @@ aws events put-events --region "$AWS_REGION" --entries '[
    "Detail":"{\"farm_id\":\"2BH\",\"drop_pct\":20}","EventBusName":"default"}
 ]' >/dev/null && echo "✅ Test alert event sent"
 
+
+
+

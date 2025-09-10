@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/*
+
+# Host
+Host: https://greenstemglobal.com
+
+# Sitemaps
+Sitemap: https://greenstemglobal.com/sitemap.xml

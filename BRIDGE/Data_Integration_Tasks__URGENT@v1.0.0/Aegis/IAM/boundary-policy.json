@@ -1,0 +1,49 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowRegionalServices",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:*",
+        "lambda:*",
+        "apigateway:*",
+        "cloudwatch:*",
+        "logs:*",
+        "events:*",
+        "sqs:*",
+        "sns:*",
+        "ce:GetCostAndUsage"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "eu-central-1"
+        }
+      }
+    },
+    {
+      "Sid": "DenyDestructiveActions",
+      "Effect": "Deny",
+      "Action": [
+        "ec2:TerminateInstances",
+        "rds:DeleteDBInstance",
+        "dynamodb:DeleteTable"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowGlobalServices",
+      "Effect": "Allow",
+      "Action": [
+        "iam:Get*",
+        "iam:List*",
+        "cloudfront:Get*",
+        "cloudfront:List*",
+        "route53:Get*",
+        "route53:List*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

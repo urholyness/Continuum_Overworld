@@ -9,3 +9,6 @@ curl -fsSL -X POST "${API_BASE}/ops" \
   | jq -e '.ok == true' >/dev/null \
   && echo "✅ POST /ops ok" || { echo "❌ POST /ops failed"; exit 1; }
 
+
+
+
