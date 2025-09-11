@@ -37,6 +37,8 @@ export default function HomePage() {
   const [farmData, setFarmData] = useState<any>(null)
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     const fetchFarmData = async () => {
       try {
         const response = await fetch('/api/trace/lots')
