@@ -37,23 +37,44 @@ export default function HomePage() {
   const [farmData, setFarmData] = useState<any>(null)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    
-    const fetchFarmData = async () => {
-      try {
-        const response = await fetch('/api/trace/lots')
-        if (response.ok) {
-          const data = await response.json()
-          setFarmData(data)
+    // For static export, we'll use mock data initially and enhance with real data later
+    const mockFarmData = {
+      farms: [
+        {
+          id: "GSG-KE-UG-001",
+          name: "GSG-KE-UG Farm",
+          location: "Eldoret, Kenya",
+          coordinates: { lat: 0.5143, lng: 35.2698 },
+          size: "9 acres",
+          crop: "French Beans - Star 2008",
+          ndvi: 0.71,
+          temperature: 22,
+          humidity: 58,
+          harvest: 1200
         }
-      } catch (error) {
-        console.error('Failed to fetch farm data:', error)
-      }
+      ]
     }
+    
+    setFarmData(mockFarmData)
 
-    fetchFarmData()
-    const interval = setInterval(fetchFarmData, 30000)
-    return () => clearInterval(interval)
+    // In production, this will try to fetch live data but won't break static build
+    if (typeof window !== 'undefined') {
+      const fetchLiveData = async () => {
+        try {
+          const response = await fetch('/api/trace/lots')
+          if (response.ok) {
+            const liveData = await response.json()
+            setFarmData(liveData)
+          }
+        } catch (error) {
+          console.log('Live data not available, using default data')
+        }
+      }
+
+      setTimeout(fetchLiveData, 2000) // Delay to avoid blocking initial render
+      const interval = setInterval(fetchLiveData, 30000)
+      return () => clearInterval(interval)
+    }
   }, [])
 
   return (

@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   eslint: {
-    ignoreDuringBuilds: true // keep if CI lint runs separately
+    ignoreDuringBuilds: true
   },
   experimental: {
     serverActions: {
