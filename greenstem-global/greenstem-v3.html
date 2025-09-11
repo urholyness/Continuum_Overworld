@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenStem Global | Farm to Ledger - Where Earth Meets Algorithm</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --earth-green: #2d5016;
+            --leaf-bright: #00ff88;
+            --soil-dark: #0a0f0a;
+            --sky-cyan: #00e5ff;
+            --harvest-gold: #ffb700;
+            --night-black: #000805;
+            --morning-mist: #f7fff7;
+            --field-emerald: #10b981;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--night-black);
+            color: var(--morning-mist);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Living Background - Crop Growth Pattern */
+        .growth-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at top, rgba(45,80,22,0.1) 0%, transparent 60%),
+                radial-gradient(ellipse at bottom, rgba(16,185,129,0.05) 0%, transparent 60%);
+            z-index: 0;
+        }
+
+        /* Organic Particles - Like Pollen */
+        .pollen-field {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .pollen {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--leaf-bright);
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(1px);
+            animation: drift 25s infinite linear;
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translate(0, 100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(100px, -100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Field Grid Pattern */
+        .field-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,255,136,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,136,0.02) 1px, transparent 1px);
+            background-size: 100px 100px;
+            transform: perspective(500px) rotateX(15deg);
+            transform-origin: center center;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        /* Navigation Bar */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            background: linear-gradient(180deg, rgba(0,8,5,0.9) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(0,255,136,0.1);
+        }
+
+        .nav-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--field-emerald), var(--leaf-bright));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--morning-mist);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--leaf-bright);
+            text-shadow: 0 0 15px rgba(0,255,136,0.4);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--leaf-bright);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .funds-btn {
+            padding: 0.7rem 1.8rem;
+            background: linear-gradient(135deg, var(--earth-green), var(--field-emerald));
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .funds-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16,185,129,0.3);
+        }
+
+        /* Main Hero Area */
+        .hero-zone {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10rem 2rem 3rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-core {
+            text-align: center;
+            max-width: 1000px;
+            animation: emerge 1.2s ease-out;
+        }
+
+        @keyframes emerge {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-title {
+            font-size: clamp(3.5rem, 9vw, 7rem);
+            font-weight: 900;
+            line-height: 0.85;
+            margin-bottom: 1.2rem;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, 
+                var(--field-emerald) 0%, 
+                var(--leaf-bright) 35%, 
+                var(--sky-cyan) 70%,
+                var(--harvest-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 40px rgba(0,255,136,0.2));
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { filter: drop-shadow(0 0 40px rgba(0,255,136,0.2)); }
+            50% { filter: drop-shadow(0 0 60px rgba(0,255,136,0.4)); }
+        }
+
+        .subtitle {
+            font-size: clamp(1.3rem, 3vw, 2rem);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            opacity: 0.85;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: slide-in 1.2s ease-out 0.3s both;
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 0.85;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-text {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            margin-bottom: 3rem;
+            opacity: 0.75;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fade-up 1.2s ease-out 0.6s both;
+        }
+
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 0.75; transform: translateY(0); }
+        }
+
+        /* Action Buttons */
+        .action-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fade-up 1.2s ease-out 0.9s both;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1.2rem 3rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--field-emerald), var(--leaf-bright));
+            color: var(--night-black);
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(16,185,129,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,255,136,0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--leaf-bright);
+            border: 2px solid var(--leaf-bright);
+            border-radius: 4px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0,255,136,0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,255,136,0.2);
+        }
+
+        /* Farm Satellite Section */
+        .farm-monitor {
+            padding: 4rem 5%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .monitor-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .monitor-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--leaf-bright);
+        }
+
+        .monitor-subtitle {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .farms-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .farm-unit {
+            background: linear-gradient(135deg, rgba(10,15,10,0.95), rgba(45,80,22,0.3));
+            border: 1px solid rgba(0,255,136,0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .farm-unit:hover {
+            transform: translateY(-5px);
+            border-color: var(--leaf-bright);
+            box-shadow: 0 20px 40px rgba(0,255,136,0.15);
+        }
+
+        .farm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .farm-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--leaf-bright);
+        }
+
+        .status-live {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--harvest-gold);
+            font-weight: 600;
+        }
+
+        .live-pulse {
+            width: 10px;
+            height: 10px;
+            background: var(--harvest-gold);
+            border-radius: 50%;
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255,183,0,0.8);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255,183,0,0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255,183,0,0);
+            }
+        }
+
+        .sat-viewport {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #0a2f0a, #1a4f1a);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ndvi-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0,255,136,0.3);
+        }
+
+        .ndvi-label {
+            color: rgba(255,255,255,0.6);
+            margin-right: 0.5rem;
+        }
+
+        .ndvi-score {
+            color: var(--leaf-bright);
+            font-weight: 700;
+        }
+
+        .farm-data {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .data-point {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            background: rgba(0,255,136,0.05);
+            border-radius: 4px;
+            border: 1px solid rgba(0,255,136,0.1);
+        }
+
+        .data-label {
+            color: rgba(247,255,247,0.6);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-value {
+            color: var(--leaf-bright);
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Real-Time Data Stream */
+        .data-stream {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,8,5,0.95), rgba(0,8,5,0.85));
+            border-top: 2px solid var(--leaf-bright);
+            padding: 0.7rem 0;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .stream-track {
+            display: flex;
+            animation: stream-flow 45s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes stream-flow {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .stream-item {
+            padding: 0 2.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--leaf-bright);
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stream-icon {
+            color: var(--harvest-gold);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .main-title {
+                font-size: 3rem;
+                letter-spacing: -1px;
+            }
+            
+            .action-row {
+                flex-direction: column;
+                padding: 0 2rem;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+            
+            .farms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes load-wave {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .loading-wave {
+            display: inline-block;
+            animation: load-wave 1.5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Living Background Layers -->
+    <div class="growth-field"></div>
+    <div class="field-grid"></div>
+    <div class="pollen-field" id="pollen-container"></div>
+    
+    <!-- Navigation -->
+    <header>
+        <div class="nav-wrapper">
+            <div class="brand">GreenStem Global</div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="/produce">Produce</a></li>
+                    <li><a href="/farms">Farms</a></li>
+                    <li><a href="/oracle">Oracle</a></li>
+                    <li><a href="/sustainability">Sustainability</a></li>
+                    <li><button class="funds-btn" onclick="window.location.href='/funds'">F&F Funds</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Hero Zone -->
+    <section class="hero-zone">
+        <div class="hero-core">
+            <h1 class="main-title">Farm to Ledger</h1>
+            <p class="subtitle">Where Earth Meets Algorithm</p>
+            <p class="hero-text">
+                Sustainable agriculture powered by satellite intelligence. Every harvest monitored from space,
+                every bean grade verified, every shipment tracked to destination. 
+                From Kenyan soil to global markets - transparent, traceable, transformative.
+            </p>
+            <div class="action-row">
+                <button class="btn-primary" onclick="window.location.href='/portal'">Enter the Continuum</button>
+                <button class="btn-secondary" onclick="window.location.href='/produce'">View Live Traces</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Farm Monitoring Section -->
+    <section class="farm-monitor">
+        <div class="monitor-header">
+            <h2 class="monitor-title">Live Farm Intelligence</h2>
+            <p class="monitor-subtitle">Real-time satellite monitoring of our verified farms</p>
+        </div>
+        
+        <div class="farms-grid">
+            <!-- 2 Butterflies Homestead - Plot A -->
+            <div class="farm-unit">
+                <div class="farm-header">
+                    <h3 class="farm-title">2 Butterflies Homestead</h3>
+                    <div class="status-live">
+                        <div class="live-pulse"></div>
+                        <span>LIVE FEED</span>
+                    </div>
+                </div>
+                <div class="sat-viewport" id="sat-view-1">
+                    <div class="ndvi-badge">
+                        <span class="ndvi-label">NDVI:</span>
+                        <span class="ndvi-score" id="ndvi-1">0.71</span>
+                    </div>
+                    <canvas id="farm-canvas-1" style="width: 100%; height: 100%;"></canvas>
+                </div>
+                <div class="farm-data">
+                    <div class="data-point">
+                        <span class="data-label">Location</span>
+                        <span class="data-value">Naivasha, Kenya</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">Crop</span>
+                        <span class="data-value">French Beans</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">Temperature</span>
+                        <span class="data-value" id="temp-1">24°C</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">Humidity</span>
+                        <span class="data-value">62%</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">GPS</span>
+                        <span class="data-value">-0.7167°, 36.4333°</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">Harvest</span>
+                        <span class="data-value">850 kg/week</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 2 Butterflies Homestead - Plot B -->
+            <div class="farm-unit">
+                <div class="farm-header">
+                    <h3 class="farm-title">2 Butterflies - Extension</h3>
+                    <div class="status-live">
+                        <div class="live-pulse"></div>
+                        <span>LIVE FEED</span>
+                    </div>
+                </div>
+                <div class="sat-viewport" id="sat-view-2">
+                    <div class="ndvi-badge">
+                        <span class="ndvi-label">NDVI:</span>
+                        <span class="ndvi-score" id="ndvi-2">0.68</span>
+                    </div>
+                    <canvas id="farm-canvas-2" style="width: 100%; height: 100%;"></canvas>
+                </div>
+                <div class="farm-data">
+                    <div class="data-point">
+                        <span class="data-label">Location</span>
+                        <span class="data-value">Naivasha, Kenya</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">Crop</span>
+                        <span class="data-value">Snow Peas</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">Temperature</span>
+                        <span class="data-value" id="temp-2">23°C</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">Humidity</span>
+                        <span class="data-value">65%</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">GPS</span>
+                        <span class="data-value">-0.7201°, 36.4298°</span>
+                    </div>
+                    <div class="data-point">
+                        <span class="data-label">Harvest</span>
+                        <span class="data-value">620 kg/week</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Real-Time Data Stream -->
+    <div class="data-stream">
+        <div class="stream-track">
+            <!-- First set of data -->
+            <span class="stream-item"><span class="stream-icon">🌍</span> FARM: 2_Butterflies_Homestead</span>
+            <span class="stream-item"><span class="stream-icon">📍</span> GPS: -0.7167°S, 36.4333°E</span>
+            <span class="stream-item"><span class="stream-icon">🌾</span> HARVEST: French Beans 850kg/week</span>
+            <span class="stream-item"><span class="stream-icon">📊</span> GRADE: 62% Extra Fine, 28% Fine</span>
+            <span class="stream-item"><span class="stream-icon">🏭</span> PACKHOUSE: Naivasha Cooling Facility</span>
+            <span class="stream-item"><span class="stream-icon">❄️</span> PRE-COOL: 6°C Maintained</span>
+            <span class="stream-item"><span class="stream-icon">📋</span> KEPHIS: #KE/2024/FB/2847</span>
+            <span class="stream-item"><span class="stream-icon">✅</span> GLOBALG.A.P: 4049929274838</span>
+            <span class="stream-item"><span class="stream-icon">✈️</span> EXPORT: ETH507 to Amsterdam</span>
+            <span class="stream-item"><span class="stream-icon">📦</span> AWB: 071-58374629</span>
+            <span class="stream-item"><span class="stream-icon">🌡️</span> FIELD TEMP: 24°C</span>
+            <span class="stream-item"><span class="stream-icon">💧</span> HUMIDITY: 62% Optimal</span>
+            <span class="stream-item"><span class="stream-icon">🛰️</span> SATELLITE: Sentinel-2 Coverage</span>
+            <span class="stream-item"><span class="stream-icon">🌱</span> NDVI: 0.71 Healthy Vegetation</span>
+            <span class="stream-item"><span class="stream-icon">☀️</span> WEATHER: Clear Skies</span>
+            <!-- Duplicate for seamless loop -->
+            <span class="stream-item"><span class="stream-icon">🌍</span> FARM: 2_Butterflies_Homestead</span>
+            <span class="stream-item"><span class="stream-icon">📍</span> GPS: -0.7167°S, 36.4333°E</span>
+            <span class="stream-item"><span class="stream-icon">🌾</span> HARVEST: French Beans 850kg/week</span>
+            <span class="stream-item"><span class="stream-icon">📊</span> GRADE: 62% Extra Fine, 28% Fine</span>
+            <span class="stream-item"><span class="stream-icon">🏭</span> PACKHOUSE: Naivasha Cooling Facility</span>
+            <span class="stream-item"><span class="stream-icon">❄️</span> PRE-COOL: 6°C Maintained</span>
+            <span class="stream-item"><span class="stream-icon">📋</span> KEPHIS: #KE/2024/FB/2847</span>
+            <span class="stream-item"><span class="stream-icon">✅</span> GLOBALG.A.P: 4049929274838</span>
+            <span class="stream-item"><span class="stream-icon">✈️</span> EXPORT: ETH507 to Amsterdam</span>
+            <span class="stream-item"><span class="stream-icon">📦</span> AWB: 071-58374629</span>
+            <span class="stream-item"><span class="stream-icon">🌡️</span> FIELD TEMP: 24°C</span>
+            <span class="stream-item"><span class="stream-icon">💧</span> HUMIDITY: 62% Optimal</span>
+            <span class="stream-item"><span class="stream-icon">🛰️</span> SATELLITE: Sentinel-2 Coverage</span>
+            <span class="stream-item"><span class="stream-icon">🌱</span> NDVI: 0.71 Healthy Vegetation</span>
+            <span class="stream-item"><span class="stream-icon">☀️</span> WEATHER: Clear Skies</span>
+        </div>
+    </div>
+    
+    <script>
+        // Generate organic pollen particles
+        const pollenContainer = document.getElementById('pollen-container');
+        for (let i = 0; i < 40; i++) {
+            const pollen = document.createElement('div');
+            pollen.className = 'pollen';
+            pollen.style.left = Math.random() * 100 + '%';
+            pollen.style.animationDelay = Math.random() * 25 + 's';
+            pollen.style.animationDuration = (20 + Math.random() * 10) + 's';
+            pollenContainer.appendChild(pollen);
+        }
+        
+        // Enhanced satellite visualization
+        function createSatelliteView(canvasId, ndviBase) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Create realistic field pattern
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#0a3f0a');
+            gradient.addColorStop(0.3, '#1a5f1a');
+            gradient.addColorStop(0.6, '#2a7f2a');
+            gradient.addColorStop(1, '#1a5f1a');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add field rows
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.15)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.height; i += 15) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i + Math.sin(i * 0.1) * 5);
+                ctx.stroke();
+            }
+            
+            // Add vegetation patches (NDVI visualization)
+            for (let i = 0; i < 8; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = 30 + Math.random() * 40;
+                
+                const health = ndviBase + (Math.random() - 0.5) * 0.1;
+                const healthColor = health > 0.7 ? 'rgba(136, 255, 0, 0.4)' : 
+                                   health > 0.6 ? 'rgba(255, 255, 0, 0.3)' :
+                                   'rgba(255, 136, 0, 0.3)';
+                
+                const veg = ctx.createRadialGradient(x, y, 0, x, y, radius);
+                veg.addColorStop(0, healthColor);
+                veg.addColorStop(1, 'transparent');
+                ctx.fillStyle = veg;
+                ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+            }
+            
+            // Add grid overlay
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.08)';
+            ctx.setLineDash([5, 10]);
+            for (let i = 0; i < canvas.width; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+        }
+        
+        // Initialize satellite views
+        createSatelliteView('farm-canvas-1', 0.71);
+        createSatelliteView('farm-canvas-2', 0.68);
+        
+        // Rotate satellite views periodically
+        setInterval(() => {
+            createSatelliteView('farm-canvas-1', 0.71);
+            createSatelliteView('farm-canvas-2', 0.68);
+        }, 8000);
+        
+        // Real-time temperature based on Naivasha time
+        function updateFieldTemperatures() {
+            const kenyaTime = new Date().toLocaleString("en-US", {timeZone: "Africa/Nairobi"});
+            const hour = new Date(kenyaTime).getHours();
+            
+            let temp1 = 24;
+            let temp2 = 23;
+            
+            // Naivasha temperature patterns
+            if (hour >= 5 && hour < 9) {
+                temp1 = 15 + (hour - 5) * 1.5; // Dawn warming
+                temp2 = 14 + (hour - 5) * 1.5;
+            } else if (hour >= 9 && hour < 14) {
+                temp1 = 21 + (hour - 9) * 1.2; // Morning to noon
+                temp2 = 20 + (hour - 9) * 1.2;
+            } else if (hour >= 14 && hour < 18) {
+                temp1 = 27 - (hour - 14) * 1.5; // Afternoon cooling
+                temp2 = 26 - (hour - 14) * 1.5;
+            } else {
+                temp1 = 16 + Math.random() * 2; // Night
+                temp2 = 15 + Math.random() * 2;
+            }
+            
+            document.getElementById('temp-1').textContent = Math.round(temp1) + '°C';
+            document.getElementById('temp-2').textContent = Math.round(temp2) + '°C';
+        }
+        
+        updateFieldTemperatures();
+        setInterval(updateFieldTemperatures, 60000);
+        
+        // NDVI fluctuation within healthy crop range
+        function updateNDVI() {
+            const ndvi1 = document.getElementById('ndvi-1');
+            const ndvi2 = document.getElementById('ndvi-2');
+            
+            const base1 = 0.71;
+            const base2 = 0.68;
+            
+            const variation1 = (Math.random() - 0.5) * 0.02;
+            const variation2 = (Math.random() - 0.5) * 0.02;
+            
+            ndvi1.textContent = Math.max(0.68, Math.min(0.74, base1 + variation1)).toFixed(2);
+            ndvi2.textContent = Math.max(0.65, Math.min(0.71, base2 + variation2)).toFixed(2);
+        }
+        
+        setInterval(updateNDVI, 10000);
+        
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
