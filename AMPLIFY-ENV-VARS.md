@@ -2,14 +2,14 @@
 
 **App ID**: dgcik29wowtkc  
 **Environment**: main  
-**Region**: eu-north-1 (Stockholm)
+**Region**: eu-central-1
 
 ## 🔧 Environment Variables to Add in Amplify Console
 
 ### Core AWS Configuration
 ```
-AWS_REGION=eu-north-1
-AWS_DEFAULT_REGION=eu-north-1
+AWS_REGION=eu-central-1
+AWS_DEFAULT_REGION=eu-central-1
 ```
 
 ### DynamoDB Tables (ACTUAL DEPLOYED NAMES)
