@@ -1,0 +1,1 @@
+export async function postEvent(evt){try{const r=await fetch(process.env.BRIDGE_EVENT_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(evt)});if(!r.ok)console.error("bridge sink fail",await r.text());}catch(e){console.error("bridge sink err",e)}}

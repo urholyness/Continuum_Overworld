@@ -1,0 +1,539 @@
+openapi: 3.1.0
+info:
+  title: Admin API
+  version: 1.1.0
+  description: Continuum Overworld Admin API - Farm and Agent Management
+  contact:
+    name: Continuum Overworld Team
+    email: dev@greenstemglobal.com
+
+servers:
+  - url: https://cn-dev-api.greenstemglobal.com
+    description: Development server
+  - url: https://cn-stage-api.greenstemglobal.com
+    description: Staging server
+  - url: https://cn-api.greenstemglobal.com
+    description: Production server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /admin/farms:
+    get:
+      summary: List farms
+      description: Retrieve all farms for the authenticated organization
+      operationId: listFarms
+      tags:
+        - Farm Management
+      parameters:
+        - name: org
+          in: query
+          schema:
+            type: string
+            default: org-main
+          description: Organization/tenant identifier
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, paused]
+          description: Filter by farm status
+        - name: region
+          in: query
+          schema:
+            type: string
+          description: Filter by region
+      responses:
+        '200':
+          description: Farms retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Farm'
+              examples:
+                sample_farms:
+                  value:
+                    - id: "2BH"
+                      name: "Two Butterflies Homestead"
+                      region: "Uasin Gishu"
+                      hectares: 1.0
+                      status: "active"
+                      geometry:
+                        type: "Feature"
+                        geometry:
+                          type: "Polygon"
+                          coordinates: [[[-1.2, 35.5], [-1.2, 35.6], [-1.1, 35.6], [-1.1, 35.5], [-1.2, 35.5]]]
+                    - id: "NJY"
+                      name: "Noah's Joy"
+                      region: "Nairobi"
+                      hectares: 0.8
+                      status: "active"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Create or update farm
+      description: Create a new farm or update an existing one (idempotent upsert)
+      operationId: upsertFarm
+      tags:
+        - Farm Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FarmInput'
+            examples:
+              new_farm:
+                value:
+                  id: "ABC"
+                  name: "Alpha Beta Coffee"
+                  region: "Central Kenya"
+                  hectares: 2.5
+                  status: "active"
+                  geometry:
+                    type: "Feature"
+                    geometry:
+                      type: "Polygon"
+                      coordinates: [[[-1.0, 35.0], [-1.0, 35.1], [-0.9, 35.1], [-0.9, 35.0], [-1.0, 35.0]]]
+              update_farm:
+                value:
+                  id: "2BH"
+                  name: "Two Butterflies Homestead"
+                  region: "Uasin Gishu"
+                  hectares: 1.2
+                  status: "active"
+      responses:
+        '201':
+          description: Farm created or updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Farm'
+        '400':
+          description: Bad request - validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '422':
+          description: Unprocessable entity - geometry validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/farms:batch:
+    post:
+      summary: Batch upsert farms
+      description: Create or update multiple farms in a single operation
+      operationId: batchUpsertFarms
+      tags:
+        - Farm Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - farms
+              properties:
+                farms:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/FarmInput'
+                  maxItems: 100
+                  description: Array of farms to upsert (max 100)
+            examples:
+              batch_upsert:
+                value:
+                  farms:
+                    - id: "F001"
+                      name: "Farm One"
+                      region: "Region A"
+                      hectares: 1.0
+                      status: "active"
+                    - id: "F002"
+                      name: "Farm Two"
+                      region: "Region B"
+                      hectares: 2.0
+                      status: "paused"
+      responses:
+        '201':
+          description: Batch upsert completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - results
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - id
+                        - status
+                      properties:
+                        id:
+                          type: string
+                        status:
+                          type: string
+                          enum: [created, updated, error]
+                        farm:
+                          $ref: '#/components/schemas/Farm'
+                        error:
+                          type: string
+                          description: Error message if status is error
+                  successCount:
+                    type: integer
+                    description: Number of successfully processed farms
+                  errorCount:
+                    type: integer
+                    description: Number of farms that failed processing
+        '400':
+          description: Bad request - validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '413':
+          description: Payload too large - exceeds batch size limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /admin/agents:
+    get:
+      summary: List agents
+      description: Retrieve all agents from the Pantheon registry
+      operationId: listAgents
+      tags:
+        - Agent Management
+      parameters:
+        - name: org
+          in: query
+          schema:
+            type: string
+            default: org-main
+          description: Organization/tenant identifier
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [online, degraded, offline]
+          description: Filter by agent status
+        - name: tier
+          in: query
+          schema:
+            type: string
+          description: Filter by agent tier
+        - name: role
+          in: query
+          schema:
+            type: string
+          description: Filter by agent role
+      responses:
+        '200':
+          description: Agents retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Agent'
+              examples:
+                sample_agents:
+                  value:
+                    - id: "agent_001"
+                      name: "Satellite Data Processor"
+                      role: "processor"
+                      tier: "T1"
+                      status: "online"
+                      lastHeartbeat: "2023-09-09T12:00:00.000Z"
+                      metadata:
+                        version: "1.2.3"
+                        capabilities: ["ndvi", "ndwi"]
+                    - id: "agent_002"
+                      name: "Quality Analyzer"
+                      role: "analyzer"
+                      tier: "T2"
+                      status: "degraded"
+                      lastHeartbeat: "2023-09-09T11:45:00.000Z"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token from Cognito User Pool (requires 'admin' group membership)
+
+  schemas:
+    Farm:
+      type: object
+      required:
+        - id
+        - name
+        - region
+        - hectares
+        - status
+      properties:
+        id:
+          type: string
+          description: Unique farm identifier
+          pattern: '^[A-Z0-9]{2,10}$'
+          examples:
+            - "2BH"
+            - "NJY"
+            - "ABC123"
+        name:
+          type: string
+          description: Farm name
+          minLength: 1
+          maxLength: 100
+        region:
+          type: string
+          description: Geographic region
+          minLength: 1
+          maxLength: 50
+        hectares:
+          type: number
+          description: Farm size in hectares
+          minimum: 0.01
+          maximum: 10000
+        status:
+          type: string
+          enum: [active, paused]
+          description: Farm operational status
+        geometry:
+          type: object
+          description: GeoJSON Feature or Polygon representing farm boundaries
+          additionalProperties: true
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional farm metadata
+        createdAt:
+          type: string
+          format: date-time
+          description: Farm creation timestamp
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          readOnly: true
+
+    FarmInput:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          description: Unique farm identifier
+          pattern: '^[A-Z0-9]{2,10}$'
+        name:
+          type: string
+          description: Farm name
+          minLength: 1
+          maxLength: 100
+        region:
+          type: string
+          description: Geographic region
+          minLength: 1
+          maxLength: 50
+          default: "Unknown"
+        hectares:
+          type: number
+          description: Farm size in hectares
+          minimum: 0.01
+          maximum: 10000
+          default: 1.0
+        status:
+          type: string
+          enum: [active, paused]
+          description: Farm operational status
+          default: "active"
+        geometry:
+          type: object
+          description: GeoJSON Feature or Polygon representing farm boundaries
+          additionalProperties: true
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional farm metadata
+
+    Agent:
+      type: object
+      required:
+        - id
+        - name
+        - role
+        - tier
+        - status
+      properties:
+        id:
+          type: string
+          description: Unique agent identifier
+        name:
+          type: string
+          description: Agent display name
+        role:
+          type: string
+          description: Agent functional role
+          examples:
+            - processor
+            - analyzer
+            - monitor
+            - aggregator
+        tier:
+          type: string
+          description: Agent performance tier
+          examples:
+            - T1
+            - T2
+            - T3
+        status:
+          type: string
+          enum: [online, degraded, offline]
+          description: Agent operational status
+        lastHeartbeat:
+          type: string
+          format: date-time
+          description: Last heartbeat timestamp
+        version:
+          type: string
+          description: Agent software version
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: List of agent capabilities
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional agent metadata
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          examples:
+            - UNAUTHORIZED
+            - FORBIDDEN
+            - BAD_REQUEST
+            - VALIDATION_ERROR
+            - NOT_FOUND
+            - RATE_LIMITED
+            - INTERNAL_ERROR
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error details
+        validationErrors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+              code:
+                type: string
+          description: Field-specific validation errors
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+        requestId:
+          type: string
+          description: Request identifier for debugging
+
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    ForbiddenError:
+      description: Access denied - requires admin group membership
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFoundError:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    RateLimitError:
+      description: Too many requests - rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying
+          schema:
+            type: integer
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
