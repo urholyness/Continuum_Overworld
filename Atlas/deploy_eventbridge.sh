@@ -3,7 +3,7 @@ set -e
 
 echo "📡 Creating C_N EventBridge Infrastructure..."
 
-AWS_REGION=${AWS_REGION:-eu-central-1}
+AWS_REGION=${AWS_REGION:-eu-north-1}
 ENV_SUFFIX="${ENVIRONMENT:-PROD}"
 BUS_NAME="C_N-EventBus-Core-${ENV_SUFFIX}"
 

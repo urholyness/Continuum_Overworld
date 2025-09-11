@@ -1,0 +1,193 @@
+version: '3.9'
+
+services:
+  # PostgreSQL with pgvector for multi-tenant core + agent memory
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: bridge_postgres
+    environment:
+      POSTGRES_DB: continuum
+      POSTGRES_USER: bridge_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bridge_secure_2025}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../The_Bridge/Console--Database__PROD@/schema:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bridge_admin -d continuum"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redpanda (Kafka-compatible) for event streaming
+  redpanda:
+    image: redpandadata/redpanda:v23.3.3
+    container_name: bridge_redpanda
+    command:
+      - redpanda
+      - start
+      - --smp 1
+      - --memory 1G
+      - --overprovisioned
+      - --node-id 0
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr internal://redpanda:8082,external://localhost:18082
+      - --schema-registry-addr internal://0.0.0.0:8081,external://0.0.0.0:18081
+      - --advertise-schema-registry-addr internal://redpanda:8081,external://localhost:18081
+    ports:
+      - "18081:18081"  # Schema Registry
+      - "18082:18082"  # Pandaproxy (REST)
+      - "19092:19092"  # Kafka API
+      - "19644:9644"   # Admin API
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -q healthy"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # MinIO for lakehouse storage
+  minio:
+    image: minio/minio:latest
+    container_name: bridge_minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-bridge_admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-bridge_secure_2025}
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # Neo4j for graph relationships
+  neo4j:
+    image: neo4j:5.15
+    container_name: bridge_neo4j
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-bridge_secure_2025}
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
+      NEO4J_dbms_memory_pagecache_size: 1G
+      NEO4J_dbms_memory_heap_max__size: 1G
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"  # Bolt
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD:-bridge_secure_2025} 'RETURN 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # DataHub for data governance and catalog
+  datahub-gms:
+    image: acryldata/datahub-gms:v0.12.0
+    container_name: bridge_datahub_gms
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATAHUB_DB_NAME: datahub
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USERNAME: bridge_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bridge_secure_2025}
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT: 9200
+      KAFKA_BOOTSTRAP_SERVER: redpanda:9092
+      SCHEMA_REGISTRY_URL: http://redpanda:8081
+    ports:
+      - "8080:8080"
+    volumes:
+      - datahub_data:/datahub/gms/store
+
+  datahub-frontend:
+    image: acryldata/datahub-frontend-react:v0.12.0
+    container_name: bridge_datahub_frontend
+    depends_on:
+      - datahub-gms
+    environment:
+      DATAHUB_GMS_HOST: datahub-gms
+      DATAHUB_GMS_PORT: 8080
+    ports:
+      - "9002:9002"
+
+  # Elasticsearch for DataHub
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: bridge_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Optional: Redis for hot cache
+  redis:
+    image: redis:7-alpine
+    container_name: bridge_redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # dbt for data transformation
+  dbt:
+    build:
+      context: ../
+      dockerfile: infra/Dockerfile.dbt
+    container_name: bridge_dbt
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DBT_PROFILES_DIR: /usr/app/dbt
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: continuum
+      POSTGRES_USER: bridge_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bridge_secure_2025}
+    volumes:
+      - ../dbt:/usr/app/dbt
+      - ../Lake:/usr/app/lake
+    command: ["dbt", "debug"]
+
+volumes:
+  postgres_data:
+  redpanda_data:
+  minio_data:
+  neo4j_data:
+  neo4j_logs:
+  datahub_data:
+  elasticsearch_data:
+  redis_data:
+
+networks:
+  default:
+    name: bridge_network
+    driver: bridge

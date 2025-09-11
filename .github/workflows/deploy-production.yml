@@ -11,7 +11,7 @@ on:
         type: string
 
 env:
-  AWS_REGION: eu-central-1
+  AWS_REGION: eu-north-1
   NODE_VERSION: '20'
   ENVIRONMENT: production
 

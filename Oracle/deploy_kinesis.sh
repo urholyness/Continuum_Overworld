@@ -5,7 +5,7 @@ echo "🌊 Creating C_N Kinesis Streams (1 shard each for cost optimization)..."
 
 STREAMS=("FarmData" "SatelliteData" "LogisticsData" "BlockchainEvents")
 PROJECT_NAME="greenstemglobal"
-AWS_REGION=${AWS_REGION:-eu-central-1}
+AWS_REGION=${AWS_REGION:-eu-north-1}
 ENV_SUFFIX="${ENVIRONMENT:-prod}"
 
 for stream in "${STREAMS[@]}"; do

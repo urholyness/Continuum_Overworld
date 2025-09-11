@@ -8,7 +8,7 @@ ENV_SUFFIX="${ENVIRONMENT:-prod}"
 TIERS=("raw" "bronze" "silver" "gold")
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 PROJECT_NAME="greenstemglobal"
-AWS_REGION=${AWS_REGION:-eu-central-1}
+AWS_REGION=${AWS_REGION:-eu-north-1}
 
 for tier in "${TIERS[@]}"; do
     # S3 requires lowercase with environment suffix

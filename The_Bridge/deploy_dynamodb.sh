@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "🗄️ Creating C_N DynamoDB Tables with PITR in Frankfurt..."
+echo "🗄️ Creating C_N DynamoDB Tables with PITR in Stockholm..."
 
-AWS_REGION=${AWS_REGION:-eu-central-1}
+AWS_REGION=${AWS_REGION:-eu-north-1}
 ENV_SUFFIX="${ENVIRONMENT:-PROD}"
 
 # Farm Metrics Table (Hot Data - 7 day TTL)
