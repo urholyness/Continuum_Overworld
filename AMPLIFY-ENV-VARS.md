@@ -23,7 +23,7 @@ DDB_SHIPMENT_TABLE=C_N-ShipmentTracking-Active-PROD
 ```
 NEXT_PUBLIC_SITE_URL=https://main.d1o0v91pjtyjuc.amplifyapp.com
 NEXT_PUBLIC_SITE_ENV=production
-NEXT_PUBLIC_AWS_REGION=eu-central-1
+NEXT_PUBLIC_AWS_REGION=eu-north-1
 ```
 
 ## 📋 Manual Steps for Amplify Console
@@ -38,7 +38,7 @@ NEXT_PUBLIC_AWS_REGION=eu-central-1
 
 ## ✅ Table Verification
 
-These tables were confirmed to exist in eu-central-1:
+These tables were confirmed to exist in eu-north-1:
 - ✅ C_N-FarmMetrics-Live-PROD (for farm data)
 - ✅ C_N-WebSocketConnections-PROD (for real-time updates)  
 - ✅ C_N-ShipmentTracking-Active-PROD (for logistics)
