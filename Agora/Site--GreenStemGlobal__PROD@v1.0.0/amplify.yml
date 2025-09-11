@@ -3,19 +3,13 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Installing dependencies including Amplify adapter"
         - npm ci
     build:
       commands:
-        - echo "Building Next.js application with Amplify adapter"
         - env | grep -e NEXT_PUBLIC_ >> .env.production
         - npm run build
-        - echo "Generating deployment manifest"
-        - npm run postbuild
-        - echo "Checking for deploy manifest:"
-        - ls -la .amplify-hosting/
   artifacts:
-    baseDirectory: .amplify-hosting
+    baseDirectory: .next
     files:
       - '**/*'
   cache:
