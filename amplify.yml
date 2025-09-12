@@ -17,7 +17,7 @@ frontend:
         - npm run build
         - echo "Build completed successfully"
   artifacts:
-    baseDirectory: Agora/Site--GreenStemGlobal__PROD@v1.0.0/.next
+    baseDirectory: Agora/Site--GreenStemGlobal__PROD@v1.0.0/.amplify-hosting
     files:
       - '**/*'
   cache:
