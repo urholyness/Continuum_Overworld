@@ -11,5 +11,8 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.886.0",
     "@aws-sdk/lib-dynamodb": "^3.886.0"
+  },
+  "devDependencies": {
+    "@aws-amplify/adapter-nextjs": "^1.6.9"
   }
 }
